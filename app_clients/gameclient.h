@@ -5,7 +5,9 @@
 #include <QtNetwork>
 #include <QTcpSocket>
 #include <QDebug>
+#include <QByteArray>
 #include <memory>
+#include "message.h"
 
 
 class GameClient : public QObject
@@ -20,8 +22,9 @@ public slots:
     void readData();
 
 private:
+    void responseForMessage(std::unique_ptr<Communication::Message> msg);
     std::unique_ptr<QTcpSocket> socket;
-
+    QByteArray buffer;
 };
 
 #endif // GAMECLIENT_H

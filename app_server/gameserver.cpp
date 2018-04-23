@@ -1,4 +1,8 @@
 #include "gameserver.h"
+#include "message.h"
+#include "point.h"
+#include "pointmessage.h"
+#include "translatortoarray.h"
 
 GameServer::GameServer(QObject *parent) : QObject(parent)
 {
@@ -13,7 +17,10 @@ GameServer::GameServer(QObject *parent) : QObject(parent)
 
 void GameServer::newConnection() {
     QTcpSocket *socket = server->nextPendingConnection();
-    socket->write("dupa");
+    Communication::PointMessage msg;
+    Communication::TranslatorToArray translator;
+    translator.visit(msg);
+    socket->write(translator.getLastMessage());
     socket->flush();
     socket->waitForBytesWritten(2000);
     socket->close();

@@ -15,3 +15,8 @@ SOURCES += main.cpp \
 HEADERS += \
     gameserver.h
 
+INCLUDEPATH += ../GamePlay \
+    ../Communication
+
+LIBS += -L../Communication -lCommunication \
+    -L../GamePlay -lGamePlay

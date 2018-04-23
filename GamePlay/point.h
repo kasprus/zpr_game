@@ -7,6 +7,7 @@ class Point
 {
 public:
     Point(double x, double y, double radius, long turnNumber, int playerNumber);
+    Point(const Point &p) = default;
     double getX() const {
         return x;
     }

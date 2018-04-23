@@ -21,4 +21,10 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     gameclient.h
 
+INCLUDEPATH += ../GamePlay \
+    ../Communication
+
+LIBS += -L../Communication -lCommunication \
+    -L../GamePlay -lGamePlay
+
 FORMS    += mainwindow.ui
