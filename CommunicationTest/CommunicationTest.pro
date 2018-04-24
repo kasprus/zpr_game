@@ -22,6 +22,8 @@ SOURCES += ../GamePlay/gameplay.cpp \
     ../Communication/communication.cpp \
     ../Communication/message.cpp \
     ../Communication/pointmessage.cpp \
+    ../Communication/keypressedmessage.cpp \
+    ../Communication/keyreleasedmessage.cpp \
     ../Communication/translatorfromarray.cpp \
     ../Communication/translatortoarray.cpp
 
@@ -32,6 +34,8 @@ HEADERS += ../GamePlay/gameplay.h \
     ../Communication/communication.h \
     ../Communication/message.h \
     ../Communication/pointmessage.h \
+    ../Communication/keypressedmessage.h \
+    ../Communication/keyreleasedmessage.h \
     ../Communication/translatorfromarray.h \
     ../Communication/translatortoarray.h
 

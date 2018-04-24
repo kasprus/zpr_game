@@ -21,6 +21,7 @@ signals:
     void newPoint(GamePlay::Point);
 public slots:
     void readData();
+    void writeData(QByteArray data);
 
 private:
     void responseForMessage(std::unique_ptr<Communication::Message> msg);

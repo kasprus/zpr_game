@@ -1,5 +1,7 @@
 #include "translatortoarray.h"
 #include "pointmessage.h"
+#include "keypressedmessage.h"
+#include "keyreleasedmessage.h"
 #include "communication.h"
 #include <QIODevice>
 #include <QDataStream>
@@ -25,6 +27,36 @@ void TranslatorToArray::visit(const PointMessage &pointMessage) const{
         out<<p.getX()<<p.getY()<<p.getRadius()<<qint64(p.getTurnNumber())<<qint32(p.getPlayerId());
         usedBytes += PointMessage::messageItemSize;
     }
+    while(usedBytes < Communication::messageSize) {
+        out<<qint8(0);
+        ++usedBytes;
+    }
+}
+
+void TranslatorToArray::visit(const KeyPressedMessage &keyPressedMessage) const {
+    lastMessage = QByteArray();
+    int usedBytes = 0;
+    QDataStream out(&lastMessage, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_0);
+    out.setByteOrder(QDataStream::LittleEndian);
+    out.setFloatingPointPrecision(QDataStream::DoublePrecision);
+    out<<qint32(keyPressedMessage.getHeader())<<qint32(0)<<qint32(keyPressedMessage.getKeyId());
+    usedBytes += Communication::headerSize + 4;
+    while(usedBytes < Communication::messageSize) {
+        out<<qint8(0);
+        ++usedBytes;
+    }
+}
+
+void TranslatorToArray::visit(const KeyReleasedMessage &keyReleasedMessage) const {
+    lastMessage = QByteArray();
+    int usedBytes = 0;
+    QDataStream out(&lastMessage, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_0);
+    out.setByteOrder(QDataStream::LittleEndian);
+    out.setFloatingPointPrecision(QDataStream::DoublePrecision);
+    out<<qint32(keyReleasedMessage.getHeader())<<qint32(0)<<qint32(keyReleasedMessage.getKeyId());
+    usedBytes += Communication::headerSize + 4;
     while(usedBytes < Communication::messageSize) {
         out<<qint8(0);
         ++usedBytes;

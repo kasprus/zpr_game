@@ -10,6 +10,12 @@
     <height>575</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -28,6 +34,18 @@
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="transformationAnchor">
+     <enum>QGraphicsView::NoAnchor</enum>
+    </property>
+    <property name="viewportUpdateMode">
+     <enum>QGraphicsView::SmartViewportUpdate</enum>
     </property>
    </widget>
   </widget>

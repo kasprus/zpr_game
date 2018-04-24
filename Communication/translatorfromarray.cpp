@@ -1,6 +1,8 @@
 #include "translatorfromarray.h"
 #include "message.h"
 #include "pointmessage.h"
+#include "keypressedmessage.h"
+#include "keyreleasedmessage.h"
 #include "communication.h"
 #include "../GamePlay/point.h"
 #include <QDataStream>
@@ -32,6 +34,22 @@ std::unique_ptr<Message> TranslatorFromArray::getMessage(const QByteArray& array
             m->addPoint(GamePlay::Point(x, y, radius, turn, player));
             --size;
         }
+        return std::unique_ptr<Message>(m);
+    }
+    else if(type == Communication::Communication::keyPressedMessageHeader) {
+        KeyPressedMessage *m;
+        qint32 tmp;
+        qint32 key;
+        dataStream>>tmp>>key;
+        m = new KeyPressedMessage(key);
+        return std::unique_ptr<Message>(m);
+    }
+    else if(type == Communication::Communication::keyReleasedMessageHeader) {
+        KeyReleasedMessage *m;
+        qint32 tmp;
+        qint32 key;
+        dataStream>>tmp>>key;
+        m = new KeyReleasedMessage(key);
         return std::unique_ptr<Message>(m);
     }
     return std::unique_ptr<Message>(nullptr);

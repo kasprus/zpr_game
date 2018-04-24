@@ -32,7 +32,7 @@ std::vector<GamePlay::Point> PointMessage::getPoints() const {
     return points;
 }
 
-int PointMessage::getHeader() {
+int PointMessage::getHeader() const{
     return Communication::Communication::pointMessageHeader;
 }
 

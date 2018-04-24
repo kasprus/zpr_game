@@ -19,7 +19,7 @@ public:
     }
     void setRotatingLeft();
     void setRotatingRight();
-    void cancelRoatingLeft();
+    void cancelRotatingLeft();
     void cancelRotatingRight();
     Point getPoint(long turn) const;
 private:

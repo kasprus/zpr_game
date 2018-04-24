@@ -15,13 +15,17 @@ SOURCES += communication.cpp \
     message.cpp \
     translatortoarray.cpp \
     translatorfromarray.cpp \
-    pointmessage.cpp
+    pointmessage.cpp \
+    keypressedmessage.cpp \
+    keyreleasedmessage.cpp
 
 HEADERS += communication.h \
     message.h \
     translatortoarray.h \
     translatorfromarray.h \
-    pointmessage.h
+    pointmessage.h \
+    keypressedmessage.h \
+    keyreleasedmessage.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

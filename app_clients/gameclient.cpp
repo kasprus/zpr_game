@@ -4,6 +4,7 @@
 #include "pointmessage.h"
 #include "translatorfromarray.h"
 #include "translatortoarray.h"
+#include <QDebug>
 
 GameClient::GameClient(QObject *parent) : QObject(parent)
 {
@@ -23,7 +24,7 @@ GameClient::~GameClient() {
 }
 
 void GameClient::readData() {
-    qDebug()<<"new data";
+//    qDebug()<<"new data";
     QByteArray tmp = socket->readAll();
     Communication::TranslatorFromArray translator;
     for(auto byte : tmp) {
@@ -38,10 +39,16 @@ void GameClient::readData() {
 void GameClient::responseForMessage(std::unique_ptr<Communication::Message> msg) {
     if(msg->getHeader() == Communication::Communication::pointMessageHeader) {
         auto points = dynamic_cast<Communication::PointMessage*>(msg.get())->getPoints();
-        qDebug() <<"Number of points: "<<points.size();
+//        qDebug() <<"Number of points: "<<points.size();
         for(auto &p : points) {
-            qDebug() <<"Emining new point";
+//            qDebug() <<"Emining new point";
             emit newPoint(p);
         }
     }
+}
+
+void GameClient::writeData(QByteArray data) {
+    qDebug()<<"sending some data";
+    socket->write(data);
+    socket->flush();
 }

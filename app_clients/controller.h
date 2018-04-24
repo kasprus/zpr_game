@@ -5,6 +5,9 @@
 #include <QGraphicsItem>
 #include <memory>
 #include "point.h"
+#include "message.h"
+#include "keypressedmessage.h"
+#include "keyreleasedmessage.h"
 
 class GameClient;
 
@@ -16,10 +19,12 @@ public:
     void setBoardPixelSize(int size);
 signals:
     void newItem(QGraphicsItem*);
+    void newDataToWrite(QByteArray);
 
-
-private slots:
+public slots:
     void newPoint(GamePlay::Point);
+    void newKeyPressedMessageToSend(Communication::KeyPressedMessage msg);
+    void newKeyReleasedMessageToSend(Communication::KeyReleasedMessage msg);
 
 private:
     qreal boardPixelSize;

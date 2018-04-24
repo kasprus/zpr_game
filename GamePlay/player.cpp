@@ -29,7 +29,7 @@ void Player::setRotatingRight() {
     rotatingRight = true;
 }
 
-void Player::cancelRoatingLeft() {
+void Player::cancelRotatingLeft() {
     rotatingLeft = false;
 }
 

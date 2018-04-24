@@ -9,6 +9,8 @@
 #include <QTimer>
 #include "player.h"
 #include "board.h"
+#include "communication.h"
+#include "message.h"
 
 class GameServer : public QObject
 {
@@ -21,9 +23,12 @@ signals:
 public slots:
     void newConnection();
     void performTurn();
+    void readData();
 
 private:
     void startGame();
+    void dispatchMessage(int playerIndex, std::unique_ptr<Communication::Message>);
+    std::vector<QByteArray> buffers;
     std::unique_ptr<QTcpServer> server;
     std::vector<std::unique_ptr<QTcpSocket>> sockets;
     std::vector<GamePlay::Player>players;
