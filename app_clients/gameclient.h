@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QByteArray>
 #include <memory>
+#include "point.h"
 #include "message.h"
 
 
@@ -17,7 +18,7 @@ public:
     explicit GameClient(QObject *parent = 0);
     virtual ~GameClient();
 signals:
-
+    void newPoint(GamePlay::Point);
 public slots:
     void readData();
 

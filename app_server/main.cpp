@@ -4,7 +4,7 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    GameServer server;
+    GameServer server(1);
     return a.exec();
 }
 

@@ -6,7 +6,7 @@
 
 namespace GamePlay {
 
-Player::Player(const int id, double x = Board::dimensionX / 2, double y = Board::dimensionY / 2, double angle = 0) : id(id), x(x), y(y), angle(angle), rotatingLeft(false), rotatingRight(false)
+Player::Player(int id, double x, double y, double angle) : id(id), x(x), y(y), angle(angle), rotatingLeft(false), rotatingRight(false)
 {
 }
 

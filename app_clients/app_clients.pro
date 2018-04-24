@@ -16,10 +16,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    gameclient.cpp
+    gameclient.cpp \
+    controller.cpp
 
 HEADERS  += mainwindow.h \
-    gameclient.h
+    gameclient.h \
+    controller.h
 
 INCLUDEPATH += ../GamePlay \
     ../Communication

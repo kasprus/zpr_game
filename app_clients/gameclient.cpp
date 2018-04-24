@@ -23,18 +23,25 @@ GameClient::~GameClient() {
 }
 
 void GameClient::readData() {
+    qDebug()<<"new data";
     QByteArray tmp = socket->readAll();
     Communication::TranslatorFromArray translator;
     for(auto byte : tmp) {
         buffer.append(byte);
         if(buffer.size() == Communication::Communication::messageSize) {
             responseForMessage(translator.getMessage(buffer));
+            buffer.clear();
         }
     }
 }
 
 void GameClient::responseForMessage(std::unique_ptr<Communication::Message> msg) {
     if(msg->getHeader() == Communication::Communication::pointMessageHeader) {
-        qDebug()<<"New point!\n";
+        auto points = dynamic_cast<Communication::PointMessage*>(msg.get())->getPoints();
+        qDebug() <<"Number of points: "<<points.size();
+        for(auto &p : points) {
+            qDebug() <<"Emining new point";
+            emit newPoint(p);
+        }
     }
 }

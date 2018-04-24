@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "point.h"
+#include "board.h"
 
 namespace GamePlay {
 
