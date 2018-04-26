@@ -6,13 +6,13 @@
 
 namespace GamePlay {
 
-Player::Player(int id, double x, double y, double angle) : id(id), x(x), y(y), angle(angle), rotatingLeft(false), rotatingRight(false)
+Player::Player(int id, double x, double y, double angle) : id(id), x(x), y(y), angle(angle), rotatingLeft(false), rotatingRight(false), active(true)
 {
 }
 
 void Player::move() {
-    if(rotatingLeft)angle += GamePlay::defaultAngle;
-    if(rotatingRight)angle -= GamePlay::defaultAngle;
+    if(rotatingLeft)angle -= GamePlay::defaultAngle;
+    if(rotatingRight)angle += GamePlay::defaultAngle;
     x += GamePlay::defaultSpeedPerTurn * std::cos(angle);
     y += GamePlay::defaultSpeedPerTurn * std::sin(angle);
 }
@@ -37,6 +37,13 @@ void Player::cancelRotatingRight() {
     rotatingRight = false;
 }
 
+bool Player::isActive() const {
+    return active;
+}
+
+void Player::setInactive() {
+    active = false;
+}
 }
 
 

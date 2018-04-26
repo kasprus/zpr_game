@@ -24,6 +24,7 @@ public:
         return playerId;
     }
     bool checkCollision(const Point &p) const;
+    bool checkEdgeCollision() const;
 private:
     const double x;
     const double y;

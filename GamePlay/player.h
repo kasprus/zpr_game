@@ -22,6 +22,9 @@ public:
     void cancelRotatingLeft();
     void cancelRotatingRight();
     Point getPoint(long turn) const;
+    bool isActive() const;
+    void setInactive();
+    void reset();
 private:
     const int id;
     double x;
@@ -29,6 +32,7 @@ private:
     double angle;
     bool rotatingLeft;
     bool rotatingRight;
+    bool active;
 };
 
 }

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QGraphicsItem>
+#include <QPainter>
 #include <memory>
 #include "point.h"
 #include "message.h"
@@ -18,7 +19,7 @@ public:
     explicit Controller(GameClient& client, QObject *parent = 0);
     void setBoardPixelSize(int size);
 signals:
-    void newItem(QGraphicsItem*);
+    void newCircle(qreal x, qreal y, qreal radius);
     void newDataToWrite(QByteArray);
 
 public slots:
@@ -28,7 +29,6 @@ public slots:
 
 private:
     qreal boardPixelSize;
-
 
 };
 

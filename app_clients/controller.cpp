@@ -21,10 +21,7 @@ void Controller::newPoint(GamePlay::Point p) {
     x = (double)boardPixelSize * p.getX() / GamePlay::Board::dimensionX;
     y = (double)boardPixelSize * p.getY() / GamePlay::Board::dimensionY;
     radius = boardPixelSize * p.getRadius() / GamePlay::Board::dimensionX;
-//    qDebug()<<x<<" "<<y<<" "<<radius;
-    QGraphicsItem *item = new QGraphicsEllipseItem(x, y, radius, radius);
-    item->setFlag(QGraphicsItem::ItemIgnoresTransformations);
-    emit newItem(item);
+    emit newCircle(x, y, 2 * radius);
 }
 
 void Controller::newKeyPressedMessageToSend(Communication::KeyPressedMessage msg) {

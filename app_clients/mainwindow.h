@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QGraphicsItem>
 #include <memory>
+#include <QPen>
 #include "communication.h"
 #include "keypressedmessage.h"
 #include "keyreleasedmessage.h"
@@ -30,10 +31,11 @@ signals:
 
 
 private slots:
-    void newItem(QGraphicsItem* ptr);
+    void newCircle(qreal x, qreal y, qreal radius);
 
 private:
     Ui::MainWindow *ui;
+    QPen pen;
 };
 
 #endif // MAINWINDOW_H

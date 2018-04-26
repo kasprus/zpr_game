@@ -28,6 +28,7 @@ public slots:
 private:
     void startGame();
     void dispatchMessage(int playerIndex, std::unique_ptr<Communication::Message>);
+    void sendToAll(const QByteArray &array) const;
     std::vector<QByteArray> buffers;
     std::unique_ptr<QTcpServer> server;
     std::vector<std::unique_ptr<QTcpSocket>> sockets;

@@ -9,6 +9,7 @@
 #include "translatorfromarray.h"
 #include "keypressedmessage.h"
 #include "keyreleasedmessage.h"
+#include "board.h"
 #include <QObject>
 #include <QTimer>
 #include <QDebug>
@@ -29,7 +30,7 @@ void GameServer::newConnection() {
     ++currentNumberOfPlayers;
     sockets.emplace_back(server->nextPendingConnection());
     buffers.emplace_back();
-    players.emplace_back(currentNumberOfPlayers, GamePlay::Board::dimensionX / (currentNumberOfPlayers + 2), GamePlay::Board::dimensionY / (currentNumberOfPlayers + 2), 0);
+    players.emplace_back(currentNumberOfPlayers, GamePlay::Board::dimensionX / (nPlayers + 2) * currentNumberOfPlayers, GamePlay::Board::dimensionY / (nPlayers + 2) * currentNumberOfPlayers, 0);
     if(nPlayers == currentNumberOfPlayers)startGame();
 //    Communication::PointMessage msg;
 //    Communication::TranslatorToArray translator;
@@ -59,12 +60,17 @@ void GameServer::performTurn() {
     for(int i = 0; i < nPlayers; ++i) {
         Communication::PointMessage msg;
         Communication::TranslatorToArray translator;
-        players[i].move();
-        GamePlay::Point p = players[i].getPoint(turnNumber);
-        msg.addPoint(p);
-        translator.visit(msg);
-        sockets[i]->write(translator.getLastMessage());
-        sockets[i]->flush();
+        if(players[i].isActive()) {
+            players[i].move();
+            GamePlay::Point p = players[i].getPoint(turnNumber);
+            if(board.checkCollision(p)) {
+                players[i].setInactive();
+            }
+            board.registerPoint(p);
+            msg.addPoint(p);
+            translator.visit(msg);
+            sendToAll(translator.getLastMessage());
+        }
     }
     ++turnNumber;
 }
@@ -103,6 +109,13 @@ void GameServer::dispatchMessage(int playerIndex, std::unique_ptr<Communication:
         if(key == Communication::Communication::rightKeyId) {
             players[playerIndex].cancelRotatingRight();
         }
+    }
+}
+
+void GameServer::sendToAll(const QByteArray& array) const {
+    for(auto &socket : sockets) {
+        socket->write(array);
+        socket->flush();
     }
 }
 

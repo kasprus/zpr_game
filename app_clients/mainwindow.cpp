@@ -10,16 +10,19 @@ MainWindow::MainWindow(Controller &controller, QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    controller.setBoardPixelSize(ui->graphicsView->width());
-    connect(&controller, SIGNAL(newItem(QGraphicsItem*)), this, SLOT(newItem(QGraphicsItem*)));
+    pen.setColor(Qt::red);
+    connect(&controller, SIGNAL(newCircle(qreal, qreal, qreal)), this, SLOT(newCircle(qreal, qreal, qreal)));
     connect(this, SIGNAL(newKeyPressedMessage(Communication::KeyPressedMessage)), &controller, SLOT(newKeyPressedMessageToSend(Communication::KeyPressedMessage)));
     connect(this, SIGNAL(newKeyReleasedMessage(Communication::KeyReleasedMessage)), &controller, SLOT(newKeyReleasedMessageToSend(Communication::KeyReleasedMessage)));
     ui->graphicsView->setScene(new QGraphicsScene());
     ui->graphicsView->scene()->setParent(ui->graphicsView);
-    ui->graphicsView->scene()->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
+    ui->graphicsView->scene()->setSceneRect(0, 0, ui->graphicsView->height(), ui->graphicsView->height());
+    ui->graphicsView->setAlignment(Qt::AlignCenter);
+    controller.setBoardPixelSize(ui->graphicsView->scene()->height() - ui->graphicsView->viewport()->height());
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
+    if(event->isAutoRepeat())return;
     qDebug()<<"Some key pressed";
     if(event->key() == Qt::Key_A) {
         qDebug()<<"Left key pressed";
@@ -32,6 +35,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
+    if(event->isAutoRepeat())return;
     qDebug()<<"Some key released";
     if(event->key() == Qt::Key_A) {
         qDebug()<<"Left key released";
@@ -43,8 +47,8 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     }
 }
 
-void MainWindow::newItem(QGraphicsItem *ptr) {
-    ui->graphicsView->scene()->addItem(ptr);
+void MainWindow::newCircle(qreal x, qreal y, qreal radius) {
+    ui->graphicsView->scene()->addEllipse(x, y, radius, radius, pen, QBrush(Qt::red));
 }
 
 MainWindow::~MainWindow()

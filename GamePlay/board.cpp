@@ -1,4 +1,5 @@
 #include "board.h"
+#include "gameplay.h"
 #include <algorithm>
 
 namespace GamePlay {
@@ -13,8 +14,9 @@ void Board::registerPoint(Point p) {
 }
 
 bool Board::checkCollision(const Point& p) const {
-    auto lowIt = pointsSet.lowerBound(p.getX() - p.getRadius());
-    auto highIt = pointsSet.upperBound(p.getX() + p.getRadius());
+    if(p.checkEdgeCollision())return true;
+    auto lowIt = pointsSet.lowerBound(p.getX() - GamePlay::bigRadius);
+    auto highIt = pointsSet.upperBound(p.getX() + GamePlay::bigRadius);
     while(lowIt != highIt) {
         if(p.checkCollision(lowIt.value()))return true;
         ++lowIt;
