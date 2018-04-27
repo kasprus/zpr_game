@@ -7,6 +7,7 @@
 #include "../Communication/communication.h"
 #include "../GamePlay/point.h"
 #include "../Communication/translatorfromarray.h"
+#include "../Communication/keyreleasedmessage.h"
 #include <memory>
 
 class CommunicationTest : public QObject
@@ -23,6 +24,8 @@ private Q_SLOTS:
     void outputPointMessageTest2();
     void keyPressedMessegeSizeTest1();
     void outputKeyPressedMessegeTest1();
+    void keyReleasedMessegeSizeTest1();
+    void outputKeyReleasedMessegeTest1();
 };
 
 CommunicationTest::CommunicationTest()
@@ -102,6 +105,28 @@ void CommunicationTest::outputKeyPressedMessegeTest1() {
     QVERIFY2(!(msg == nullptr), "Wrong outpus message - nullptr");
     QVERIFY2(dynamic_cast<Communication::KeyPressedMessage*>(msg.get())->getHeader() == Communication::Communication::keyPressedMessageHeader, "Wrong header");
     QVERIFY2(dynamic_cast<Communication::KeyPressedMessage*>(msg.get())->getKeyId() == Communication::Communication::leftKeyId, "Wrong key id");
+
+}
+
+void CommunicationTest::keyReleasedMessegeSizeTest1() {
+    Communication::KeyReleasedMessage m(Communication::Communication::leftKeyId);
+    Communication::TranslatorToArray tt;
+    Communication::TranslatorFromArray tf;
+    m.accept(tt);
+    QVERIFY2(m.getHeader() == Communication::Communication::keyReleasedMessageHeader, "Wrong header");
+    QVERIFY2(m.getKeyId() == Communication::Communication::leftKeyId, "Wrong key id");
+    QVERIFY2(tt.getLastMessage().length() == Communication::Communication::messageSize, "Wrong message size");
+}
+
+void CommunicationTest::outputKeyReleasedMessegeTest1() {
+    Communication::KeyReleasedMessage m(Communication::Communication::leftKeyId);
+    Communication::TranslatorToArray tt;
+    Communication::TranslatorFromArray tf;
+    m.accept(tt);
+    auto msg = std::move(tf.getMessage(tt.getLastMessage()));
+    QVERIFY2(!(msg == nullptr), "Wrong outpus message - nullptr");
+    QVERIFY2(dynamic_cast<Communication::KeyReleasedMessage*>(msg.get())->getHeader() == Communication::Communication::keyReleasedMessageHeader, "Wrong header");
+    QVERIFY2(dynamic_cast<Communication::KeyReleasedMessage*>(msg.get())->getKeyId() == Communication::Communication::leftKeyId, "Wrong key id");
 
 }
 

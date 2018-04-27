@@ -8,6 +8,7 @@
 #include "communication.h"
 #include "keypressedmessage.h"
 #include "keyreleasedmessage.h"
+#include "addressdialog.h"
 
 namespace Ui {
 class MainWindow;

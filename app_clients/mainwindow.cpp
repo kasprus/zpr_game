@@ -16,9 +16,9 @@ MainWindow::MainWindow(Controller &controller, QWidget *parent) :
     connect(this, SIGNAL(newKeyReleasedMessage(Communication::KeyReleasedMessage)), &controller, SLOT(newKeyReleasedMessageToSend(Communication::KeyReleasedMessage)));
     ui->graphicsView->setScene(new QGraphicsScene());
     ui->graphicsView->scene()->setParent(ui->graphicsView);
-    ui->graphicsView->scene()->setSceneRect(0, 0, ui->graphicsView->height(), ui->graphicsView->height());
-    ui->graphicsView->setAlignment(Qt::AlignCenter);
-    controller.setBoardPixelSize(ui->graphicsView->scene()->height() - ui->graphicsView->viewport()->height());
+    ui->graphicsView->scene()->setSceneRect(0, 0, ui->graphicsView->height() - ui->graphicsView->viewport()->height() * 0.35, ui->graphicsView->height() - ui->graphicsView->viewport()->height() * 0.35);
+    ui->graphicsView->setAlignment(Qt::AlignLeft);
+    controller.setBoardPixelSize(ui->graphicsView->scene()->height());
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {

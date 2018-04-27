@@ -6,6 +6,7 @@
 #include <QTcpSocket>
 #include <QDebug>
 #include <QByteArray>
+#include <QString>
 #include <memory>
 #include "point.h"
 #include "message.h"
@@ -22,7 +23,7 @@ signals:
 public slots:
     void readData();
     void writeData(QByteArray data);
-
+    void establishConnection(QString ip);
 private:
     void responseForMessage(std::unique_ptr<Communication::Message> msg);
     std::unique_ptr<QTcpSocket> socket;

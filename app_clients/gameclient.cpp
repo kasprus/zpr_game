@@ -5,17 +5,10 @@
 #include "translatorfromarray.h"
 #include "translatortoarray.h"
 #include <QDebug>
+#include <QString>
 
 GameClient::GameClient(QObject *parent) : QObject(parent)
 {
-    socket = std::unique_ptr<QTcpSocket>(new QTcpSocket(this));
-    connect(socket.get(), SIGNAL(readyRead()), this, SLOT(readData()));
-    socket->connectToHost("127.0.0.1", 4321);
-    if(socket->waitForConnected()) {
-        qDebug() <<"Connection started";
-    } else {
-        qDebug() <<"Connection failed";
-    }
 }
 
 GameClient::~GameClient() {
@@ -23,8 +16,20 @@ GameClient::~GameClient() {
         socket->close();
 }
 
+void GameClient::establishConnection(QString ip) {
+    socket = std::unique_ptr<QTcpSocket>(new QTcpSocket(this));
+    connect(socket.get(), SIGNAL(readyRead()), this, SLOT(readData()));
+    socket->connectToHost(ip, 80);
+    if(socket->waitForConnected()) {
+        qDebug() <<"Connection started";
+    } else {
+        qDebug() <<"Connection failed";
+    }
+}
+
 void GameClient::readData() {
 //    qDebug()<<"new data";
+    if(!socket)return;
     QByteArray tmp = socket->readAll();
     Communication::TranslatorFromArray translator;
     for(auto byte : tmp) {
@@ -48,6 +53,7 @@ void GameClient::responseForMessage(std::unique_ptr<Communication::Message> msg)
 }
 
 void GameClient::writeData(QByteArray data) {
+    if(!socket)return;
     qDebug()<<"sending some data";
     socket->write(data);
     socket->flush();

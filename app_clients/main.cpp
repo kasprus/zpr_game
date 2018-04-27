@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
     Controller controller(clinet);
     MainWindow w(controller);
     w.show();
+    controller.showIpDialog();
 
     return a.exec();
 }

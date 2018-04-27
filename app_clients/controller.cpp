@@ -10,6 +10,8 @@ Controller::Controller(GameClient &client, QObject *parent) : QObject(parent), b
 {
     connect(&client, SIGNAL(newPoint(GamePlay::Point)), this, SLOT(newPoint(GamePlay::Point)));
     connect(this, SIGNAL(newDataToWrite(QByteArray)), &client, SLOT(writeData(QByteArray)));
+    connect(&ipDialog, SIGNAL(accepted()), this, SLOT(generateAddressIp()));
+    connect(this, SIGNAL(newIpAddress(QString)), &client, SLOT(establishConnection(QString)));
 }
 
 void Controller::setBoardPixelSize(int size) {
@@ -34,4 +36,12 @@ void Controller::newKeyReleasedMessageToSend(Communication::KeyReleasedMessage m
     Communication::TranslatorToArray translator;
     msg.accept(translator);
     emit newDataToWrite(translator.getLastMessage());
+}
+
+void Controller::generateAddressIp() {
+    emit newIpAddress(ipDialog.getIpAddress());
+}
+
+void Controller::showIpDialog() {
+    ipDialog.show();
 }

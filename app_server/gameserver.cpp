@@ -32,17 +32,6 @@ void GameServer::newConnection() {
     buffers.emplace_back();
     players.emplace_back(currentNumberOfPlayers, GamePlay::Board::dimensionX / (nPlayers + 2) * currentNumberOfPlayers, GamePlay::Board::dimensionY / (nPlayers + 2) * currentNumberOfPlayers, 0);
     if(nPlayers == currentNumberOfPlayers)startGame();
-//    Communication::PointMessage msg;
-//    Communication::TranslatorToArray translator;
-//    GamePlay::Point p1(0.8, 0.5, 0.1, 1, 1);
-//    GamePlay::Point p2(0.9, 0.2, 0.1, 1, 1);
-//    msg.addPoint(p1);
-//    msg.addPoint(p2);
-//    translator.visit(msg);
-//    socket->write(translator.getLastMessage());
-//    socket->flush();
-//    socket->waitForBytesWritten(2000);
-//    socket->close();
 }
 
 void GameServer::startGame() {
@@ -51,7 +40,6 @@ void GameServer::startGame() {
         connect(sockets[i].get(), SIGNAL(readyRead()), this, SLOT(readData()));
     }
     connect(&timer, SIGNAL(timeout()), this, SLOT(performTurn()));
-    //
     timer.start(GamePlay::GamePlay::turnInterval);
 }
 

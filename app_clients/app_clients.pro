@@ -17,11 +17,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     gameclient.cpp \
-    controller.cpp
+    controller.cpp \
+    addressdialog.cpp
 
 HEADERS  += mainwindow.h \
     gameclient.h \
-    controller.h
+    controller.h \
+    addressdialog.h
 
 INCLUDEPATH += ../GamePlay \
     ../Communication
@@ -29,4 +31,5 @@ INCLUDEPATH += ../GamePlay \
 LIBS += -L../Communication -lCommunication \
     -L../GamePlay -lGamePlay
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    addressdialog.ui
