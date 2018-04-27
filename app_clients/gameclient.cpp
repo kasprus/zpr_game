@@ -19,7 +19,7 @@ GameClient::~GameClient() {
 void GameClient::establishConnection(QString ip) {
     socket = std::unique_ptr<QTcpSocket>(new QTcpSocket(this));
     connect(socket.get(), SIGNAL(readyRead()), this, SLOT(readData()));
-    socket->connectToHost(ip, 80);
+    socket->connectToHost(ip, 4321);
     if(socket->waitForConnected()) {
         qDebug() <<"Connection started";
     } else {
