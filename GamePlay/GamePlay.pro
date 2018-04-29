@@ -10,6 +10,7 @@ TARGET = GamePlay
 TEMPLATE = lib
 CONFIG += staticlib \
     c++11
+CONFIG += create_prl
 
 SOURCES += gameplay.cpp \
     board.cpp \

@@ -1,7 +1,7 @@
 #include <QString>
 #include <QtTest>
-#include "../GamePlay/point.h"
-#include "../GamePlay/board.h"
+#include "point.h"
+#include "board.h"
 
 class GamePlayTest : public QObject
 {

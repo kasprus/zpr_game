@@ -2,7 +2,7 @@
 #define POINTMESSAGE_H
 
 #include <vector>
-#include "../GamePlay/point.h"
+#include "point.h"
 #include "message.h"
 
 namespace Communication {

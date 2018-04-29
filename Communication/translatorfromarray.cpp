@@ -4,7 +4,6 @@
 #include "keypressedmessage.h"
 #include "keyreleasedmessage.h"
 #include "communication.h"
-#include "../GamePlay/point.h"
 #include <QDataStream>
 
 namespace Communication {

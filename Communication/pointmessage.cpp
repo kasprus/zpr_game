@@ -2,7 +2,7 @@
 #include "pointmessage.h"
 #include "translatortoarray.h"
 #include "communication.h"
-#include "../GamePlay/point.h"
+#include "point.h"
 
 namespace Communication {
 

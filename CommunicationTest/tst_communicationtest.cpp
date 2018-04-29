@@ -1,13 +1,13 @@
 #include <QString>
 #include <QtTest>
-#include "../Communication/message.h"
-#include "../Communication/pointmessage.h"
-#include "../Communication/keypressedmessage.h"
-#include "../Communication/translatortoarray.h"
-#include "../Communication/communication.h"
-#include "../GamePlay/point.h"
-#include "../Communication/translatorfromarray.h"
-#include "../Communication/keyreleasedmessage.h"
+#include "message.h"
+#include "pointmessage.h"
+#include "keypressedmessage.h"
+#include "translatortoarray.h"
+#include "communication.h"
+#include "point.h"
+#include "translatorfromarray.h"
+#include "keyreleasedmessage.h"
 #include <memory>
 
 class CommunicationTest : public QObject
