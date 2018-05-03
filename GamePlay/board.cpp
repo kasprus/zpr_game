@@ -11,6 +11,11 @@ Board::Board()
 
 void Board::registerPoint(Point p) {
     pointsSet.insertMulti(p.getX(), p);
+
+}
+
+void Board::eraseBoard() {
+    pointsSet.clear();
 }
 
 bool Board::checkCollision(const Point& p) const {

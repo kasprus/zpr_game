@@ -18,7 +18,10 @@ SOURCES += communication.cpp \
     translatorfromarray.cpp \
     pointmessage.cpp \
     keypressedmessage.cpp \
-    keyreleasedmessage.cpp
+    keyreleasedmessage.cpp \
+    roundendmessage.cpp \
+    gamestartmessage.cpp \
+    gameendmessage.cpp
 
 HEADERS += communication.h \
     message.h \
@@ -26,7 +29,10 @@ HEADERS += communication.h \
     translatorfromarray.h \
     pointmessage.h \
     keypressedmessage.h \
-    keyreleasedmessage.h
+    keyreleasedmessage.h \
+    roundendmessage.h \
+    gamestartmessage.h \
+    gameendmessage.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

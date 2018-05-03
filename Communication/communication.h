@@ -12,6 +12,8 @@ public:
     constexpr const static int pointMessageHeader = 1;
     constexpr const static int keyPressedMessageHeader = 2;
     constexpr const static int keyReleasedMessageHeader = 3;
+    constexpr const static int roundEndMessageHeader = 4;
+    constexpr const static int gameStartMessageHeader = 5;
 
     constexpr const static int leftKeyId = 0;
     constexpr const static int rightKeyId = 1;

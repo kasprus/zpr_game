@@ -13,6 +13,7 @@ public:
     constexpr static const double dimensionY = 1.0;
     Board();
     void registerPoint(Point p);
+    void eraseBoard();
     bool checkCollision(const Point& p) const;
 private:
     QMultiMap<double, Point> pointsSet;

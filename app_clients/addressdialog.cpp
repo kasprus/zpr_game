@@ -9,9 +9,14 @@ AddressDialog::AddressDialog(QWidget *parent) :
 }
 
 QString AddressDialog::getIpAddress() const {
+    //check input
     return ui->lineEdit->text();
 }
 
+qint32 AddressDialog::getPortNumber() const {
+    //check input
+    return ui->lineEdit_2->text().toInt();
+}
 AddressDialog::~AddressDialog()
 {
     delete ui;

@@ -15,6 +15,8 @@ class AddressDialog : public QDialog
 public:
     explicit AddressDialog(QWidget *parent = 0);
     QString getIpAddress() const;
+    qint32 getPortNumber() const;
+
     ~AddressDialog();
 
 private:

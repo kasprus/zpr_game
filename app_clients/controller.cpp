@@ -9,9 +9,11 @@
 Controller::Controller(GameClient &client, QObject *parent) : QObject(parent), boardPixelSize(0)
 {
     connect(&client, SIGNAL(newPoint(GamePlay::Point)), this, SLOT(newPoint(GamePlay::Point)));
+    connect(&client, SIGNAL(endRound(const std::vector<int>&)), this, SLOT(endRound(const std::vector<int>&)));
+    connect(&client, SIGNAL(setWindow(qint32,qint32)), this, SLOT(setWindow(qint32, qint32)));
     connect(this, SIGNAL(newDataToWrite(QByteArray)), &client, SLOT(writeData(QByteArray)));
-    connect(&ipDialog, SIGNAL(accepted()), this, SLOT(generateAddressIp()));
-    connect(this, SIGNAL(newIpAddress(QString)), &client, SLOT(establishConnection(QString)));
+    connect(&ipDialog, SIGNAL(accepted()), this, SLOT(generateConnectionInfo()));
+    connect(this, SIGNAL(newConnectionInfo(QString, qint32)), &client, SLOT(establishConnection(QString, qint32)));
 }
 
 void Controller::setBoardPixelSize(int size) {
@@ -23,7 +25,7 @@ void Controller::newPoint(GamePlay::Point p) {
     x = (double)boardPixelSize * p.getX() / GamePlay::Board::dimensionX;
     y = (double)boardPixelSize * p.getY() / GamePlay::Board::dimensionY;
     radius = boardPixelSize * p.getRadius() / GamePlay::Board::dimensionX;
-    emit newCircle(x, y, 2 * radius);
+    emit newCircle(x, y, 2 * radius, p.getPlayerId());//COLOR
 }
 
 void Controller::newKeyPressedMessageToSend(Communication::KeyPressedMessage msg) {
@@ -38,10 +40,17 @@ void Controller::newKeyReleasedMessageToSend(Communication::KeyReleasedMessage m
     emit newDataToWrite(translator.getLastMessage());
 }
 
-void Controller::generateAddressIp() {
-    emit newIpAddress(ipDialog.getIpAddress());
+void Controller::generateConnectionInfo() {
+    emit newConnectionInfo(ipDialog.getIpAddress(), ipDialog.getPortNumber());
 }
 
+void Controller::endRound(const std::vector<int>& scr) {
+    emit endRoundAndClear(scr);
+}
+
+void Controller::setWindow(qint32 nPlayers, qint32 maxScore) {
+    emit setWindows(nPlayers, maxScore);
+}
 void Controller::showIpDialog() {
     ipDialog.show();
 }

@@ -6,7 +6,7 @@
 
 namespace GamePlay {
 
-Player::Player(int id, double x, double y, double angle) : id(id), x(x), y(y), angle(angle), rotatingLeft(false), rotatingRight(false), active(true)
+Player::Player(int id, double x, double y, double angle) : id(id), score(0), x(x), y(y), angle(angle), rotatingLeft(false), rotatingRight(false), active(true)
 {
 }
 
@@ -17,10 +17,18 @@ void Player::move() {
     y += GamePlay::defaultSpeedPerTurn * std::sin(angle);
 }
 
+void Player::setCoordinatesAndAngle(double x_, double y_, double angle_) {
+    x = x_;
+    y = y_;
+    angle = angle_;
+}
+
 Point Player::getPoint(long turn) const {
     return Point(x, y, GamePlay::defaultRadius, turn, id);
 }
-
+void Player::addScore(int pts) {
+    score += pts;
+}
 void Player::setRotatingLeft() {
     rotatingLeft = true;
 }
@@ -41,6 +49,9 @@ bool Player::isActive() const {
     return active;
 }
 
+void Player::setActive() {
+    active = true;
+}
 void Player::setInactive() {
     active = false;
 }

@@ -8,6 +8,7 @@
 #include <QByteArray>
 #include <QString>
 #include <memory>
+#include <vector>
 #include "point.h"
 #include "message.h"
 
@@ -20,10 +21,12 @@ public:
     virtual ~GameClient();
 signals:
     void newPoint(GamePlay::Point);
+    void endRound(const std::vector<int>& scores);
+    void setWindow(qint32, qint32);
 public slots:
     void readData();
     void writeData(QByteArray data);
-    void establishConnection(QString ip);
+    void establishConnection(QString ip, qint32 port);
 private:
     void responseForMessage(std::unique_ptr<Communication::Message> msg);
     std::unique_ptr<QTcpSocket> socket;

@@ -2,6 +2,9 @@
 #include "communication.h"
 #include "message.h"
 #include "pointmessage.h"
+#include "gamestartmessage.h"
+#include "gameendmessage.h"
+#include "roundendmessage.h"
 #include "translatorfromarray.h"
 #include "translatortoarray.h"
 #include <QDebug>
@@ -16,10 +19,10 @@ GameClient::~GameClient() {
         socket->close();
 }
 
-void GameClient::establishConnection(QString ip) {
+void GameClient::establishConnection(QString ip, qint32 port) {
     socket = std::unique_ptr<QTcpSocket>(new QTcpSocket(this));
     connect(socket.get(), SIGNAL(readyRead()), this, SLOT(readData()));
-    socket->connectToHost(ip, 4321);
+    socket->connectToHost(ip, port);
     if(socket->waitForConnected()) {
         qDebug() <<"Connection started";
     } else {
@@ -49,6 +52,19 @@ void GameClient::responseForMessage(std::unique_ptr<Communication::Message> msg)
 //            qDebug() <<"Emining new point";
             emit newPoint(p);
         }
+    }
+    else if (msg->getHeader() == Communication::Communication::roundEndMessageHeader) {
+        qDebug() << "Round Ended";
+        std::vector<int> scr = dynamic_cast<Communication::RoundEndMessage*>(msg.get())->getScore();
+        emit endRound(scr);
+    }
+    else if (msg->getHeader() == Communication::Communication::gameStartMessageHeader) {
+        qDebug() << "Game Starts...";
+        auto m = dynamic_cast<Communication::GameStartMessage*>(msg.get());
+        qint32 nPlayers = m->getNumberOfPlayers();
+        qint32 maxScore = m->getMaxScore();
+
+        emit setWindow(nPlayers, maxScore);
     }
 }
 

@@ -11,7 +11,7 @@ Point::Point(double x, double y, double radius, long turnNumber, int playerNumbe
 bool Point::checkCollision(const Point &p) const {
     long turnDifference = p.turnNumber - turnNumber;
     if(turnDifference < 0)turnDifference = -turnDifference;
-    if(p.playerId == playerId && turnDifference < GamePlay::numberOfInactiveCollisionTurns)return false;
+    if(p.playerId == playerId && turnDifference < GamePlay::numberOfInactiveCollisionTurns) return false;
     double a = getX() - p.getX();
     a *= a;
     double b = getY() - p.getY();

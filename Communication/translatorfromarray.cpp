@@ -1,8 +1,10 @@
 #include "translatorfromarray.h"
 #include "message.h"
 #include "pointmessage.h"
+#include "gamestartmessage.h"
 #include "keypressedmessage.h"
 #include "keyreleasedmessage.h"
+#include "roundendmessage.h"
 #include "communication.h"
 #include <QDataStream>
 
@@ -49,6 +51,32 @@ std::unique_ptr<Message> TranslatorFromArray::getMessage(const QByteArray& array
         qint32 key;
         dataStream>>tmp>>key;
         m = new KeyReleasedMessage(key);
+        return std::unique_ptr<Message>(m);
+    }
+    else if (type == Communication::roundEndMessageHeader) {
+        RoundEndMessage *m;
+        qint32 tmp;
+        qint32 nPlayers;
+        qint32 score;
+
+        dataStream >> tmp >> nPlayers;
+        m = new RoundEndMessage(nPlayers);
+        for(int i = 0; i < nPlayers; ++i) {
+            dataStream >> score;
+            m->addScore(i, score);
+        }
+
+        return std::unique_ptr<Message>(m);
+    }
+    else if (type == Communication::gameStartMessageHeader) {
+        GameStartMessage *m;
+        qint32 tmp;
+        qint32 nPlayers;
+        qint32 maxScore;
+
+        dataStream >> tmp >> nPlayers >> maxScore;
+        m = new GameStartMessage(nPlayers, maxScore);
+
         return std::unique_ptr<Message>(m);
     }
     return std::unique_ptr<Message>(nullptr);

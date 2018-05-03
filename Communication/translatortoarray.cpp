@@ -1,7 +1,9 @@
 #include "translatortoarray.h"
+#include "gamestartmessage.h"
 #include "pointmessage.h"
 #include "keypressedmessage.h"
 #include "keyreleasedmessage.h"
+#include "roundendmessage.h"
 #include "communication.h"
 #include <QIODevice>
 #include <QDataStream>
@@ -62,6 +64,46 @@ void TranslatorToArray::visit(const KeyReleasedMessage &keyReleasedMessage) cons
         ++usedBytes;
     }
 }
+
+void TranslatorToArray::visit(const RoundEndMessage &roundEndMessage) const {
+    lastMessage = QByteArray();
+    int usedBytes = 0;
+    QDataStream out(&lastMessage, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_0);
+    out.setByteOrder(QDataStream::LittleEndian);
+    out.setFloatingPointPrecision(QDataStream::DoublePrecision);
+
+    out << qint32(roundEndMessage.getHeader()) << qint32(0);
+    out << qint32(roundEndMessage.getNumberOfPlayers());
+    for(int score : roundEndMessage.getScore()) {
+        out << qint32(score);
+        usedBytes += 4;
+    }
+
+    usedBytes += Communication::headerSize + 4;
+    while(usedBytes < Communication::messageSize) {
+        out << qint8(0);
+        ++usedBytes;
+    }
+}
+
+void TranslatorToArray::visit(const GameStartMessage &gameStartMessage) const {
+    lastMessage = QByteArray();
+    int usedBytes = 0;
+    QDataStream out(&lastMessage, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_0);
+    out.setByteOrder(QDataStream::LittleEndian);
+    out.setFloatingPointPrecision(QDataStream::DoublePrecision);
+
+    out << qint32(gameStartMessage.getHeader()) << qint32(0);
+    out << qint32(gameStartMessage.getNumberOfPlayers()) << qint32(gameStartMessage.getMaxScore());
+    usedBytes += 16;
+    while(usedBytes < Communication::messageSize) {
+        out << qint8(0);
+        ++usedBytes;
+    }
+}
+
 
 QByteArray TranslatorToArray::getLastMessage() const {
     return lastMessage;
