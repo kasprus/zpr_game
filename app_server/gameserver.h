@@ -2,6 +2,7 @@
 #define GAMESERVER_H
 
 #include <QObject>
+#include <QCoreApplication>
 #include <QtNetwork>
 #include <QDebug>
 #include <memory>
@@ -17,8 +18,9 @@ class GameServer : public QObject
 {
     Q_OBJECT
 public:
-    explicit GameServer(int numberOfPlayers, int portNumber, QObject *parent = 0);
+    explicit GameServer(int argc, char *argv[], int numberOfPlayers, int numberOfPoints, int portNumber, QObject *parent = 0);
     virtual ~GameServer();
+    int exec();
 signals:
 
 public slots:
@@ -31,6 +33,9 @@ private:
     void dispatchMessage(int playerIndex, std::unique_ptr<Communication::Message>);
     void sendToAll(const QByteArray &array) const;
     void endRound();
+    void checkEndOfAllGames();
+
+    QCoreApplication app;
     std::vector<QByteArray> buffers;
     std::unique_ptr<QTcpServer> server;
     std::vector<std::unique_ptr<QTcpSocket>> sockets;
@@ -39,6 +44,7 @@ private:
     GamePlay::Board board;
 
     int nPlayers;
+    int nPoints;
     int currentNumberOfPlayers;
     int numberOfActivePlayers;
     long turnNumber;

@@ -11,10 +11,13 @@ CONFIG += link_prl
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    gameserver.cpp
+    gameserver.cpp \
+    parameterselector.cpp
 
 HEADERS += \
-    gameserver.h
+    gameserver.h \
+    parameterexception.h \
+    parameterselector.h
 
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../GamePlay/release/ -lGamePlay

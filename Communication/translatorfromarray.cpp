@@ -6,6 +6,7 @@
 #include "keyreleasedmessage.h"
 #include "roundendmessage.h"
 #include "communication.h"
+#include "point.h"
 #include <QDataStream>
 
 namespace Communication {

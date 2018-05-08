@@ -18,7 +18,7 @@
 #include <QTimer>
 #include <QDebug>
 
-GameServer::GameServer(int numberOfPlayers, int portNumber, QObject *parent) : QObject(parent), nPlayers(numberOfPlayers), currentNumberOfPlayers(0), numberOfActivePlayers(numberOfPlayers), turnNumber(0), maxScore(50), dev(), gen(dev()), dist(0.1, 0.9)
+GameServer::GameServer(int argc, char *argv[], int numberOfPlayers, int numberOfPoints, int portNumber, QObject *parent) : QObject(parent), app(argc, argv), nPlayers(numberOfPlayers), currentNumberOfPlayers(0), numberOfActivePlayers(numberOfPlayers), turnNumber(0), maxScore(numberOfPoints), dev(), gen(dev()), dist(0.1, 0.9)
 {
     server = std::unique_ptr<QTcpServer>(new QTcpServer(this));
     connect(server.get(), SIGNAL(newConnection()), this, SLOT(newConnection()));
@@ -41,7 +41,7 @@ void GameServer::newConnection() {
 
     if(nPlayers == currentNumberOfPlayers) {
 
-        Communication::GameStartMessage msg(nPlayers, 50);
+        Communication::GameStartMessage msg(nPlayers, maxScore);
         Communication::TranslatorToArray translator;
         translator.visit(msg);
         sendToAll(translator.getLastMessage());
@@ -57,6 +57,10 @@ void GameServer::startGame() {
     }
     connect(&timer, SIGNAL(timeout()), this, SLOT(performTurn()));
     timer.start(GamePlay::GamePlay::turnInterval);
+}
+
+int GameServer::exec() {
+    return app.exec();
 }
 
 void GameServer::performTurn() {
@@ -90,9 +94,6 @@ void GameServer::performTurn() {
 void GameServer::endRound() {
     Communication::RoundEndMessage msg(nPlayers);
     Communication::TranslatorToArray translator;
-    //std::random_device dev;
-    //std::default_random_engine gen{};
-   // std::uniform_real_distribution<double> dist(0.1, 0.9);
     for(int i = 0; i < nPlayers; ++i) {
         msg.addScore(i, players[i].getScore());
         players[i].setCoordinatesAndAngle(dist(gen), dist(gen), 3.14*dist(gen));
@@ -102,6 +103,7 @@ void GameServer::endRound() {
 
     board.eraseBoard();
     sendToAll(translator.getLastMessage());
+    checkEndOfAllGames();
     numberOfActivePlayers = nPlayers;
     timer.start(GamePlay::GamePlay::turnInterval);
 }
@@ -146,6 +148,16 @@ void GameServer::sendToAll(const QByteArray& array) const {
     for(auto &socket : sockets) {
         socket->write(array);
         socket->flush();
+    }
+}
+
+void GameServer::checkEndOfAllGames() {
+    qDebug()<<"checking...";
+    for(auto &p : players) {
+        if(p.getScore() >= maxScore) {
+            qDebug()<<"end of all games";
+            app.quit();
+        }
     }
 }
 

@@ -1,17 +1,25 @@
 #include <QCoreApplication>
 #include <gameserver.h>
 #include <stdlib.h>
+#include <iostream>
+#include "parameterselector.h"
+#include "parameterexception.h"
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-    if(argc < 2) {
-        qDebug()<<"Used default number of players: 2";
-        GameServer server(2, 4321);
-        return a.exec();
-    } else {
-        GameServer server(atoi(argv[1]), atoi(argv[2]));
-        return a.exec();
+//    QCoreApplication a(argc, argv);
+    ParameterSelector selector;
+    selector.selectNumberOfPlayer();
+    selector.selectNumberOfPoints();
+    selector.selectPort();
+    std::unique_ptr<GameServer> server;
+    try {
+        server = std::move(selector.createServer(argc, argv));
     }
+    catch(const ParameterException &e) {
+        std::cerr<<"wrong argument values";
+        return 0;
+    }
+    return server->exec();
 }
 
