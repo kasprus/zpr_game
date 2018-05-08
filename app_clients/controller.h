@@ -28,6 +28,7 @@ signals:
     void endRoundAndClear(const std::vector<int>& scr);
     void newDataToWrite(QByteArray);
     void newConnectionInfo(QString ip, qint32 port);
+    void newSceneMessage(QString message);
 
 public slots:
     void setWindow(qint32, qint32);
@@ -36,6 +37,7 @@ public slots:
     void newKeyPressedMessageToSend(Communication::KeyPressedMessage msg);
     void newKeyReleasedMessageToSend(Communication::KeyReleasedMessage msg);
     void generateConnectionInfo();
+    void gameOver();
 
 private:
     qreal boardPixelSize;

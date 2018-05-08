@@ -23,6 +23,7 @@ signals:
     void newPoint(GamePlay::Point);
     void endRound(const std::vector<int>& scores);
     void setWindow(qint32, qint32);
+    void gameOver();
 public slots:
     void readData();
     void writeData(QByteArray data);

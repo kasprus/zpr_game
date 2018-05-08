@@ -6,11 +6,11 @@
 class ParameterSelector
 {
 public:
-    constexpr static int MIN_PLAYERS = 2;
+    constexpr static int MIN_PLAYERS = 1;
     constexpr static int MAX_PLAYERS = 6;
     constexpr static int MIN_PORT = 1024;
     constexpr static int MAX_PORT = 65555;
-    constexpr static int MIN_POINTS = 5;
+    constexpr static int MIN_POINTS = 1;
     constexpr static int MAX_POINTS = 100;
     ParameterSelector();
     void selectPort();

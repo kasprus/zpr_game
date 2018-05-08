@@ -66,6 +66,10 @@ void GameClient::responseForMessage(std::unique_ptr<Communication::Message> msg)
 
         emit setWindow(nPlayers, maxScore);
     }
+    else if (msg->getHeader() == Communication::Communication::gameOverMessageHeader) {
+        qDebug() << "Game over";
+        emit gameOver();
+    }
 }
 
 void GameClient::writeData(QByteArray data) {

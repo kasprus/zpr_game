@@ -7,6 +7,7 @@
 #include "communication.h"
 #include "player.h"
 #include "gamestartmessage.h"
+#include "gameovermessage.h"
 #include "translatorfromarray.h"
 #include "keypressedmessage.h"
 #include "keyreleasedmessage.h"
@@ -155,6 +156,10 @@ void GameServer::checkEndOfAllGames() {
     qDebug()<<"checking...";
     for(auto &p : players) {
         if(p.getScore() >= maxScore) {
+            Communication::TranslatorToArray t;
+            Communication::GameOverMessage m;
+            m.accept(t);
+            sendToAll(t.getLastMessage());
             qDebug()<<"end of all games";
             app.quit();
         }

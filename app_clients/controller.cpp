@@ -14,6 +14,7 @@ Controller::Controller(GameClient &client, QObject *parent) : QObject(parent), b
     connect(this, SIGNAL(newDataToWrite(QByteArray)), &client, SLOT(writeData(QByteArray)));
     connect(&ipDialog, SIGNAL(accepted()), this, SLOT(generateConnectionInfo()));
     connect(this, SIGNAL(newConnectionInfo(QString, qint32)), &client, SLOT(establishConnection(QString, qint32)));
+    connect(&client, SIGNAL(gameOver()), this, SLOT(gameOver()));
 }
 
 void Controller::setBoardPixelSize(int size) {
@@ -53,4 +54,8 @@ void Controller::setWindow(qint32 nPlayers, qint32 maxScore) {
 }
 void Controller::showIpDialog() {
     ipDialog.show();
+}
+
+void Controller::gameOver() {
+    emit newSceneMessage("Game over");
 }

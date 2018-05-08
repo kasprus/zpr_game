@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <QPen>
+#include <QLabel>
 #include "communication.h"
 #include "keypressedmessage.h"
 #include "keyreleasedmessage.h"
@@ -38,7 +39,9 @@ private slots:
     void newCircle(qreal x, qreal y, qreal radius, qint32 pID);
     void endRoundAndClear(const std::vector<int>& scr);
     void setWindows(qint32 nPlayers, qint32 maxScore);
+    void printSceneMessage(QString message);
 private:
+    QLabel sceneMessage;
     Ui::MainWindow *ui;
     QPen pen; // ? no need ?
     void setScores(const std::vector<int>& scr);

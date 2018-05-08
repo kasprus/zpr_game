@@ -5,6 +5,7 @@
 #include "keypressedmessage.h"
 #include "keyreleasedmessage.h"
 #include "roundendmessage.h"
+#include "gameovermessage.h"
 #include "communication.h"
 #include "point.h"
 #include <QDataStream>
@@ -79,6 +80,9 @@ std::unique_ptr<Message> TranslatorFromArray::getMessage(const QByteArray& array
         m = new GameStartMessage(nPlayers, maxScore);
 
         return std::unique_ptr<Message>(m);
+    }
+    else if(type == Communication::gameOverMessageHeader) {
+        return std::unique_ptr<Message>(new GameOverMessage());
     }
     return std::unique_ptr<Message>(nullptr);
 }

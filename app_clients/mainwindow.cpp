@@ -16,6 +16,7 @@ MainWindow::MainWindow(Controller &controller, QWidget *parent) :
     connect(&controller, SIGNAL(setWindows(qint32, qint32)), this, SLOT(setWindows(qint32,qint32)));
     connect(&controller, SIGNAL(newCircle(qreal, qreal, qreal, qint32)), this, SLOT(newCircle(qreal, qreal, qreal, qint32)));
     connect(&controller, SIGNAL(endRoundAndClear(const std::vector<int>&)), this, SLOT(endRoundAndClear(const std::vector<int>&)));
+    connect(&controller, SIGNAL(newSceneMessage(QString)), this, SLOT(printSceneMessage(QString)));
     connect(this, SIGNAL(newKeyPressedMessage(Communication::KeyPressedMessage)), &controller, SLOT(newKeyPressedMessageToSend(Communication::KeyPressedMessage)));
     connect(this, SIGNAL(newKeyReleasedMessage(Communication::KeyReleasedMessage)), &controller, SLOT(newKeyReleasedMessageToSend(Communication::KeyReleasedMessage)));
     ui->graphicsView->setScene(new QGraphicsScene());
@@ -53,6 +54,13 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
 //change color
 void MainWindow::newCircle(qreal x, qreal y, qreal radius, qint32 pID) {
     ui->graphicsView->scene()->addEllipse(x, y, radius, radius, Qt::NoPen, QBrush(colors[pID]));// ?
+}
+
+void MainWindow::printSceneMessage(QString message) {;
+    sceneMessage.setText(message);
+    sceneMessage.setAlignment(Qt::AlignCenter);
+    sceneMessage.setStyleSheet("QLabel {color : blue; font-size : 40px; background-color : black;}");
+    ui->graphicsView->scene()->addWidget(&sceneMessage);
 }
 
 
