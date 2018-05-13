@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QGraphicsItem>
+#include <QGraphicsScene>
+#include <QGraphicsEllipseItem>
 #include <memory>
 #include <string>
 #include <vector>
@@ -36,16 +38,17 @@ signals:
 
 
 private slots:
-    void newCircle(qreal x, qreal y, qreal radius, qint32 pID);
+    void newCircle(qreal x, qreal y, qreal radius, qint32 pID, bool isVisible);
     void endRoundAndClear(const std::vector<int>& scr);
-    void setWindows(qint32 nPlayers, qint32 maxScore);
+    void setWindows(qint32 playersCount, qint32 maxScore);
     void printSceneMessage(QString message);
 private:
     QLabel sceneMessage;
     Ui::MainWindow *ui;
-    QPen pen; // ? no need ?
     void setScores(const std::vector<int>& scr);
-    void clearBoard();
+    void clearBoard(int sz);
+    std::vector<QGraphicsEllipseItem*> invisiblePoints;
+    int nPlayers;
     const int colors[6] = {0xfd0000, 0x00edc5, 0x0eed00, 0xeddb00, 0xed00c5, 0xd8e7e1 };
     const std::string colorsName[6] = {"RED", "BLUE", "GREEN", "YELLOW", "PINK", "WHITE"};
 };

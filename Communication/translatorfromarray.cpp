@@ -33,8 +33,9 @@ std::unique_ptr<Message> TranslatorFromArray::getMessage(const QByteArray& array
             double x, y, radius;
             qint64 turn;
             qint32 player;
-            dataStream>>x>>y>>radius>>turn>>player;
-            m->addPoint(GamePlay::Point(x, y, radius, turn, player));
+            qint8 visible;
+            dataStream>>x>>y>>radius>>turn>>player>>visible;
+            m->addPoint(GamePlay::Point(x, y, radius, turn, player, visible));
             --size;
         }
         return std::unique_ptr<Message>(m);

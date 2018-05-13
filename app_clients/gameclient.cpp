@@ -46,6 +46,7 @@ void GameClient::readData() {
 
 void GameClient::responseForMessage(std::unique_ptr<Communication::Message> msg) {
     if(msg->getHeader() == Communication::Communication::pointMessageHeader) {
+        qDebug() << "Point Message";
         auto points = dynamic_cast<Communication::PointMessage*>(msg.get())->getPoints();
 //        qDebug() <<"Number of points: "<<points.size();
         for(auto &p : points) {

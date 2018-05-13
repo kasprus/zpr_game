@@ -20,6 +20,7 @@ void Board::eraseBoard() {
 
 bool Board::checkCollision(const Point& p) const {
     if(p.checkEdgeCollision())return true;
+    if(!p.isVisible()) return false;
     auto lowIt = pointsSet.lowerBound(p.getX() - GamePlay::bigRadius);
     auto highIt = pointsSet.upperBound(p.getX() + GamePlay::bigRadius);
     while(lowIt != highIt) {
@@ -27,6 +28,18 @@ bool Board::checkCollision(const Point& p) const {
         ++lowIt;
     }
     return false;
+}
+
+bool Board::checkBonus(const Point& p) const {
+    double bonX = gameMode->getX(), bonY = gameMode->getY();
+    double lowX = p.getX() - GamePlay::bigRadius;
+    double highX = p.getX() + GamePlay::bigRadius;
+    double lowY = p.getY() - GamePlay::bigRadius;
+    double highY = p.getY() + GamePlay::bigRadius;
+
+    if(bonX <= highX  && bonX >= lowX && bonY >=lowY && bonY <= highY )
+        return true;
+    return true;
 }
 
 }

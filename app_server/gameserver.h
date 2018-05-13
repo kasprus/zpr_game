@@ -13,6 +13,7 @@
 #include "board.h"
 #include "communication.h"
 #include "message.h"
+#include "gamemode.h"
 
 class GameServer : public QObject
 {
@@ -40,6 +41,7 @@ private:
     std::unique_ptr<QTcpServer> server;
     std::vector<std::unique_ptr<QTcpSocket>> sockets;
     std::vector<GamePlay::Player>players;
+    GamePlay::GameMode gamemode;
     QTimer timer;
     GamePlay::Board board;
 

@@ -23,7 +23,7 @@ public:
     void setBoardPixelSize(int size);
     void showIpDialog();
 signals:
-    void newCircle(qreal x, qreal y, qreal radius, qint32 pId);
+    void newCircle(qreal x, qreal y, qreal radius, qint32 pId, bool isVisible);
     void setWindows(qint32 nPlayers, qint32 maxScore);
     void endRoundAndClear(const std::vector<int>& scr);
     void newDataToWrite(QByteArray);

@@ -4,17 +4,18 @@
 #include <QKeyEvent>
 #include <QDebug>
 #include <cassert>
+#include <QObject>
 
 
 MainWindow::MainWindow(Controller &controller, QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    invisiblePoints(6, nullptr)
 {
     ui->setupUi(this);
-    //auto const labels = {ui->label, ui->label_2, ui->label_3, ui->label_4, ui->label_5, ui->label_6 };
-    pen.setColor(Qt::red); //todo:change color
+
     connect(&controller, SIGNAL(setWindows(qint32, qint32)), this, SLOT(setWindows(qint32,qint32)));
-    connect(&controller, SIGNAL(newCircle(qreal, qreal, qreal, qint32)), this, SLOT(newCircle(qreal, qreal, qreal, qint32)));
+    connect(&controller, SIGNAL(newCircle(qreal, qreal, qreal, qint32, bool)), this, SLOT(newCircle(qreal, qreal, qreal, qint32, bool)));
     connect(&controller, SIGNAL(endRoundAndClear(const std::vector<int>&)), this, SLOT(endRoundAndClear(const std::vector<int>&)));
     connect(&controller, SIGNAL(newSceneMessage(QString)), this, SLOT(printSceneMessage(QString)));
     connect(this, SIGNAL(newKeyPressedMessage(Communication::KeyPressedMessage)), &controller, SLOT(newKeyPressedMessageToSend(Communication::KeyPressedMessage)));
@@ -51,9 +52,23 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
         emit newKeyReleasedMessage(Communication::KeyReleasedMessage(Communication::Communication::rightKeyId));
     }
 }
-//change color
-void MainWindow::newCircle(qreal x, qreal y, qreal radius, qint32 pID) {
-    ui->graphicsView->scene()->addEllipse(x, y, radius, radius, Qt::NoPen, QBrush(colors[pID]));// ?
+
+
+void MainWindow::newCircle(qreal x, qreal y, qreal radius, qint32 pID, bool isVisible) {
+       if(invisiblePoints[pID]) {
+         delete invisiblePoints[pID];
+         invisiblePoints[pID] = nullptr;
+    }
+
+
+    if(isVisible) {
+        ui->graphicsView->scene()->addEllipse(x, y, radius, radius, Qt::NoPen, QBrush(colors[pID]));
+    }
+    else {
+        invisiblePoints[pID] = new QGraphicsEllipseItem(x, y, radius, radius);
+        invisiblePoints[pID]->setBrush(QBrush(colors[pID]));
+        ui->graphicsView->scene()->addItem(invisiblePoints[pID]);
+    }
 }
 
 void MainWindow::printSceneMessage(QString message) {;
@@ -61,28 +76,35 @@ void MainWindow::printSceneMessage(QString message) {;
     sceneMessage.setAlignment(Qt::AlignCenter);
     sceneMessage.setStyleSheet("QLabel {color : blue; font-size : 40px; background-color : black;}");
     ui->graphicsView->scene()->addWidget(&sceneMessage);
+
 }
 
 
 void MainWindow::endRoundAndClear(const std::vector<int>& scr) {
     setScores(scr);
-    clearBoard();
+    clearBoard(scr.size());
 }
 
 void MainWindow::setScores(const std::vector<int>& scr) {
     QLabel* labels[6] = {ui->label_2_1, ui->label_2_2, ui->label_2_3, ui->label_2_4, ui->label_2_5, ui->label_2_6 };
     for(size_t i = 0; i < scr.size(); ++i) {
-
         labels[i]->setText(QString::number(scr[i]));
     }
 }
 
-void MainWindow::clearBoard() {
+void MainWindow::clearBoard(int sz) {
+
+    for(int i = 0; i < sz; ++i) {
+        if(invisiblePoints[i]) {
+            delete invisiblePoints[i];
+            invisiblePoints[i] = nullptr;
+        }
+    }
     ui->graphicsView->scene()->clear();
 }
 
-void MainWindow::setWindows(qint32 nPlayers, qint32 maxScore) {
-    qDebug() << nPlayers << maxScore;
+void MainWindow::setWindows(qint32 playersCount, qint32 maxScore) {
+    nPlayers = playersCount;
     QLabel* labels_n[6] = {ui->label_1_1, ui->label_1_2, ui->label_1_3, ui->label_1_4, ui->label_1_5, ui->label_1_6 };
     QLabel* labels_s[6] = {ui->label_2_1, ui->label_2_2, ui->label_2_3, ui->label_2_4, ui->label_2_5, ui->label_2_6 };
     for(int i = 0; i < nPlayers; ++i) {
@@ -96,5 +118,10 @@ void MainWindow::setWindows(qint32 nPlayers, qint32 maxScore) {
 
 MainWindow::~MainWindow()
 {
+//    for(int i = 0; i < nPlayers; ++i) {
+//        if(invisiblePoints[i]) {
+//            delete invisiblePoints[i];
+//        }
+//    }
     delete ui;
 }

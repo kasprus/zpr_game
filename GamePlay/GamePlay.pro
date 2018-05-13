@@ -15,12 +15,14 @@ CONFIG += create_prl
 SOURCES += gameplay.cpp \
     board.cpp \
     player.cpp \
-    point.cpp
+    point.cpp \
+    gamemode.cpp
 
 HEADERS += gameplay.h \
     board.h \
     player.h \
-    point.h
+    point.h \
+    gamemode.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

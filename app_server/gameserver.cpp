@@ -12,6 +12,7 @@
 #include "keypressedmessage.h"
 #include "keyreleasedmessage.h"
 #include "roundendmessage.h"
+#include "gamemode.h"
 #include "board.h"
 
 
@@ -19,7 +20,8 @@
 #include <QTimer>
 #include <QDebug>
 
-GameServer::GameServer(int argc, char *argv[], int numberOfPlayers, int numberOfPoints, int portNumber, QObject *parent) : QObject(parent), app(argc, argv), nPlayers(numberOfPlayers), currentNumberOfPlayers(0), numberOfActivePlayers(numberOfPlayers), turnNumber(0), maxScore(numberOfPoints), dev(), gen(dev()), dist(0.1, 0.9)
+GameServer::GameServer(int argc, char *argv[], int numberOfPlayers, int numberOfPoints, int portNumber, QObject *parent) : QObject(parent), app(argc, argv), nPlayers(numberOfPlayers), currentNumberOfPlayers(0), numberOfActivePlayers(numberOfPlayers),
+                                                                                                                           turnNumber(0), maxScore(numberOfPoints), dev(), gen(dev()), dist(0.1, 0.9)
 {
     server = std::unique_ptr<QTcpServer>(new QTcpServer(this));
     connect(server.get(), SIGNAL(newConnection()), this, SLOT(newConnection()));
@@ -35,13 +37,16 @@ void GameServer::newConnection() {
 
     sockets.emplace_back(server->nextPendingConnection());
     buffers.emplace_back();
-    players.emplace_back(currentNumberOfPlayers, dist(gen), dist(gen), dist(gen)*3.14);// change to rand
+    players.emplace_back(currentNumberOfPlayers, dist(gen), dist(gen), dist(gen)*3.14);
+
     ++currentNumberOfPlayers;
 
 
 
     if(nPlayers == currentNumberOfPlayers) {
-
+        for(int i = 0; i < nPlayers; ++i) {
+            gamemode.addObserver(&players[i]);
+        }
         Communication::GameStartMessage msg(nPlayers, maxScore);
         Communication::TranslatorToArray translator;
         translator.visit(msg);
@@ -65,20 +70,19 @@ int GameServer::exec() {
 }
 
 void GameServer::performTurn() {
-    qDebug()<<"Next turn";
+    //qDebug()<<"Next turn";
     for(int i = 0; i < nPlayers; ++i) {
         Communication::PointMessage msg;
         Communication::TranslatorToArray translator;
         if(players[i].isActive()) {
-            players[i].move();
-            GamePlay::Point p = players[i].getPoint(turnNumber);
+            GamePlay::Point p = players[i].move(turnNumber);
             if(board.checkCollision(p)) {
                 players[i].addScore(nPlayers - numberOfActivePlayers);
                 --numberOfActivePlayers;
                 players[i].setInactive();
             }
-
-            board.registerPoint(p);
+            if(p.isVisible())
+                board.registerPoint(p);
             msg.addPoint(p);
             translator.visit(msg);
             sendToAll(translator.getLastMessage());
@@ -101,10 +105,11 @@ void GameServer::endRound() {
         players[i].setActive();
     }
     translator.visit(msg);
-
+    //gamemode.setMode(GamePlay::Mode::COLLISIONLESS, 0);
     board.eraseBoard();
     sendToAll(translator.getLastMessage());
     checkEndOfAllGames();
+
     numberOfActivePlayers = nPlayers;
     timer.start(GamePlay::GamePlay::turnInterval);
 }

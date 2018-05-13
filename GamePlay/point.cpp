@@ -4,7 +4,7 @@
 
 namespace GamePlay {
 
-Point::Point(double x, double y, double radius, long turnNumber, int playerNumber) : x(x), y(y), radius(radius), turnNumber(turnNumber), playerId(playerNumber)
+Point::Point(double x, double y, double radius, long turnNumber, int playerNumber, bool visible) : x(x), y(y), radius(radius), turnNumber(turnNumber), playerId(playerNumber), visible(visible)
 {
 }
 

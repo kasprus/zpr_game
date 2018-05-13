@@ -13,7 +13,7 @@ class Message;
 class PointMessage : public Message
 {
 public:
-    static constexpr const int messageItemSize = 36;
+    static constexpr const int messageItemSize = 37;
     PointMessage();
     virtual int getHeader() const;
     virtual void accept(const TranslatorToArray& translator);

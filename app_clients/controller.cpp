@@ -26,7 +26,8 @@ void Controller::newPoint(GamePlay::Point p) {
     x = (double)boardPixelSize * p.getX() / GamePlay::Board::dimensionX;
     y = (double)boardPixelSize * p.getY() / GamePlay::Board::dimensionY;
     radius = boardPixelSize * p.getRadius() / GamePlay::Board::dimensionX;
-    emit newCircle(x, y, 2 * radius, p.getPlayerId());//COLOR
+
+    emit newCircle(x, y, 2 * radius, p.getPlayerId(), p.isVisible());//COLOR
 }
 
 void Controller::newKeyPressedMessageToSend(Communication::KeyPressedMessage msg) {
@@ -46,6 +47,7 @@ void Controller::generateConnectionInfo() {
 }
 
 void Controller::endRound(const std::vector<int>& scr) {
+    qDebug() << "CONTROLLER END ROUND";
     emit endRoundAndClear(scr);
 }
 

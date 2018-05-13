@@ -6,7 +6,7 @@ namespace GamePlay {
 class Point
 {
 public:
-    Point(double x, double y, double radius, long turnNumber, int playerNumber);
+    Point(double x, double y, double radius, long turnNumber, int playerNumber, bool visble = false);
     Point(const Point &p) = default;
     double getX() const {
         return x;
@@ -23,6 +23,9 @@ public:
     int getPlayerId() const {
         return playerId;
     }
+    bool isVisible() const {
+        return visible;
+    }
     bool checkCollision(const Point &p) const;
     bool checkEdgeCollision() const;
 private:
@@ -31,6 +34,7 @@ private:
     const double radius;
     const long turnNumber;
     const int playerId;
+    const int visible;
 };
 
 }

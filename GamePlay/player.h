@@ -1,16 +1,20 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+
 #include "point.h"
 #include "board.h"
+#include "gamemode.h"
 
 namespace GamePlay {
+class GameMode;
+enum class Mode;
 
 class Player
 {
 public:
     Player(int id, double x, double y, double angle);
-    void move();
+    Point move(long turn);
     double getX() const {
         return x;
     }
@@ -19,6 +23,9 @@ public:
     }
     int getScore() const {
         return score;
+    }
+    int getID() const {
+        return id;
     }
     void setCoordinatesAndAngle(double x, double y, double angle);
     void addScore(int pts);
@@ -31,15 +38,22 @@ public:
     void setActive();
     void setInactive();
     void reset();
+    void updateMode(Mode, int pID);
 private:
     const int id;
     int score;
     double x;
     double y;
     double angle;
+    double radius;
+    double speed;
+    bool visible;
+    bool squares;
+    bool collisionless;
     bool rotatingLeft;
     bool rotatingRight;
-    bool active;    
+    bool active;
+
 };
 
 }

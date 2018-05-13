@@ -23,7 +23,7 @@ void TranslatorToArray::visit(const PointMessage &pointMessage) const{
     *out<<qint32(Communication::pointMessageHeader)<<qint32(points.size());
     usedBytes += Communication::headerSize;
     for(auto &p : points) {
-        *out<<p.getX()<<p.getY()<<p.getRadius()<<qint64(p.getTurnNumber())<<qint32(p.getPlayerId());
+        *out<<p.getX()<<p.getY()<<p.getRadius()<<qint64(p.getTurnNumber())<<qint32(p.getPlayerId())<<qint8(p.isVisible());
         usedBytes += PointMessage::messageItemSize;
     }
     while(usedBytes < Communication::messageSize) {
