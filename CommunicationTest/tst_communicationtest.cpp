@@ -137,7 +137,7 @@ void CommunicationTest::gameDelayMessageTest1() {
     Communication::TranslatorToArray tt;
     Communication::TranslatorFromArray tf;
     m.accept(tt);
-    QVERIFY2(tt.getLastMessage().size() != Communication::Communication::messageSize, "Wrong message size");
+    QVERIFY2(tt.getLastMessage().size() == Communication::Communication::messageSize, "Wrong message size");
     auto msg = std::move(tf.getMessage(tt.getLastMessage()));
     QVERIFY2(dynamic_cast<Communication::GameDelayMessage*>(msg.get())->getHeader() == Communication::Communication::gameDelayMessageHeader, "Wrong header");
     QVERIFY2(dynamic_cast<Communication::GameDelayMessage*>(msg.get())->getDelay() == 3, "Wrong delay");
