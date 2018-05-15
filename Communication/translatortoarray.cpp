@@ -6,6 +6,7 @@
 #include "roundendmessage.h"
 #include "communication.h"
 #include "gameovermessage.h"
+#include "gamedelaymessage.h"
 #include <QIODevice>
 #include <QDataStream>
 
@@ -87,6 +88,19 @@ void TranslatorToArray::visit(const GameOverMessage &gameOverMessage) const {
     auto out = prepareLatMessage();
     *out << qint32(gameOverMessage.getHeader()) << qint32(0);
     usedBytes += 8;
+    while(usedBytes < Communication::messageSize) {
+        *out << qint8(0);
+        ++usedBytes;
+    }
+}
+
+void TranslatorToArray::visit(const GameDelayMessage &gameDelayMessage) const {
+    int usedBytes = 0;
+    auto out = prepareLatMessage();
+    *out << qint32(gameDelayMessage.getHeader()) << qint32(0);
+    usedBytes += Communication::headerSize;
+    *out << qint32(gameDelayMessage.getDelay());
+    usedBytes += 4;
     while(usedBytes < Communication::messageSize) {
         *out << qint8(0);
         ++usedBytes;

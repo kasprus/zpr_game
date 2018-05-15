@@ -28,6 +28,7 @@ public slots:
     void newConnection();
     void performTurn();
     void readData();
+    void performDelay();
 
 private:
     void startGame();
@@ -35,6 +36,8 @@ private:
     void sendToAll(const QByteArray &array) const;
     void endRound();
     void checkEndOfAllGames();
+    void resetDelay();
+    void setDelayTimer();
 
     QCoreApplication app;
     std::vector<QByteArray> buffers;
@@ -43,6 +46,7 @@ private:
     std::vector<GamePlay::Player>players;
     GamePlay::GameMode gamemode;
     QTimer timer;
+    QTimer gameDelayTimer;
     GamePlay::Board board;
 
     int nPlayers;
@@ -54,6 +58,7 @@ private:
     std::random_device dev;
     std::default_random_engine gen;
     std::uniform_real_distribution<double> dist;
+    int secondsOfDelayLeft;
 };
 
 #endif // GAMESERVER_H

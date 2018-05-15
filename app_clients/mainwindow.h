@@ -42,6 +42,8 @@ private slots:
     void endRoundAndClear(const std::vector<int>& scr);
     void setWindows(qint32 playersCount, qint32 maxScore);
     void printSceneMessage(QString message);
+    void hideSceneMessage();
+
 private:
     QLabel sceneMessage;
     Ui::MainWindow *ui;

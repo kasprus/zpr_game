@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <cassert>
 #include <QObject>
+#include <QGraphicsProxyWidget>
 
 
 MainWindow::MainWindow(Controller &controller, QWidget *parent) :
@@ -18,12 +19,14 @@ MainWindow::MainWindow(Controller &controller, QWidget *parent) :
     connect(&controller, SIGNAL(newCircle(qreal, qreal, qreal, qint32, bool)), this, SLOT(newCircle(qreal, qreal, qreal, qint32, bool)));
     connect(&controller, SIGNAL(endRoundAndClear(const std::vector<int>&)), this, SLOT(endRoundAndClear(const std::vector<int>&)));
     connect(&controller, SIGNAL(newSceneMessage(QString)), this, SLOT(printSceneMessage(QString)));
+    connect(&controller, SIGNAL(clearMessages()), this, SLOT(hideSceneMessage()));
     connect(this, SIGNAL(newKeyPressedMessage(Communication::KeyPressedMessage)), &controller, SLOT(newKeyPressedMessageToSend(Communication::KeyPressedMessage)));
     connect(this, SIGNAL(newKeyReleasedMessage(Communication::KeyReleasedMessage)), &controller, SLOT(newKeyReleasedMessageToSend(Communication::KeyReleasedMessage)));
     ui->graphicsView->setScene(new QGraphicsScene());
     ui->graphicsView->scene()->setParent(ui->graphicsView);
     ui->graphicsView->scene()->setSceneRect(0, 0, ui->graphicsView->height() - ui->graphicsView->viewport()->height() * 0.35, ui->graphicsView->height() - ui->graphicsView->viewport()->height() * 0.35);
     ui->graphicsView->setAlignment(Qt::AlignLeft);
+    ui->graphicsView->scene()->addWidget(&sceneMessage);
     controller.setBoardPixelSize(ui->graphicsView->scene()->height());
 }
 
@@ -71,11 +74,11 @@ void MainWindow::newCircle(qreal x, qreal y, qreal radius, qint32 pID, bool isVi
     }
 }
 
-void MainWindow::printSceneMessage(QString message) {;
+void MainWindow::printSceneMessage(QString message) {
+    sceneMessage.setVisible(true);
     sceneMessage.setText(message);
     sceneMessage.setAlignment(Qt::AlignCenter);
     sceneMessage.setStyleSheet("QLabel {color : blue; font-size : 40px; background-color : black;}");
-    ui->graphicsView->scene()->addWidget(&sceneMessage);
 
 }
 
@@ -100,7 +103,14 @@ void MainWindow::clearBoard(int sz) {
             invisiblePoints[i] = nullptr;
         }
     }
-    ui->graphicsView->scene()->clear();
+    auto items = ui->graphicsView->scene()->items();
+//Changed way of clearing messages, because we don't want to remove widget
+    for (auto &it : items) {
+        if(it != static_cast<QGraphicsItem*>(sceneMessage.graphicsProxyWidget())) {
+            ui->graphicsView->scene()->removeItem(it);
+            delete it;
+        }
+    }
 }
 
 void MainWindow::setWindows(qint32 playersCount, qint32 maxScore) {
@@ -116,12 +126,16 @@ void MainWindow::setWindows(qint32 playersCount, qint32 maxScore) {
     ui->label_Not->setVisible(true); //labels
 }
 
+void MainWindow::hideSceneMessage() {
+    sceneMessage.setVisible(false);
+}
+
 MainWindow::~MainWindow()
 {
-//    for(int i = 0; i < nPlayers; ++i) {
-//        if(invisiblePoints[i]) {
-//            delete invisiblePoints[i];
-//        }
-//    }
+    for(int i = 0; i < nPlayers; ++i) {
+        if(invisiblePoints[i]) {
+            delete invisiblePoints[i];
+        }
+    }
     delete ui;
 }

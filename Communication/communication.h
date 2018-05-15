@@ -15,6 +15,7 @@ public:
     constexpr const static int roundEndMessageHeader = 4;
     constexpr const static int gameStartMessageHeader = 5;
     constexpr const static int gameOverMessageHeader = 6;
+    constexpr const static int gameDelayMessageHeader = 7;
 
     constexpr const static int leftKeyId = 0;
     constexpr const static int rightKeyId = 1;

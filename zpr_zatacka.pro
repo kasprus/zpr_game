@@ -8,16 +8,19 @@ SUBDIRS += \
     Communication \
     CommunicationTest
 
+app_clients.subdir = app_clients
+app_server.subdir = app_server
+GamePlay.subdir = GamePlay
+GamePlayTest.subdir = GamePlayTest
+Communication.subdir = Communication
+CommuniactionTest.subdir = CommunicationTest
+
 Communication.depends += GamePlay
 
-app_clients.depends += Communication
-app_clients.depends += GamePlay
+app_clients.depends += GamePlay Communication
 
-app_server.depends += Communication
-app_server.depends += GamePlay
-
+app_server.depends += GamePlay Communication
 
 GamePlayTest.depends += GamePlay
 
-CommunicationTest.depends += Communication \
-    GamePlay
+CommunicationTest.depends += GamePlay Communication

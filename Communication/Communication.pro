@@ -10,7 +10,7 @@ TARGET = Communication
 TEMPLATE = lib
 CONFIG += staticlib
 CONFIG += c++11
-CONFIG += create_prl
+CONFIG += create_prl link_prl
 
 SOURCES += communication.cpp \
     message.cpp \
@@ -22,7 +22,8 @@ SOURCES += communication.cpp \
     roundendmessage.cpp \
     gamestartmessage.cpp \
     gameendmessage.cpp \
-    gameovermessage.cpp
+    gameovermessage.cpp \
+    gamedelaymessage.cpp
 
 HEADERS += communication.h \
     message.h \
@@ -34,7 +35,8 @@ HEADERS += communication.h \
     roundendmessage.h \
     gamestartmessage.h \
     gameendmessage.h \
-    gameovermessage.h
+    gameovermessage.h \
+    gamedelaymessage.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

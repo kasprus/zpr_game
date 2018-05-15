@@ -18,6 +18,7 @@ public:
     constexpr static const double bigRadius = 0.016;
     constexpr static const double smallRadius = 0.005;
     constexpr static const int numberOfInactiveCollisionTurns = 10;
+    constexpr static const int secondsOfGameDelay = 3;
 private:
     GamePlay();
 };

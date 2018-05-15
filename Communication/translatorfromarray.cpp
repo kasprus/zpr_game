@@ -6,6 +6,7 @@
 #include "keyreleasedmessage.h"
 #include "roundendmessage.h"
 #include "gameovermessage.h"
+#include "gamedelaymessage.h"
 #include "communication.h"
 #include "point.h"
 #include <QDataStream>
@@ -84,6 +85,16 @@ std::unique_ptr<Message> TranslatorFromArray::getMessage(const QByteArray& array
     }
     else if(type == Communication::gameOverMessageHeader) {
         return std::unique_ptr<Message>(new GameOverMessage());
+    }
+    else if(type == Communication::gameDelayMessageHeader) {
+        GameDelayMessage *m;
+        qint32 tmp;
+        qint32 delay;
+
+        dataStream>>tmp>>delay;
+        m = new GameDelayMessage(delay);
+        return std::unique_ptr<Message>(m);
+
     }
     return std::unique_ptr<Message>(nullptr);
 }

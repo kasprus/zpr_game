@@ -13,6 +13,8 @@ class KeyReleasedMessage;
 class RoundEndMessage;
 class GameStartMessage;
 class GameOverMessage;
+class GameDelayMessage;
+
 class TranslatorToArray
 {
 public:
@@ -23,6 +25,7 @@ public:
     void visit(const RoundEndMessage &roundEndMessage) const;
     void visit(const GameStartMessage& gameStartMessage) const;
     void visit(const GameOverMessage& gameOverMessage) const;
+    void visit(const GameDelayMessage &gameDelayMessage) const;
     QByteArray getLastMessage() const;
 private:
     std::unique_ptr<QDataStream> prepareLatMessage() const;

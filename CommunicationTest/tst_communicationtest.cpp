@@ -8,6 +8,7 @@
 #include "point.h"
 #include "translatorfromarray.h"
 #include "keyreleasedmessage.h"
+#include "gamedelaymessage.h"
 #include <memory>
 
 class CommunicationTest : public QObject
@@ -26,6 +27,7 @@ private Q_SLOTS:
     void outputKeyPressedMessegeTest1();
     void keyReleasedMessegeSizeTest1();
     void outputKeyReleasedMessegeTest1();
+    void gameDelayMessageTest1();
 };
 
 CommunicationTest::CommunicationTest()
@@ -128,6 +130,17 @@ void CommunicationTest::outputKeyReleasedMessegeTest1() {
     QVERIFY2(dynamic_cast<Communication::KeyReleasedMessage*>(msg.get())->getHeader() == Communication::Communication::keyReleasedMessageHeader, "Wrong header");
     QVERIFY2(dynamic_cast<Communication::KeyReleasedMessage*>(msg.get())->getKeyId() == Communication::Communication::leftKeyId, "Wrong key id");
 
+}
+
+void CommunicationTest::gameDelayMessageTest1() {
+    Communication::GameDelayMessage m(3);
+    Communication::TranslatorToArray tt;
+    Communication::TranslatorFromArray tf;
+    m.accept(tt);
+    QVERIFY2(tt.getLastMessage().size() != Communication::Communication::messageSize, "Wrong message size");
+    auto msg = std::move(tf.getMessage(tt.getLastMessage()));
+    QVERIFY2(dynamic_cast<Communication::GameDelayMessage*>(msg.get())->getHeader() == Communication::Communication::gameDelayMessageHeader, "Wrong header");
+    QVERIFY2(dynamic_cast<Communication::GameDelayMessage*>(msg.get())->getDelay() == 3, "Wrong delay");
 }
 
 QTEST_APPLESS_MAIN(CommunicationTest)

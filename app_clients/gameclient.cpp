@@ -5,6 +5,7 @@
 #include "gamestartmessage.h"
 #include "gameendmessage.h"
 #include "roundendmessage.h"
+#include "gamedelaymessage.h"
 #include "translatorfromarray.h"
 #include "translatortoarray.h"
 #include <QDebug>
@@ -70,6 +71,10 @@ void GameClient::responseForMessage(std::unique_ptr<Communication::Message> msg)
     else if (msg->getHeader() == Communication::Communication::gameOverMessageHeader) {
         qDebug() << "Game over";
         emit gameOver();
+    }
+    else if(msg->getHeader() == Communication::Communication::gameDelayMessageHeader) {
+        qDebug() << "Dealy" << dynamic_cast<Communication::GameDelayMessage*>(msg.get())->getDelay();
+        emit gameDelay(dynamic_cast<Communication::GameDelayMessage*>(msg.get())->getDelay());
     }
 }
 

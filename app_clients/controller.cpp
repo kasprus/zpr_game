@@ -15,6 +15,7 @@ Controller::Controller(GameClient &client, QObject *parent) : QObject(parent), b
     connect(&ipDialog, SIGNAL(accepted()), this, SLOT(generateConnectionInfo()));
     connect(this, SIGNAL(newConnectionInfo(QString, qint32)), &client, SLOT(establishConnection(QString, qint32)));
     connect(&client, SIGNAL(gameOver()), this, SLOT(gameOver()));
+    connect(&client, SIGNAL(gameDelay(qint32)), this, SLOT(gameDelay(qint32)));
 }
 
 void Controller::setBoardPixelSize(int size) {
@@ -60,4 +61,12 @@ void Controller::showIpDialog() {
 
 void Controller::gameOver() {
     emit newSceneMessage("Game over");
+}
+
+void Controller::gameDelay(qint32 delay) {
+    qDebug() << "Control delay: "<<QString::number(delay);
+    if(delay > 0)emit newSceneMessage("Game starts in:" + QString::number(delay) + " seconds");
+    else {
+        emit clearMessages();
+    }
 }

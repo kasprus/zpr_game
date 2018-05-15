@@ -12,10 +12,11 @@
 #include "keypressedmessage.h"
 #include "keyreleasedmessage.h"
 #include "roundendmessage.h"
+#include "gamedelaymessage.h"
 #include "gamemode.h"
 #include "board.h"
 
-
+#include <QtMath>
 #include <QObject>
 #include <QTimer>
 #include <QDebug>
@@ -37,7 +38,7 @@ void GameServer::newConnection() {
 
     sockets.emplace_back(server->nextPendingConnection());
     buffers.emplace_back();
-    players.emplace_back(currentNumberOfPlayers, dist(gen), dist(gen), dist(gen)*3.14);
+    players.emplace_back(currentNumberOfPlayers, dist(gen), dist(gen), dist(gen)*M_PI);
 
     ++currentNumberOfPlayers;
 
@@ -62,7 +63,10 @@ void GameServer::startGame() {
         connect(sockets[i].get(), SIGNAL(readyRead()), this, SLOT(readData()));
     }
     connect(&timer, SIGNAL(timeout()), this, SLOT(performTurn()));
-    timer.start(GamePlay::GamePlay::turnInterval);
+//    timer.start(GamePlay::GamePlay::turnInterval);
+    connect(&gameDelayTimer, SIGNAL(timeout()), this, SLOT(performDelay()));
+    resetDelay();
+    setDelayTimer();
 }
 
 int GameServer::exec() {
@@ -70,7 +74,6 @@ int GameServer::exec() {
 }
 
 void GameServer::performTurn() {
-    //qDebug()<<"Next turn";
     for(int i = 0; i < nPlayers; ++i) {
         Communication::PointMessage msg;
         Communication::TranslatorToArray translator;
@@ -97,11 +100,12 @@ void GameServer::performTurn() {
     ++turnNumber;
 }
 void GameServer::endRound() {
+    timer.stop();
     Communication::RoundEndMessage msg(nPlayers);
     Communication::TranslatorToArray translator;
     for(int i = 0; i < nPlayers; ++i) {
         msg.addScore(i, players[i].getScore());
-        players[i].setCoordinatesAndAngle(dist(gen), dist(gen), 3.14*dist(gen));
+        players[i].setCoordinatesAndAngle(dist(gen), dist(gen), M_PI*dist(gen));
         players[i].setActive();
     }
     translator.visit(msg);
@@ -111,7 +115,9 @@ void GameServer::endRound() {
     checkEndOfAllGames();
 
     numberOfActivePlayers = nPlayers;
-    timer.start(GamePlay::GamePlay::turnInterval);
+//    timer.start(GamePlay::GamePlay::turnInterval);
+    resetDelay();
+    setDelayTimer();
 }
 void GameServer::readData() {
     int socketIndex = 0;
@@ -169,6 +175,30 @@ void GameServer::checkEndOfAllGames() {
             app.quit();
         }
     }
+}
+
+void GameServer::resetDelay() {
+    secondsOfDelayLeft = GamePlay::GamePlay::secondsOfGameDelay;
+}
+
+void GameServer::setDelayTimer() {
+    gameDelayTimer.start(1000);
+    Communication::TranslatorToArray t;
+    Communication::GameDelayMessage m(secondsOfDelayLeft);
+    m.accept(t);
+    sendToAll(t.getLastMessage());
+}
+
+void GameServer::performDelay() {
+    if(--secondsOfDelayLeft <= 0) {
+        gameDelayTimer.stop();
+        timer.start(GamePlay::GamePlay::turnInterval);
+    }
+    Communication::TranslatorToArray t;
+    Communication::GameDelayMessage m(secondsOfDelayLeft);
+    m.accept(t);
+    sendToAll(t.getLastMessage());
+
 }
 
 GameServer::~GameServer() {
