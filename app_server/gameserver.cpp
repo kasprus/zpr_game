@@ -112,12 +112,13 @@ void GameServer::endRound() {
     //gamemode.setMode(GamePlay::Mode::COLLISIONLESS, 0);
     board.eraseBoard();
     sendToAll(translator.getLastMessage());
-    checkEndOfAllGames();
 
-    numberOfActivePlayers = nPlayers;
-//    timer.start(GamePlay::GamePlay::turnInterval);
-    resetDelay();
-    setDelayTimer();
+    if(!checkEndOfAllGames()) {
+        numberOfActivePlayers = nPlayers;
+    //    timer.start(GamePlay::GamePlay::turnInterval);
+        resetDelay();
+        setDelayTimer();
+    }
 }
 void GameServer::readData() {
     int socketIndex = 0;
@@ -163,7 +164,7 @@ void GameServer::sendToAll(const QByteArray& array) const {
     }
 }
 
-void GameServer::checkEndOfAllGames() {
+bool GameServer::checkEndOfAllGames() {
     qDebug()<<"checking...";
     for(auto &p : players) {
         if(p.getScore() >= maxScore) {
@@ -173,8 +174,10 @@ void GameServer::checkEndOfAllGames() {
             sendToAll(t.getLastMessage());
             qDebug()<<"end of all games";
             app.quit();
+            return true;
         }
     }
+    return false;
 }
 
 void GameServer::resetDelay() {

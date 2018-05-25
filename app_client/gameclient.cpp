@@ -26,7 +26,9 @@ void GameClient::establishConnection(QString ip, qint32 port) {
     socket->connectToHost(ip, port);
     if(socket->waitForConnected()) {
         qDebug() <<"Connection started";
+        emit newConnectionMessage(true);
     } else {
+        emit newConnectionMessage(false);
         qDebug() <<"Connection failed";
     }
 }

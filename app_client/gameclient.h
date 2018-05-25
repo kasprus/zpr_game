@@ -27,6 +27,11 @@ public:
     virtual ~GameClient();
 signals:
     /**
+     * @brief Called when connection is established or failed.
+     * @param status True if connection is established.
+     */
+    void newConnectionMessage(bool);
+    /**
      * @brief Called when new point should be processed by controller.
      * @param point New point.
      */

@@ -35,7 +35,7 @@ private:
     void dispatchMessage(int playerIndex, std::unique_ptr<Communication::Message>);
     void sendToAll(const QByteArray &array) const;
     void endRound();
-    void checkEndOfAllGames();
+    bool checkEndOfAllGames();
     void resetDelay();
     void setDelayTimer();
 

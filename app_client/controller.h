@@ -128,6 +128,12 @@ public slots:
      */
     void gameDelay(qint32 delay);
 
+    /**
+     * @brief Deals with information about connection.
+     * @param status Status of the connection.
+     */
+    void newConnection(bool status);
+
 private:
     qreal boardPixelSize;
     AddressDialog ipDialog;
