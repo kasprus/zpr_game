@@ -22,26 +22,69 @@ class MainWindow;
 
 class Controller;
 
+/**
+ * @brief The MainWindow class
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
+    /**
+     * @brief Contructs whole game window
+     * @param controller Controller
+     * @param parent Parent - optional
+     */
     explicit MainWindow(Controller &controller, QWidget *parent = 0);
-    virtual void keyPressEvent(QKeyEvent *event);
-    virtual void keyReleaseEvent(QKeyEvent *event);
     ~MainWindow();
 
 signals:
+    /**
+     * @brief Called when user presses keyboard key.
+     * @param msg Message with information about pressed key.
+     */
     void newKeyPressedMessage(Communication::KeyPressedMessage msg);
+
+    /**
+     * @brief Called when user releases keyboard key.
+     * @param msg Message whit information about released key.
+     */
     void newKeyReleasedMessage(Communication::KeyReleasedMessage msg);
 
 
 private slots:
+    /**
+     * @brief Draws new circle on board.
+     * @param x
+     * @param y
+     * @param radius
+     * @param pId Player number
+     * @param isVisible True if point is visible
+     */
     void newCircle(qreal x, qreal y, qreal radius, qint32 pID, bool isVisible);
+
+    /**
+     * @brief Updates meta game information and clears scene.
+     * @param scr Players points
+     */
     void endRoundAndClear(const std::vector<int>& scr);
+
+    /**
+     * @brief Sets meta game information
+     * @param playersCount number of players
+     * @param maxScore maximum number of scores
+     */
     void setWindows(qint32 playersCount, qint32 maxScore);
+
+    /**
+     * @brief Prints message on the scene
+     * @param message Message o print
+     */
     void printSceneMessage(QString message);
+
+    /**
+     * @brief Hides mesage on scene.
+     */
     void hideSceneMessage();
 
 private:
