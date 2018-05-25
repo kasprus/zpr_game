@@ -36,6 +36,8 @@ public:
      * @param parent Parent - optional
      */
     explicit MainWindow(Controller &controller, QWidget *parent = 0);
+    virtual void keyPressEvent(QKeyEvent *event);
+    virtual void keyReleaseEvent(QKeyEvent *event);
     ~MainWindow();
 
 signals:

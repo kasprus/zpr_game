@@ -9,6 +9,7 @@ Point::Point(double x, double y, double radius, long turnNumber, int playerNumbe
 }
 
 bool Point::checkCollision(const Point &p) const {
+    if(!p.isVisible() || !this->isVisible())return false;
     long turnDifference = p.turnNumber - turnNumber;
     if(turnDifference < 0)turnDifference = -turnDifference;
     if(p.playerId == playerId && turnDifference < GamePlay::numberOfInactiveCollisionTurns) return false;
