@@ -9,7 +9,7 @@ QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = app_clients
+TARGET = app_client
 CONFIG += c++11
 CONFIG += link_prl
 TEMPLATE = app
