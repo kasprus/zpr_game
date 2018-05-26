@@ -42,6 +42,7 @@ public:
     QLabel *label_2_2;
     QLabel *label_2_6;
     QLabel *label_Not;
+    QLabel *label_color;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -125,6 +126,10 @@ public:
         label_Not->setVisible(false);
         label_Not->setLayoutDirection(Qt::RightToLeft);
         label_Not->setAlignment(Qt::AlignCenter);
+        label_color = new QLabel(centralWidget);
+        label_color->setObjectName(QStringLiteral("label_color"));
+        label_color->setGeometry(QRect(140, 510, 231, 31));
+        label_color->setLayoutDirection(Qt::LeftToRight);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -158,6 +163,7 @@ public:
         label_2_2->setText(QApplication::translate("MainWindow", "0", 0));
         label_2_6->setText(QApplication::translate("MainWindow", "0", 0));
         label_Not->setText(QString());
+        label_color->setText(QString());
     } // retranslateUi
 
 };

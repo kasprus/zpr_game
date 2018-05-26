@@ -77,9 +77,9 @@ std::unique_ptr<Message> TranslatorFromArray::getMessage(const QByteArray& array
         qint32 tmp;
         qint32 nPlayers;
         qint32 maxScore;
-
-        dataStream >> tmp >> nPlayers >> maxScore;
-        m = new GameStartMessage(nPlayers, maxScore);
+        qint32 playerNumber;
+        dataStream >> tmp >> nPlayers >> maxScore >> playerNumber;
+        m = new GameStartMessage(nPlayers, maxScore, playerNumber);
 
         return std::unique_ptr<Message>(m);
     }

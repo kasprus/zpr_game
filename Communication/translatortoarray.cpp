@@ -75,8 +75,8 @@ void TranslatorToArray::visit(const GameStartMessage &gameStartMessage) const {
     int usedBytes = 0;
     auto out = prepareLatMessage();
     *out << qint32(gameStartMessage.getHeader()) << qint32(0);
-    *out << qint32(gameStartMessage.getNumberOfPlayers()) << qint32(gameStartMessage.getMaxScore());
-    usedBytes += 16;
+    *out << qint32(gameStartMessage.getNumberOfPlayers()) << qint32(gameStartMessage.getMaxScore()) << qint32(gameStartMessage.getPlayerNumber());
+    usedBytes += 20;
     while(usedBytes < Communication::messageSize) {
         *out << qint8(0);
         ++usedBytes;

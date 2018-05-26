@@ -7,6 +7,7 @@
 #include <cassert>
 #include <QObject>
 #include <QGraphicsProxyWidget>
+#include <QPalette>
 
 
 MainWindow::MainWindow(Controller &controller, QWidget *parent) :
@@ -16,7 +17,7 @@ MainWindow::MainWindow(Controller &controller, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(&controller, SIGNAL(setWindows(qint32, qint32)), this, SLOT(setWindows(qint32,qint32)));
+    connect(&controller, SIGNAL(setWindows(qint32, qint32, qint32)), this, SLOT(setWindows(qint32,qint32, qint32)));
     connect(&controller, SIGNAL(newCircle(qreal, qreal, qreal, qint32, bool)), this, SLOT(newCircle(qreal, qreal, qreal, qint32, bool)));
     connect(&controller, SIGNAL(endRoundAndClear(const std::vector<int>&)), this, SLOT(endRoundAndClear(const std::vector<int>&)));
     connect(&controller, SIGNAL(newSceneMessage(QString)), this, SLOT(printSceneMessage(QString)));
@@ -115,7 +116,7 @@ void MainWindow::clearBoard(int sz) {
     }
 }
 
-void MainWindow::setWindows(qint32 playersCount, qint32 maxScore) {
+void MainWindow::setWindows(qint32 playersCount, qint32 maxScore, qint32 playerNumber) {
     nPlayers = playersCount;
     QLabel* labels_n[6] = {ui->label_1_1, ui->label_1_2, ui->label_1_3, ui->label_1_4, ui->label_1_5, ui->label_1_6 };
     QLabel* labels_s[6] = {ui->label_2_1, ui->label_2_2, ui->label_2_3, ui->label_2_4, ui->label_2_5, ui->label_2_6 };
@@ -126,6 +127,11 @@ void MainWindow::setWindows(qint32 playersCount, qint32 maxScore) {
     }
     ui->label_Not->setText(QString("First Player to reach " + QString::number(maxScore) + " points wins!"));
     ui->label_Not->setVisible(true); //labels
+    QPalette palette;
+    palette.setColor(QPalette::WindowText, colors[playerNumber]);
+    palette.setBrush(QPalette::WindowText, QBrush(colors[playerNumber]));
+    ui->label_color->setPalette(palette);
+    ui->label_color->setText(QString::fromStdString(std::string("Your color is " + colorsName[playerNumber])));
 }
 
 void MainWindow::hideSceneMessage() {

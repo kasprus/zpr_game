@@ -61,6 +61,7 @@ private:
     std::uniform_real_distribution<double> dist;
     int secondsOfDelayLeft;
     bool hasBeenReseted;
+    int portNumber;
 };
 
 #endif // GAMESERVER_H

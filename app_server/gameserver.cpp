@@ -22,9 +22,9 @@
 #include <QDebug>
 
 GameServer::GameServer(int argc, char *argv[], int numberOfPlayers, int numberOfPoints, int portNumber, QObject *parent) : QObject(parent), app(argc, argv), nPlayers(numberOfPlayers), currentNumberOfPlayers(0), numberOfActivePlayers(numberOfPlayers),
-                                                                                                                           turnNumber(0), maxScore(numberOfPoints), dev(), gen(dev()), dist(0.1, 0.9), hasBeenReseted(false)
+                                                                                                                           turnNumber(0), maxScore(numberOfPoints), dev(), gen(dev()), dist(0.1, 0.9), hasBeenReseted(false), portNumber(portNumber)
 {
-    server = std::unique_ptr<QTcpServer>(new QTcpServer(this));
+    server = std::unique_ptr<QTcpServer>(new QTcpServer(nullptr));
     connect(server.get(), SIGNAL(newConnection()), this, SLOT(newConnection()));
     if(!server->listen(QHostAddress::AnyIPv4, portNumber)) {
         qDebug() <<"Server could not start";
@@ -34,8 +34,9 @@ GameServer::GameServer(int argc, char *argv[], int numberOfPlayers, int numberOf
 }
 
 void GameServer::newConnection() {
-    if(nPlayers == currentNumberOfPlayers) return;
-
+    if(nPlayers == currentNumberOfPlayers) {
+        return;
+    }
     sockets.emplace_back(server->nextPendingConnection());
     buffers.emplace_back();
     players.emplace_back(currentNumberOfPlayers, dist(gen), dist(gen), dist(gen)*M_PI);
@@ -45,13 +46,15 @@ void GameServer::newConnection() {
 
 
     if(nPlayers == currentNumberOfPlayers) {
+        server->close();
         for(int i = 0; i < nPlayers; ++i) {
             gamemode.addObserver(&players[i]);
+            Communication::GameStartMessage msg(nPlayers, maxScore, i);
+            Communication::TranslatorToArray translator;
+            translator.visit(msg);
+            sockets[i]->write(translator.getLastMessage());
+            sockets[i]->flush();
         }
-        Communication::GameStartMessage msg(nPlayers, maxScore);
-        Communication::TranslatorToArray translator;
-        translator.visit(msg);
-        sendToAll(translator.getLastMessage());
 
         startGame();
     }
@@ -219,6 +222,13 @@ void GameServer::reset() {
         s->close();
     }
     sockets.clear();
+    server = std::unique_ptr<QTcpServer>(new QTcpServer(nullptr));
+    connect(server.get(), SIGNAL(newConnection()), this, SLOT(newConnection()));
+    if(!server->listen(QHostAddress::AnyIPv4, portNumber)) {
+        qDebug() <<"Server could not start";
+    } else {
+        qDebug() <<"Server started";
+    }
     players.clear();
     currentNumberOfPlayers = 0;
     numberOfActivePlayers = nPlayers;

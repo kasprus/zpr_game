@@ -7,7 +7,7 @@ namespace Communication {
 class TranslatorToArray;
 class Message;
 
-GameStartMessage::GameStartMessage(int nPlayers_, int maxScore_) : nPlayers(nPlayers_), maxScore(maxScore_) {
+GameStartMessage::GameStartMessage(int nPlayers_, int maxScore_, int playerNumber_) : nPlayers(nPlayers_), maxScore(maxScore_), playerNumber(playerNumber_) {
 
 }
 
@@ -25,6 +25,10 @@ int GameStartMessage::getMaxScore() const {
 
 int GameStartMessage::getNumberOfPlayers() const {
     return nPlayers;
+}
+
+int GameStartMessage::getPlayerNumber() const {
+    return playerNumber;
 }
 
 GameStartMessage::~GameStartMessage() {

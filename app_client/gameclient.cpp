@@ -68,8 +68,8 @@ void GameClient::responseForMessage(std::unique_ptr<Communication::Message> msg)
         auto m = dynamic_cast<Communication::GameStartMessage*>(msg.get());
         qint32 nPlayers = m->getNumberOfPlayers();
         qint32 maxScore = m->getMaxScore();
-
-        emit setWindow(nPlayers, maxScore);
+        qint32 playerNumber = m->getPlayerNumber();
+        emit setWindow(nPlayers, maxScore, playerNumber);
     }
     else if (msg->getHeader() == Communication::Communication::gameOverMessageHeader) {
         qDebug() << "Game over";

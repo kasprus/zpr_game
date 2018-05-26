@@ -76,7 +76,7 @@ private slots:
      * @param playersCount number of players
      * @param maxScore maximum number of scores
      */
-    void setWindows(qint32 playersCount, qint32 maxScore);
+    void setWindows(qint32 playersCount, qint32 maxScore, qint32 playerNumber);
 
     /**
      * @brief Prints message on the scene

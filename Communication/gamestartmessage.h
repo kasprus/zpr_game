@@ -10,15 +10,17 @@ class Message;
 
 class GameStartMessage : public Message {
 public:
-    GameStartMessage(int nPlayers, int maxScore);
+    GameStartMessage(int nPlayers, int maxScore, int playerNumber);
     virtual int getHeader() const;
     virtual void accept(const TranslatorToArray& translator);
     int getNumberOfPlayers() const;
     int getMaxScore() const;
+    int getPlayerNumber() const;
     virtual ~GameStartMessage();
 private:
     int nPlayers;
     int maxScore;
+    int playerNumber;
 };
 
 }

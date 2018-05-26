@@ -42,7 +42,7 @@ signals:
      */
     void endRound(const std::vector<int>& scores);
 
-    void setWindow(qint32, qint32);
+    void setWindow(qint32, qint32, qint32);
 
     /**
      * @brief Called when delay between rounds should be set.

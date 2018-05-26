@@ -54,7 +54,7 @@ signals:
      * @param nPlayers Number of players of the game.
      * @param maxScore Maximum score of the game.
      */
-    void setWindows(qint32 nPlayers, qint32 maxScore);
+    void setWindows(qint32 nPlayers, qint32 maxScore, qint32 playerNumber);
 
     /**
      * @brief Called when round is finished and board should be cleared.
@@ -87,7 +87,7 @@ signals:
 
 public slots:
     //Trzeba zmienić nazwę, bo jest myląca
-    void setWindow(qint32, qint32);
+    void setWindow(qint32, qint32, qint32);
 
     /**
      * @brief Deals with new point.

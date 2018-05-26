@@ -10,7 +10,7 @@ Controller::Controller(GameClient &client, QObject *parent) : QObject(parent), b
 {
     connect(&client, SIGNAL(newPoint(GamePlay::Point)), this, SLOT(newPoint(GamePlay::Point)));
     connect(&client, SIGNAL(endRound(const std::vector<int>&)), this, SLOT(endRound(const std::vector<int>&)));
-    connect(&client, SIGNAL(setWindow(qint32,qint32)), this, SLOT(setWindow(qint32, qint32)));
+    connect(&client, SIGNAL(setWindow(qint32,qint32, qint32)), this, SLOT(setWindow(qint32, qint32, qint32)));
     connect(this, SIGNAL(newDataToWrite(QByteArray)), &client, SLOT(writeData(QByteArray)));
     connect(&ipDialog, SIGNAL(accepted()), this, SLOT(generateConnectionInfo()));
     connect(this, SIGNAL(newConnectionInfo(QString, qint32)), &client, SLOT(establishConnection(QString, qint32)));
@@ -53,8 +53,8 @@ void Controller::endRound(const std::vector<int>& scr) {
     emit endRoundAndClear(scr);
 }
 
-void Controller::setWindow(qint32 nPlayers, qint32 maxScore) {
-    emit setWindows(nPlayers, maxScore);
+void Controller::setWindow(qint32 nPlayers, qint32 maxScore, qint32 playerNumber) {
+    emit setWindows(nPlayers, maxScore, playerNumber);
 }
 void Controller::showIpDialog() {
     ipDialog.show();
@@ -74,7 +74,7 @@ void Controller::gameDelay(qint32 delay) {
 
 void Controller::newConnection(bool status) {
     if(status) {
-        emit newSceneMessage("Waiting for othe players");
+        emit newSceneMessage("Waiting for other players");
     }
     else {
         emit newSceneMessage("Cannot connect to server");
