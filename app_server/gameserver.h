@@ -38,6 +38,7 @@ private:
     bool checkEndOfAllGames();
     void resetDelay();
     void setDelayTimer();
+    void reset();
 
     QCoreApplication app;
     std::vector<QByteArray> buffers;
@@ -59,6 +60,7 @@ private:
     std::default_random_engine gen;
     std::uniform_real_distribution<double> dist;
     int secondsOfDelayLeft;
+    bool hasBeenReseted;
 };
 
 #endif // GAMESERVER_H

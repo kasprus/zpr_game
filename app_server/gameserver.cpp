@@ -22,7 +22,7 @@
 #include <QDebug>
 
 GameServer::GameServer(int argc, char *argv[], int numberOfPlayers, int numberOfPoints, int portNumber, QObject *parent) : QObject(parent), app(argc, argv), nPlayers(numberOfPlayers), currentNumberOfPlayers(0), numberOfActivePlayers(numberOfPlayers),
-                                                                                                                           turnNumber(0), maxScore(numberOfPoints), dev(), gen(dev()), dist(0.1, 0.9)
+                                                                                                                           turnNumber(0), maxScore(numberOfPoints), dev(), gen(dev()), dist(0.1, 0.9), hasBeenReseted(false)
 {
     server = std::unique_ptr<QTcpServer>(new QTcpServer(this));
     connect(server.get(), SIGNAL(newConnection()), this, SLOT(newConnection()));
@@ -62,9 +62,10 @@ void GameServer::startGame() {
     for(int i = 0; i < nPlayers; ++i) {
         connect(sockets[i].get(), SIGNAL(readyRead()), this, SLOT(readData()));
     }
-    connect(&timer, SIGNAL(timeout()), this, SLOT(performTurn()));
-//    timer.start(GamePlay::GamePlay::turnInterval);
-    connect(&gameDelayTimer, SIGNAL(timeout()), this, SLOT(performDelay()));
+    if(!hasBeenReseted) {
+        connect(&timer, SIGNAL(timeout()), this, SLOT(performTurn()));
+        connect(&gameDelayTimer, SIGNAL(timeout()), this, SLOT(performDelay()));
+    }
     resetDelay();
     setDelayTimer();
 }
@@ -165,15 +166,24 @@ void GameServer::sendToAll(const QByteArray& array) const {
 }
 
 bool GameServer::checkEndOfAllGames() {
+    auto findWinner = [this]() -> int {
+        int w = 0;
+        for(int i = 0; i < nPlayers; ++i) {
+            if(players[i].getScore() > players[w].getScore()) {
+                w = i;
+            }
+        }
+        return w;
+    };
     qDebug()<<"checking...";
     for(auto &p : players) {
         if(p.getScore() >= maxScore) {
             Communication::TranslatorToArray t;
-            Communication::GameOverMessage m;
+            Communication::GameOverMessage m(findWinner());
             m.accept(t);
             sendToAll(t.getLastMessage());
             qDebug()<<"end of all games";
-            app.quit();
+            reset();
             return true;
         }
     }
@@ -204,9 +214,20 @@ void GameServer::performDelay() {
 
 }
 
+void GameServer::reset() {
+    for(auto &s : sockets) {
+        s->close();
+    }
+    sockets.clear();
+    players.clear();
+    currentNumberOfPlayers = 0;
+    numberOfActivePlayers = nPlayers;
+    turnNumber = 0;
+    hasBeenReseted = true;
+}
+
 GameServer::~GameServer() {
     for(auto &socket : sockets)
         socket->close();
 }
-
 

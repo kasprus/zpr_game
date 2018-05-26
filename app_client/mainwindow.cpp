@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "controller.h"
+#include <memory>
 #include <QKeyEvent>
 #include <QDebug>
 #include <cassert>
@@ -28,6 +29,7 @@ MainWindow::MainWindow(Controller &controller, QWidget *parent) :
     ui->graphicsView->setAlignment(Qt::AlignLeft);
     ui->graphicsView->scene()->addWidget(&sceneMessage);
     controller.setBoardPixelSize(ui->graphicsView->scene()->height());
+    controller.setColors(getColorNames());
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
@@ -128,6 +130,10 @@ void MainWindow::setWindows(qint32 playersCount, qint32 maxScore) {
 
 void MainWindow::hideSceneMessage() {
     sceneMessage.setVisible(false);
+}
+
+const std::vector<std::string> MainWindow::getColorNames() const{
+    return colorsName;
 }
 
 MainWindow::~MainWindow()

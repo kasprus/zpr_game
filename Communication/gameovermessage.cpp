@@ -4,7 +4,7 @@
 
 namespace Communication {
 
-GameOverMessage::GameOverMessage()
+GameOverMessage::GameOverMessage(int winner) : winner(winner)
 {
 
 }
@@ -15,6 +15,10 @@ void GameOverMessage::accept(const TranslatorToArray& translator) {
 
 int GameOverMessage::getHeader() const {
     return Communication::gameOverMessageHeader;
+}
+
+int GameOverMessage::getWinner() const {
+    return winner;
 }
 
 GameOverMessage::~GameOverMessage() {

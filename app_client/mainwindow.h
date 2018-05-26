@@ -87,7 +87,14 @@ private slots:
     /**
      * @brief Hides mesage on scene.
      */
+
     void hideSceneMessage();
+
+    /**
+     * @brief Returns player colors used by window
+     * @return vector of strings with color names
+     */
+    const std::vector<std::string> getColorNames() const;
 
 private:
     QLabel sceneMessage;
@@ -97,7 +104,7 @@ private:
     std::vector<QGraphicsEllipseItem*> invisiblePoints;
     int nPlayers;
     const int colors[6] = {0xfd0000, 0x00edc5, 0x0eed00, 0xeddb00, 0xed00c5, 0xd8e7e1 };
-    const std::string colorsName[6] = {"RED", "BLUE", "GREEN", "YELLOW", "PINK", "WHITE"};
+    const std::vector<std::string>colorsName = {"RED", "BLUE", "GREEN", "YELLOW", "PINK", "WHITE"};
 };
 
 #endif // MAINWINDOW_H

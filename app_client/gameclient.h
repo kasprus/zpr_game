@@ -53,7 +53,7 @@ signals:
     /**
      * @brief Called when game should be finished.
      */
-    void gameOver();
+    void gameOver(int winner);
 public slots:
 
     /**

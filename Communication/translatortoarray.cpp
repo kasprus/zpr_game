@@ -86,7 +86,7 @@ void TranslatorToArray::visit(const GameStartMessage &gameStartMessage) const {
 void TranslatorToArray::visit(const GameOverMessage &gameOverMessage) const {
     int usedBytes = 0;
     auto out = prepareLatMessage();
-    *out << qint32(gameOverMessage.getHeader()) << qint32(0);
+    *out << qint32(gameOverMessage.getHeader()) << qint32(gameOverMessage.getWinner());
     usedBytes += 8;
     while(usedBytes < Communication::messageSize) {
         *out << qint8(0);

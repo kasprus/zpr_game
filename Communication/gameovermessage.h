@@ -12,10 +12,13 @@ class TranslatorToArray;
 class GameOverMessage : public Message
 {
 public:
-    GameOverMessage();
+    GameOverMessage(int winner);
     virtual int getHeader() const;
     virtual void accept(const TranslatorToArray &translator);
+    int getWinner() const;
     virtual ~GameOverMessage();
+private:
+    int winner;
 };
 
 }

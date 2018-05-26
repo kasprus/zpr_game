@@ -84,7 +84,9 @@ std::unique_ptr<Message> TranslatorFromArray::getMessage(const QByteArray& array
         return std::unique_ptr<Message>(m);
     }
     else if(type == Communication::gameOverMessageHeader) {
-        return std::unique_ptr<Message>(new GameOverMessage());
+        qint32 winner;
+        dataStream>>winner;
+        return std::unique_ptr<Message>(new GameOverMessage(winner));
     }
     else if(type == Communication::gameDelayMessageHeader) {
         GameDelayMessage *m;

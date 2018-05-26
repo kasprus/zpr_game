@@ -12,6 +12,7 @@
 #include "keyreleasedmessage.h"
 #include "roundendmessage.h"
 #include "addressdialog.h"
+#include "mainwindow.h"
 
 class GameClient;
 
@@ -119,8 +120,9 @@ public slots:
 
     /**
      * @brief It finishes whole game.
+     * @param Number of the winner
      */
-    void gameOver();
+    void gameOver(int winner);
 
     /**
      * @brief It is responsible for providing required delay between rounds.
@@ -134,9 +136,15 @@ public slots:
      */
     void newConnection(bool status);
 
+    /**
+     * @brief Sets colors
+     */
+    void setColors(std::vector<std::string>colors);
+
 private:
     qreal boardPixelSize;
     AddressDialog ipDialog;
+    std::vector<std::string>colorNames;
 };
 
 #endif // CONTROLLER_H

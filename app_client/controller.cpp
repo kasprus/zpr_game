@@ -14,7 +14,7 @@ Controller::Controller(GameClient &client, QObject *parent) : QObject(parent), b
     connect(this, SIGNAL(newDataToWrite(QByteArray)), &client, SLOT(writeData(QByteArray)));
     connect(&ipDialog, SIGNAL(accepted()), this, SLOT(generateConnectionInfo()));
     connect(this, SIGNAL(newConnectionInfo(QString, qint32)), &client, SLOT(establishConnection(QString, qint32)));
-    connect(&client, SIGNAL(gameOver()), this, SLOT(gameOver()));
+    connect(&client, SIGNAL(gameOver(int)), this, SLOT(gameOver(int)));
     connect(&client, SIGNAL(gameDelay(qint32)), this, SLOT(gameDelay(qint32)));
     connect(&client, SIGNAL(newConnectionMessage(bool)), this, SLOT(newConnection(bool)));
 }
@@ -60,8 +60,8 @@ void Controller::showIpDialog() {
     ipDialog.show();
 }
 
-void Controller::gameOver() {
-    emit newSceneMessage("Game over");
+void Controller::gameOver(int winner) {
+    emit newSceneMessage(QString::fromStdString(std::string("Game over\n The winner is " + colorNames[winner])));
 }
 
 void Controller::gameDelay(qint32 delay) {
@@ -74,9 +74,13 @@ void Controller::gameDelay(qint32 delay) {
 
 void Controller::newConnection(bool status) {
     if(status) {
-        emit newSceneMessage("Waiting for ");
+        emit newSceneMessage("Waiting for othe players");
     }
     else {
         emit newSceneMessage("Cannot connect to server");
     }
+}
+
+void Controller::setColors(std::vector<std::string> colors) {
+    colorNames = colors;
 }
