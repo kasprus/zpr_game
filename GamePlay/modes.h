@@ -7,6 +7,7 @@ class Modes {
 
 public:
     constexpr const static int MODESCOUNT = 13;
+
     constexpr const static int LASTGROUPBONUS = 11;
 
     constexpr const static int FAST = 0;

@@ -24,7 +24,6 @@ Bonus GameMode::tryBonus() {
     int num = distBonus(gen);
     if(num < bonusChance) {
         int mode = distMode(gen);
-        qDebug() << " generated number" << mode << checkIfEligible(mode);
 
         if(!checkIfEligible(mode)) return Bonus(-1);
 

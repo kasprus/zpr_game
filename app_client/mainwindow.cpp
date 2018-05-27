@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "controller.h"
 #include "modes.h"
+#include "gameplay.h"
 #include <memory>
 #include <QKeyEvent>
 #include <QDebug>
@@ -16,7 +17,7 @@
 MainWindow::MainWindow(Controller &controller, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    invisiblePoints(6),
+    invisiblePoints(GamePlay::GamePlay::maximumNumberOfPlayers),
     bonusItems(GamePlay::Modes::MODESCOUNT)
 {
     ui->setupUi(this);
@@ -192,25 +193,6 @@ void MainWindow::showBonus(qint32 mode, qreal x, qreal y) {
 void MainWindow::hideBonus(qint32 mode) {
     qDebug() << "HIDE BONUS WINDOW";
     ui->graphicsView->scene()->removeItem(bonusItems[mode].get());
-    /*
-    if(mode == GamePlay::Modes::SQUARE || mode == GamePlay::Modes::SQUARE_O) {
-        ui->graphicsView->scene()->removeItem(bonusItems[0].get());
-    }
-    else if(mode == GamePlay::Modes::FAST || mode == GamePlay::Modes::FAST_O) {
-        ui->graphicsView->scene()->removeItem(bonusItems[1].get());
-    }
-    else if(mode == GamePlay::Modes::SLOW || mode == GamePlay::Modes::SLOW_O) {
-        ui->graphicsView->scene()->removeItem(bonusItems[2].get());
-    }
-    else if(mode == GamePlay::Modes::THICK || mode == GamePlay::Modes::THICK_O) {
-        ui->graphicsView->scene()->removeItem(bonusItems[3].get());
-    }
-    else if(mode == GamePlay::Modes::THIN || mode == GamePlay::Modes::THIN_O) {
-        ui->graphicsView->scene()->removeItem(bonusItems[4].get());
-    }
-    else if(mode == GamePlay::Modes::COLLISIONLESS) {
-        ui->graphicsView->scene()->removeItem(bonusItems[5].get());
-    }*/
     qDebug() << "HIDE BONUS WINDOWS END";
 }
 

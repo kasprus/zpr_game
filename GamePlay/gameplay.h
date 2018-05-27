@@ -21,6 +21,7 @@ public:
     constexpr static const int numberOfInactiveCollisionTurns = 16;
 
     constexpr static const int secondsOfGameDelay = 3;
+    constexpr static const int maximumNumberOfPlayers = 6;
 private:
     GamePlay();
 };

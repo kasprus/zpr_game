@@ -160,6 +160,7 @@ void GameServer::endRound() {
         msg.addScore(i, players[i].getScore());
         players[i].setCoordinatesAndAngle(dist(gen), dist(gen), M_PI*dist(gen));
         players[i].setActive();
+        players[i].reset();
     }
     translator.visit(msg);
 
