@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "controller.h"
+#include "modes.h"
 #include "gameplay.h"
 #include <memory>
 #include <QKeyEvent>
@@ -17,7 +18,7 @@ MainWindow::MainWindow(Controller &controller, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     invisiblePoints(GamePlay::GamePlay::maximumNumberOfPlayers),
-    bonusItems(7) // to wygląda brzydkoS
+    bonusItems(GamePlay::Modes::MODESCOUNT)
 {
     ui->setupUi(this);
 
@@ -122,41 +123,73 @@ void MainWindow::clearBoard() {
 
 void MainWindow::showBonus(qint32 mode, qreal x, qreal y) {
     qDebug() << "WINDOW BONUS";
-    if(mode == GamePlay::Modes::SQUARE || mode == GamePlay::Modes::SQUARE_O) {
-        qDebug() << mode <<"   " << x << " " << y;
-        bonusItems[0] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/angle.png").scaled(20,20));
-        bonusItems[0]->setOffset(x,y);
-        ui->graphicsView->scene()->addItem(bonusItems[0].get());
-    }
-    else if(mode == GamePlay::Modes::FAST || mode == GamePlay::Modes::FAST_O) {
-        bonusItems[1] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/fast.png").scaled(20,20));
-        bonusItems[1]->setOffset(x,y);
-        ui->graphicsView->scene()->addItem(bonusItems[1].get());
-    }
-    else if(mode == GamePlay::Modes::SLOW || mode == GamePlay::Modes::SLOW_O) {
-        bonusItems[2] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/slow.png").scaled(20,20));
-        bonusItems[2]->setOffset(x,y);
-        ui->graphicsView->scene()->addItem(bonusItems[2].get());
-    }
-    else if(mode == GamePlay::Modes::THICK || mode == GamePlay::Modes::THICK_O) {
-        bonusItems[3] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/thick.png").scaled(20,20));
-        bonusItems[3]->setOffset(x,y);
-        ui->graphicsView->scene()->addItem(bonusItems[3].get());
-    }
-    else if(mode == GamePlay::Modes::THIN || mode == GamePlay::Modes::THIN_O) {
-        bonusItems[4] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/thin.png").scaled(20,20));
-        bonusItems[4]->setOffset(x,y);
-        ui->graphicsView->scene()->addItem(bonusItems[4].get());
-    }
-    else if(mode == GamePlay::Modes::COLLISIONLESS) {
-        bonusItems[5] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/collisionless.png").scaled(20,20));
-        bonusItems[5]->setOffset(x,y);
-        ui->graphicsView->scene()->addItem(bonusItems[5].get());
-    }
-    else if(mode == GamePlay::Modes::REVERSE || GamePlay::Modes::REVERSE_O) {
-        bonusItems[6] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/reverse.png").scaled(20,20));
-        bonusItems[6]->setOffset(x,y);
-        ui->graphicsView->scene()->addItem(bonusItems[6].get());
+
+    switch(mode) {
+    case(GamePlay::Modes::COLLISIONLESS):
+        bonusItems[mode] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/collisionless.png").scaled(20,20));
+        bonusItems[mode]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[mode].get());
+        break;
+    case(GamePlay::Modes::FAST):
+        bonusItems[GamePlay::Modes::FAST] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/fast.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::FAST]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::FAST].get());
+        break;
+    case(GamePlay::Modes::FAST_O):
+        bonusItems[GamePlay::Modes::FAST_O] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/fast.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::FAST_O]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::FAST_O].get());
+        break;
+    case(GamePlay::Modes::SLOW):
+        bonusItems[GamePlay::Modes::SLOW] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/slow.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::SLOW]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::SLOW].get());
+        break;
+    case(GamePlay::Modes::SLOW_O):
+        bonusItems[GamePlay::Modes::SLOW_O] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/slow.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::SLOW_O]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::SLOW_O].get());
+        break;
+    case(GamePlay::Modes::THICK):
+        bonusItems[GamePlay::Modes::THICK] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/thick.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::THICK]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::THICK].get());
+        break;
+    case(GamePlay::Modes::THICK_O):
+        bonusItems[GamePlay::Modes::THICK_O] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/thick.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::THICK_O]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::THICK_O].get());
+        break;
+    case(GamePlay::Modes::THIN):
+        bonusItems[GamePlay::Modes::THIN] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/thin.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::THIN]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::THIN].get());
+        break;
+    case(GamePlay::Modes::THIN_O):
+        bonusItems[GamePlay::Modes::THIN_O] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/thin.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::THIN_O]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::THIN_O].get());
+        break;
+    case(GamePlay::Modes::SQUARE):
+        bonusItems[GamePlay::Modes::SQUARE] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/angle.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::SQUARE]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::SQUARE].get());
+        break;
+    case(GamePlay::Modes::SQUARE_O):
+        bonusItems[GamePlay::Modes::SQUARE_O] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/angle.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::SQUARE_O]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::SQUARE_O].get());
+        break;
+    case(GamePlay::Modes::REVERSE):
+        bonusItems[GamePlay::Modes::REVERSE] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/reverse.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::REVERSE]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::REVERSE].get());
+        break;
+    case(GamePlay::Modes::REVERSE_O):
+        bonusItems[GamePlay::Modes::REVERSE_O] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/reverse.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::REVERSE_O]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::REVERSE_O].get());
+        break;
     }
     qDebug() << "END WINDOW BONUS";
 
@@ -164,27 +197,7 @@ void MainWindow::showBonus(qint32 mode, qreal x, qreal y) {
 
 void MainWindow::hideBonus(qint32 mode) {
     qDebug() << "HIDE BONUS WINDOW";
-    if(mode == GamePlay::Modes::SQUARE || mode == GamePlay::Modes::SQUARE_O) {
-        ui->graphicsView->scene()->removeItem(bonusItems[0].get());
-    }
-    else if(mode == GamePlay::Modes::FAST || mode == GamePlay::Modes::FAST_O) {
-        ui->graphicsView->scene()->removeItem(bonusItems[1].get());
-    }
-    else if(mode == GamePlay::Modes::SLOW || mode == GamePlay::Modes::SLOW_O) {
-        ui->graphicsView->scene()->removeItem(bonusItems[2].get());
-    }
-    else if(mode == GamePlay::Modes::THICK || mode == GamePlay::Modes::THICK_O) {
-        ui->graphicsView->scene()->removeItem(bonusItems[3].get());
-    }
-    else if(mode == GamePlay::Modes::THIN || mode == GamePlay::Modes::THIN_O) {
-        ui->graphicsView->scene()->removeItem(bonusItems[4].get());
-    }
-    else if(mode == GamePlay::Modes::COLLISIONLESS) {
-        ui->graphicsView->scene()->removeItem(bonusItems[5].get());
-    }
-    else if(mode == GamePlay::Modes::REVERSE || mode == GamePlay::Modes::REVERSE_O) {
-        ui->graphicsView->scene()->removeItem(bonusItems[6].get());
-    }
+    ui->graphicsView->scene()->removeItem(bonusItems[mode].get());
     qDebug() << "HIDE BONUS WINDOWS END";
 }
 

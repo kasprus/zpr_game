@@ -19,6 +19,10 @@ Point Player::move(long turn) {
     if(!collisionless) {
         visible = turn&0b110000;
     }
+    if(angle) {
+
+
+    }
     if(rotatingLeft)angle -= GamePlay::defaultAngle;
     if(rotatingRight)angle += GamePlay::defaultAngle;
     x += speed * std::cos(angle);
@@ -29,7 +33,7 @@ Point Player::move(long turn) {
 
 void Player::updateMode(const Bonus& bonus) {
     //TODO: add states to bonus, refactor
-    qDebug() << bonus.getMode() << bonus.getPlayerID();
+    //qDebug() << bonus.getMode() << bonus.getPlayerID();
     if(bonus.getMode() == Modes::NORMAL) {
         visible = true;
         collisionless = false;

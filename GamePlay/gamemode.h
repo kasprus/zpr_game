@@ -33,12 +33,13 @@ private:
     std::vector<Player*> observerPlayers;
     std::vector<std::unique_ptr<Bonus> > bonuses;
     void notifyPlayers(const Bonus& bonus);
+    bool checkIfEligible(int mode);
     std::random_device dev;
     std::default_random_engine gen;
     std::uniform_int_distribution<int> distBonus;
     std::uniform_int_distribution<int> distMode;
     std::uniform_real_distribution<double> distPos;
-
+    constexpr const static int bonusChance = 50;
 };
 
 }
