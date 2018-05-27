@@ -17,7 +17,7 @@ MainWindow::MainWindow(Controller &controller, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     invisiblePoints(GamePlay::GamePlay::maximumNumberOfPlayers),
-    bonusItems(7)
+    bonusItems(7) // to wygląda brzydkoS
 {
     ui->setupUi(this);
 
@@ -30,6 +30,7 @@ MainWindow::MainWindow(Controller &controller, QWidget *parent) :
     connect(&controller, SIGNAL(hideBonus(qint32)), this, SLOT(hideBonus(qint32)));
     connect(this, SIGNAL(newKeyPressedMessage(Communication::KeyPressedMessage)), &controller, SLOT(newKeyPressedMessageToSend(Communication::KeyPressedMessage)));
     connect(this, SIGNAL(newKeyReleasedMessage(Communication::KeyReleasedMessage)), &controller, SLOT(newKeyReleasedMessageToSend(Communication::KeyReleasedMessage)));
+    connect(this, SIGNAL(accept()), &controller, SLOT(checkReconnect()));
     ui->graphicsView->setFrameShape(QGraphicsView::NoFrame);
     ui->graphicsView->setScene(new QGraphicsScene());
     ui->graphicsView->scene()->setParent(ui->graphicsView);
@@ -50,6 +51,10 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     else if(event->key() == Qt::Key_D) {
         qDebug()<<"Right key pressed";
         emit newKeyPressedMessage(Communication::KeyPressedMessage(Communication::Communication::rightKeyId));
+    }
+    else if(event->key() == Qt::Key_Space) {
+        qDebug()<<"Space";
+        emit accept();
     }
 }
 

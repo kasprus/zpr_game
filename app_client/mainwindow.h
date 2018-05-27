@@ -54,6 +54,11 @@ signals:
      */
     void newKeyReleasedMessage(Communication::KeyReleasedMessage msg);
 
+    /**
+     * @brief Called on enter key
+     */
+    void accept();
+
 
 private slots:
     /**

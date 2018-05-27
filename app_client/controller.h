@@ -99,6 +99,11 @@ signals:
      */
     void hideBonus(qint32 mode);
 
+    /**
+     * @brief Called when client should reconnect to server
+     */
+    void reconnect();
+
 public slots:
     //Trzeba zmienić nazwę, bo jest myląca
     void setWindow(qint32, qint32, qint32);
@@ -164,10 +169,17 @@ public slots:
      */
     void newBonus(qint32 mode, qreal x, qreal y, qint8 toShow);
 
+    /**
+     * @brief Checks if there is a need to reconnect to server
+     */
+    void checkReconnect();
+
 private:
     qreal boardPixelSize;
     AddressDialog ipDialog;
     std::vector<std::string>colorNames;
+    bool acceptReconnect;
+    bool hardReconnect;
 };
 
 #endif // CONTROLLER_H

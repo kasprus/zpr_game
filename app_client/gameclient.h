@@ -83,10 +83,17 @@ public slots:
      * @param port Port number
      */
     void establishConnection(QString ip, qint32 port);
+
+    /**
+     * @brief Tries to reconnect to server
+     */
+    void reconnect();
 private:
     void responseForMessage(std::unique_ptr<Communication::Message> msg);
     std::unique_ptr<QTcpSocket> socket;
     QByteArray buffer;
+    QString lastIP;
+    qint32 lastPort;
 };
 
 #endif // GAMECLIENT_H

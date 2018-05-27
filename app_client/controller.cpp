@@ -6,7 +6,7 @@
 #include "board.h"
 #include "translatortoarray.h"
 
-Controller::Controller(GameClient &client, QObject *parent) : QObject(parent), boardPixelSize(0)
+Controller::Controller(GameClient &client, QObject *parent) : QObject(parent), boardPixelSize(0), acceptReconnect(false), hardReconnect(false)
 {
     connect(&client, SIGNAL(newPoint(GamePlay::Point)), this, SLOT(newPoint(GamePlay::Point)));
     connect(&client, SIGNAL(newBonus(qint32,qreal,qreal,qint8)), this, SLOT(newBonus(qint32, qreal, qreal, qint8)));
@@ -18,6 +18,7 @@ Controller::Controller(GameClient &client, QObject *parent) : QObject(parent), b
     connect(&client, SIGNAL(gameOver(int)), this, SLOT(gameOver(int)));
     connect(&client, SIGNAL(gameDelay(qint32)), this, SLOT(gameDelay(qint32)));
     connect(&client, SIGNAL(newConnectionMessage(bool)), this, SLOT(newConnection(bool)));
+    connect(this, SIGNAL(reconnect()), &client, SLOT(reconnect()));
 }
 
 void Controller::setBoardPixelSize(int size) {
@@ -62,7 +63,8 @@ void Controller::showIpDialog() {
 }
 
 void Controller::gameOver(int winner) {
-    emit newSceneMessage(QString::fromStdString(std::string("Game over\n The winner is " + colorNames[winner])));
+    acceptReconnect = true;
+    emit newSceneMessage(QString::fromStdString(std::string("Game over\n The winner is " + colorNames[winner] + "\n Press SPACE to play again")));
 }
 
 void Controller::gameDelay(qint32 delay) {
@@ -78,7 +80,9 @@ void Controller::newConnection(bool status) {
         emit newSceneMessage("Waiting for other players");
     }
     else {
-        emit newSceneMessage("Cannot connect to server");
+        hardReconnect = true;
+        acceptReconnect = true;
+        emit newSceneMessage("Cannot connect to server\n Press SPACE to reconnect");
     }
 }
 
@@ -94,4 +98,16 @@ void Controller::newBonus(qint32 mode, qreal x, qreal y, qint8 show) {
         emit showBonus(mode, x, y);
     else
         emit hideBonus(mode);
+}
+
+void Controller::checkReconnect() {
+    if(acceptReconnect) {
+        if(hardReconnect) {
+            showIpDialog();
+        } else {
+            emit reconnect();
+        }
+    }
+    hardReconnect = false;
+    acceptReconnect = false;
 }

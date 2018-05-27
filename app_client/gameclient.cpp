@@ -23,6 +23,8 @@ GameClient::~GameClient() {
 }
 
 void GameClient::establishConnection(QString ip, qint32 port) {
+    lastIP = ip;
+    lastPort = port;
     socket = std::unique_ptr<QTcpSocket>(new QTcpSocket(this));
     connect(socket.get(), SIGNAL(readyRead()), this, SLOT(readData()));
     socket->connectToHost(ip, port);
@@ -33,6 +35,10 @@ void GameClient::establishConnection(QString ip, qint32 port) {
         emit newConnectionMessage(false);
         qDebug() <<"Connection failed";
     }
+}
+
+void GameClient::reconnect() {
+    establishConnection(lastIP, lastPort);
 }
 
 void GameClient::readData() {
