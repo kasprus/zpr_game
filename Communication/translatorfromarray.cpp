@@ -1,5 +1,6 @@
 #include "translatorfromarray.h"
 #include "message.h"
+#include "bonusmessage.h"
 #include "pointmessage.h"
 #include "gamestartmessage.h"
 #include "keypressedmessage.h"
@@ -96,7 +97,16 @@ std::unique_ptr<Message> TranslatorFromArray::getMessage(const QByteArray& array
         dataStream>>tmp>>delay;
         m = new GameDelayMessage(delay);
         return std::unique_ptr<Message>(m);
+    }
+    else if(type == Communication::bonusMessageHeader) {
+        BonusMessage *m;
+        qint32 tmp, mode;
+        double x, y;
+        qint8 showBonus;
+        dataStream >> tmp >> mode >> x >> y >> showBonus;
 
+        m = new BonusMessage(mode, x, y, showBonus);
+        return std::unique_ptr<Message>(m);
     }
     return std::unique_ptr<Message>(nullptr);
 }

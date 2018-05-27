@@ -14,8 +14,17 @@ void Board::registerPoint(Point p) {
 
 }
 
+void Board::registerBonus(Bonus b) {
+    bonusSet.insertMulti(b.getMode(), b);
+}
+
+void Board::removeBonus(int mode) {
+    bonusSet.remove(mode);
+}
+
 void Board::eraseBoard() {
     pointsSet.clear();
+    bonusSet.clear();
 }
 
 bool Board::checkCollision(const Point& p) const {
@@ -30,16 +39,19 @@ bool Board::checkCollision(const Point& p) const {
     return false;
 }
 
-bool Board::checkBonus(const Point& p) const {
-    double bonX = gameMode->getX(), bonY = gameMode->getY();
-    double lowX = p.getX() - GamePlay::bigRadius;
-    double highX = p.getX() + GamePlay::bigRadius;
-    double lowY = p.getY() - GamePlay::bigRadius;
-    double highY = p.getY() + GamePlay::bigRadius;
+Bonus Board::checkBonusCollision(const Point& p) const {
+    for(auto it = bonusSet.begin(); it != bonusSet.end(); ++it) {
+        double top = it.value().getY(), left = it.value().getX();
+        double bottom = top + bonusSize, right = left + bonusSize;
+        double x = p.getX(), y = p.getY();
+        if((x - GamePlay::defaultRadius < right) && (x + GamePlay::defaultRadius > left)  &&
+            (y + GamePlay::defaultRadius > top) && (y + GamePlay::defaultRadius < bottom) )
+            return Bonus(it.value());
+    }
 
-    if(bonX <= highX  && bonX >= lowX && bonY >=lowY && bonY <= highY )
-        return true;
-    return true;
+    return Bonus(-1);
+
 }
+
 
 }

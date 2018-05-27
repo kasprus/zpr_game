@@ -54,6 +54,16 @@ signals:
      * @brief Called when game should be finished.
      */
     void gameOver(int winner);
+
+    /**
+     * @brief Called when new game bonus should be processed by controller.
+     * @param mode Mode of game bonus.
+     * @param x
+     * @param y
+     * @param toShow True to display, false to hide.
+     */
+    void newBonus(qint32 mode, qreal x, qreal y, qint8 toShow);
+
 public slots:
 
     /**

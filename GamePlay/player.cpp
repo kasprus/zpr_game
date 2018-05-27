@@ -4,7 +4,7 @@
 #include "point.h"
 #include <math.h>
 #include "gamemode.h"
-
+#include <QDebug>
 
 namespace GamePlay {
 
@@ -26,38 +26,99 @@ Point Player::move(long turn) {
     return Point(x, y, radius, turn, id, visible);
 }
 
-void Player::updateMode(Mode mode, int pID) {
-    ++pID;
-    speed = GamePlay::defaultSpeedPerTurn;
-    radius = GamePlay::defaultRadius;
-    visible = true;
-
-
-
-
-    switch(mode) {
-    case Mode::COLLISIONLESS:
-        visible = false;
-        collisionless = true;
-        break;
-    case Mode::THICK:
-        radius = GamePlay::bigRadius;
+void Player::updateMode(const Bonus& bonus) {
+    //TODO: add states to bonus, refactor
+    qDebug() << bonus.getMode() << bonus.getPlayerID();
+    if(bonus.getMode() == Modes::NORMAL) {
+        visible = true;
+        collisionless = false;
         speed = GamePlay::defaultSpeedPerTurn;
-        break;
-    case Mode::THIN:
-        radius = GamePlay::smallRadius;
-        speed = GamePlay::defaultSpeedPerTurn;
-        break;
-    case Mode::FAST:
-        speed = GamePlay::fastSpeedPerTurn;
         radius = GamePlay::defaultRadius;
-        break;
-    case Mode::SLOW:
-        speed = GamePlay::slowSpeedPerTurn;
-        radius = GamePlay::defaultRadius;
-        break;
-    default:
-        break;
+        return;
+    }
+    if(bonus.isActive()) {
+        if(bonus.getMode() == Modes::COLLISIONLESS) {
+            visible = false;
+            collisionless = true;
+        }
+
+        if(bonus.getPlayerID() == id) {
+            switch(bonus.getMode()) {
+            case Modes::THICK:
+                radius = GamePlay::bigRadius;
+                break;
+            case Modes::THIN:
+                radius = GamePlay::smallRadius;
+                break;
+            case Modes::FAST:
+                speed = GamePlay::fastSpeedPerTurn;
+                break;
+            case Modes::SLOW:
+                speed = GamePlay::slowSpeedPerTurn;
+                break;
+            default:
+                break;
+            }
+        }
+        else {
+            switch(bonus.getMode()) {
+            case Modes::THICK_O:
+                radius = GamePlay::bigRadius;
+                break;
+            case Modes::THIN_O:
+                radius = GamePlay::smallRadius;
+                break;
+            case Modes::FAST_O:
+                speed = GamePlay::fastSpeedPerTurn;
+                break;
+            case Modes::SLOW_O:
+                speed = GamePlay::slowSpeedPerTurn;
+                break;
+            default:
+                break;
+            }
+        }
+
+
+    }
+    else {
+        if(bonus.getMode() == Modes::COLLISIONLESS) {
+            visible = true;
+            collisionless = false;
+        }
+
+        if(bonus.getPlayerID() == id) {
+            switch(bonus.getMode()) {
+            case Modes::THICK:
+                /* fall through */
+            case Modes::THIN:
+                radius = GamePlay::defaultRadius;
+                break;
+            case Modes::FAST:
+                /* fall through */
+            case Modes::SLOW:
+                speed = GamePlay::defaultSpeedPerTurn;
+                break;
+            default:
+                break;
+            }
+        }
+        else {
+            switch(bonus.getMode()) {
+            case Modes::THICK_O:
+                /* fall through */
+            case Modes::THIN_O:
+                radius = GamePlay::defaultRadius;
+                break;
+            case Modes::FAST_O:
+                /* fall through */
+            case Modes::SLOW_O:
+                speed = GamePlay::defaultSpeedPerTurn;
+                break;
+            default:
+                break;
+            }
+        }
     }
 }
 

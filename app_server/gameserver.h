@@ -38,6 +38,8 @@ private:
     bool checkEndOfAllGames();
     void resetDelay();
     void setDelayTimer();
+    void checkBonusCollision(const GamePlay::Point& p);
+    void manageBonuses();
     void reset();
 
     QCoreApplication app;

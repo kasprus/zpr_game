@@ -6,6 +6,7 @@
 #include "gameplay.h"
 #include "communication.h"
 #include "player.h"
+#include "bonusmessage.h"
 #include "gamestartmessage.h"
 #include "gameovermessage.h"
 #include "translatorfromarray.h"
@@ -14,6 +15,7 @@
 #include "roundendmessage.h"
 #include "gamedelaymessage.h"
 #include "gamemode.h"
+#include "bonus.h"
 #include "board.h"
 
 #include <QtMath>
@@ -88,6 +90,9 @@ void GameServer::performTurn() {
                 --numberOfActivePlayers;
                 players[i].setInactive();
             }
+
+            checkBonusCollision(p);
+
             if(p.isVisible())
                 board.registerPoint(p);
             msg.addPoint(p);
@@ -95,6 +100,10 @@ void GameServer::performTurn() {
             sendToAll(translator.getLastMessage());
         }
     }
+    if(turnNumber % 200 == 0) {
+        manageBonuses();
+    }
+
     if(numberOfActivePlayers == 0) {
         timer.stop();
         endRound();
@@ -102,6 +111,46 @@ void GameServer::performTurn() {
 
 
     ++turnNumber;
+}
+void GameServer::checkBonusCollision(const GamePlay::Point& p) {
+    GamePlay::Bonus res = board.checkBonusCollision(p);
+    if(res.getMode() != -1) {
+        qDebug() << "POINT BONUS COLLSION " << res.getMode() << res.getPlayerID();
+        Communication::TranslatorToArray t;
+        Communication::BonusMessage mes(res, false);
+        t.visit(mes);
+        sendToAll(t.getLastMessage());
+
+        board.removeBonus(res.getMode());
+        res.setActive(p.getPlayerId());
+        gamemode.updateBonus(res);
+    }
+
+}
+
+void GameServer::manageBonuses() {
+    Communication::TranslatorToArray t;
+
+    GamePlay::Bonus oldBonus = gamemode.checkTimeout();
+    if(oldBonus.getMode() != -1) {
+        qDebug() << "REMOVE BONUS " << oldBonus.getMode() << " " << oldBonus.getPlayerID();
+        Communication::BonusMessage mes(oldBonus, false);
+        t.visit(mes);
+        sendToAll(t.getLastMessage());
+        oldBonus.setInactive();
+
+        board.removeBonus(oldBonus.getMode());
+        gamemode.updateBonus(oldBonus);
+    }
+
+    GamePlay::Bonus newBonus = gamemode.tryBonus();
+    if(newBonus.getMode() != -1) {
+        qDebug() << "NEW BONUS " << newBonus.getMode() << " " << newBonus.getPlayerID();
+        board.registerBonus(newBonus);
+        Communication::BonusMessage mes(newBonus, true);
+        t.visit(mes);
+        sendToAll(t.getLastMessage());
+    }
 }
 void GameServer::endRound() {
     timer.stop();
@@ -113,13 +162,13 @@ void GameServer::endRound() {
         players[i].setActive();
     }
     translator.visit(msg);
-    //gamemode.setMode(GamePlay::Mode::COLLISIONLESS, 0);
+
     board.eraseBoard();
+    gamemode.removeAllBonuses();
     sendToAll(translator.getLastMessage());
 
     if(!checkEndOfAllGames()) {
         numberOfActivePlayers = nPlayers;
-    //    timer.start(GamePlay::GamePlay::turnInterval);
         resetDelay();
         setDelayTimer();
     }

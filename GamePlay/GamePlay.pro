@@ -16,13 +16,16 @@ SOURCES += gameplay.cpp \
     board.cpp \
     player.cpp \
     point.cpp \
-    gamemode.cpp
+    gamemode.cpp \
+    bonus.cpp
 
 HEADERS += gameplay.h \
     board.h \
     player.h \
     point.h \
-    gamemode.h
+    gamemode.h \
+    modes.h \
+    bonus.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

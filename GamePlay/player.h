@@ -27,6 +27,7 @@ public:
     int getID() const {
         return id;
     }
+
     void setCoordinatesAndAngle(double x, double y, double angle);
     void addScore(int pts);
     void setRotatingLeft();
@@ -38,7 +39,7 @@ public:
     void setActive();
     void setInactive();
     void reset();
-    void updateMode(Mode, int pID);
+    void updateMode(const Bonus& bonus);
 private:
     const int id;
     int score;

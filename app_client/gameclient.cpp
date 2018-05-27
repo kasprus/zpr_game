@@ -1,4 +1,5 @@
 #include "gameclient.h"
+#include "bonusmessage.h"
 #include "communication.h"
 #include "message.h"
 #include "pointmessage.h"
@@ -50,7 +51,7 @@ void GameClient::readData() {
 
 void GameClient::responseForMessage(std::unique_ptr<Communication::Message> msg) {
     if(msg->getHeader() == Communication::Communication::pointMessageHeader) {
-        qDebug() << "Point Message";
+        //qDebug() << "Point Message";
         auto points = dynamic_cast<Communication::PointMessage*>(msg.get())->getPoints();
 //        qDebug() <<"Number of points: "<<points.size();
         for(auto &p : points) {
@@ -78,6 +79,15 @@ void GameClient::responseForMessage(std::unique_ptr<Communication::Message> msg)
     else if(msg->getHeader() == Communication::Communication::gameDelayMessageHeader) {
         qDebug() << "Dealy" << dynamic_cast<Communication::GameDelayMessage*>(msg.get())->getDelay();
         emit gameDelay(dynamic_cast<Communication::GameDelayMessage*>(msg.get())->getDelay());
+    }
+    else if (msg->getHeader() == Communication::Communication::bonusMessageHeader) {
+        qDebug() << "Bonus";
+        auto m = dynamic_cast<Communication::BonusMessage*>(msg.get());
+        qint32 mode = m->getMode();
+        qreal x = m->getX();
+        qreal y = m->getY();
+        qint8 show = m->getShowBonus();
+        emit newBonus(mode, x, y, show);
     }
 }
 

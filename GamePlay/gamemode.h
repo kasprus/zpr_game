@@ -1,55 +1,44 @@
 #ifndef GAMEMODE_H
 #define GAMEMODE_H
 
+#include <chrono>
+#include <memory>
+#include <random>
+#include <vector>
+#include "bonus.h"
+#include "modes.h"
 #include "player.h"
-#include "vector"
 
 namespace GamePlay {
+
+class GameMode;
 class Player;
-
-
-enum class Mode{
-    NORMAL,
-    SQUARE, SQUARE_O,
-    COLLISIONLESS,
-    FAST, FAST_O,
-    SLOW, SLOW_O,
-    THICK, THICK_O,
-    THIN, THIN_O,
-    REVERSE
-};
-
+class Bonus;
 
 class GameMode {
 public:
 
     GameMode();
     void addObserver(Player* obs);
-    void setMode(Mode mode, int id);
-    void setTimeout(int timeout_);
-    Mode getMode() const {
-        return currentMode;
-    }
 
-    int getPlayer() const {
-        return playerID;
-    }
-
-    double getX() const {
-        return x;
-    }
-
-    double getY() const {
-        return y;
-    }
+    void removeAllBonuses();
+    Bonus tryBonus();
+    Bonus checkTimeout();
+    void updateBonus(const Bonus& bonus);
+    double getBonusX(int mode) const;
+    double getBonusY(int mode) const;
+    std::chrono::system_clock::time_point getTimeout(int mode) const;
 
 private:
-    Mode currentMode;
-    int playerID;
-    int timeout;
-    double x, y;
     std::vector<Player*> observerPlayers;
-    void notifyPlayers();
+    std::vector<std::unique_ptr<Bonus> > bonuses;
+    void notifyPlayers(const Bonus& bonus);
+    std::random_device dev;
+    std::default_random_engine gen;
+    std::uniform_int_distribution<int> distBonus;
+    std::uniform_int_distribution<int> distMode;
+    std::uniform_real_distribution<double> distPos;
+
 };
 
 }

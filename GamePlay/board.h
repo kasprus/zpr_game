@@ -15,15 +15,18 @@ class Board
 public:
     constexpr static const double dimensionX = 1.0;
     constexpr static const double dimensionY = 1.0;
+    constexpr static const double bonusSize = 0.05;
+
     Board();
     void registerPoint(Point p);
-    //void addBonus();
+    void registerBonus(Bonus b);
+    void removeBonus(int mode);
     void eraseBoard();
     bool checkCollision(const Point& p) const;
-    bool checkBonus(const Point& p) const;
+    Bonus checkBonusCollision(const Point& p) const;
 private:
     QMultiMap<double, Point> pointsSet;
-    GameMode* gameMode;
+    QMultiMap<int, Bonus> bonusSet;
 
 };
 

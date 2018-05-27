@@ -14,6 +14,7 @@ class RoundEndMessage;
 class GameStartMessage;
 class GameOverMessage;
 class GameDelayMessage;
+class BonusMessage;
 
 class TranslatorToArray
 {
@@ -26,9 +27,10 @@ public:
     void visit(const GameStartMessage& gameStartMessage) const;
     void visit(const GameOverMessage& gameOverMessage) const;
     void visit(const GameDelayMessage &gameDelayMessage) const;
+    void visit(const BonusMessage& bonusMessage) const;
     QByteArray getLastMessage() const;
 private:
-    std::unique_ptr<QDataStream> prepareLatMessage() const;
+    std::unique_ptr<QDataStream> prepareLastMessage() const;
     mutable QByteArray lastMessage;
 };
 

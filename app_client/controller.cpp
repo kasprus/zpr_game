@@ -9,6 +9,7 @@
 Controller::Controller(GameClient &client, QObject *parent) : QObject(parent), boardPixelSize(0)
 {
     connect(&client, SIGNAL(newPoint(GamePlay::Point)), this, SLOT(newPoint(GamePlay::Point)));
+    connect(&client, SIGNAL(newBonus(qint32,qreal,qreal,qint8)), this, SLOT(newBonus(qint32, qreal, qreal, qint8)));
     connect(&client, SIGNAL(endRound(const std::vector<int>&)), this, SLOT(endRound(const std::vector<int>&)));
     connect(&client, SIGNAL(setWindow(qint32,qint32, qint32)), this, SLOT(setWindow(qint32, qint32, qint32)));
     connect(this, SIGNAL(newDataToWrite(QByteArray)), &client, SLOT(writeData(QByteArray)));
@@ -54,7 +55,7 @@ void Controller::endRound(const std::vector<int>& scr) {
 }
 
 void Controller::setWindow(qint32 nPlayers, qint32 maxScore, qint32 playerNumber) {
-    emit setWindows(nPlayers, maxScore, playerNumber);
+    emit setScoreBoard(nPlayers, maxScore, playerNumber);
 }
 void Controller::showIpDialog() {
     ipDialog.show();
@@ -83,4 +84,14 @@ void Controller::newConnection(bool status) {
 
 void Controller::setColors(std::vector<std::string> colors) {
     colorNames = colors;
+}
+
+void Controller::newBonus(qint32 mode, qreal x, qreal y, qint8 show) {
+    qDebug() << "RECEIVED BONUS " << mode << " " << show;
+    x = (double)boardPixelSize * x / GamePlay::Board::dimensionX;
+    y = (double)boardPixelSize * y / GamePlay::Board::dimensionY;
+    if(show)
+        emit showBonus(mode, x, y);
+    else
+        emit hideBonus(mode);
 }

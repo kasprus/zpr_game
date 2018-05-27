@@ -15,6 +15,7 @@
 #include "keyreleasedmessage.h"
 #include "roundendmessage.h"
 #include "addressdialog.h"
+#include "modes.h"
 
 namespace Ui {
 class MainWindow;
@@ -76,7 +77,7 @@ private slots:
      * @param playersCount number of players
      * @param maxScore maximum number of scores
      */
-    void setWindows(qint32 playersCount, qint32 maxScore, qint32 playerNumber);
+    void setScoreBoard(qint32 playersCount, qint32 maxScore, qint32 playerNumber);
 
     /**
      * @brief Prints message on the scene
@@ -91,6 +92,20 @@ private slots:
     void hideSceneMessage();
 
     /**
+     * @brief Displays new bonus on board.
+     * @param mode Bonus type
+     * @param x
+     * @param y
+     */
+    void showBonus(qint32 mode, qreal x, qreal y);
+
+    /**
+     * @brief hideBonus Hides bonus from board.
+     * @param mode mode of bonus to hide.
+     */
+    void hideBonus(qint32 mode);
+
+    /**
      * @brief Returns player colors used by window
      * @return vector of strings with color names
      */
@@ -100,8 +115,9 @@ private:
     QLabel sceneMessage;
     Ui::MainWindow *ui;
     void setScores(const std::vector<int>& scr);
-    void clearBoard(int sz);
-    std::vector<QGraphicsEllipseItem*> invisiblePoints;
+    void clearBoard();
+    std::vector<std::shared_ptr<QGraphicsEllipseItem> > invisiblePoints;
+    std::vector<std::shared_ptr<QGraphicsPixmapItem> > bonusItems;
     int nPlayers;
     const int colors[6] = {0xfd0000, 0x00edc5, 0x0eed00, 0xeddb00, 0xed00c5, 0xd8e7e1 };
     const std::vector<std::string>colorsName = {"RED", "BLUE", "GREEN", "YELLOW", "PINK", "WHITE"};

@@ -54,7 +54,7 @@ signals:
      * @param nPlayers Number of players of the game.
      * @param maxScore Maximum score of the game.
      */
-    void setWindows(qint32 nPlayers, qint32 maxScore, qint32 playerNumber);
+    void setScoreBoard(qint32 nPlayers, qint32 maxScore, qint32 playerNumber);
 
     /**
      * @brief Called when round is finished and board should be cleared.
@@ -84,6 +84,20 @@ signals:
      * @brief Called when scene messages should be cleared.
      */
     void clearMessages();
+
+    /**
+     * @brief Called upon getting new game bonus to display.
+     * @param mode Mode of the bonus.
+     * @param x Left hand side coordinate of the bonus.
+     * @param y Top coordinate of the bonus.
+     */
+    void showBonus(qint32 mode, qreal x, qreal y);
+
+    /**
+     * @brief Called to remove game bonus with given mode.
+     * @param mode Mode of the bonus.
+     */
+    void hideBonus(qint32 mode);
 
 public slots:
     //Trzeba zmienić nazwę, bo jest myląca
@@ -140,6 +154,15 @@ public slots:
      * @brief Sets colors
      */
     void setColors(std::vector<std::string>colors);
+
+    /**
+     * @brief Deals with game bonuses.
+     * @param mode Mode of game bonus.
+     * @param x
+     * @param y
+     * @param toShow True if bonus must be displayed. false to remove.
+     */
+    void newBonus(qint32 mode, qreal x, qreal y, qint8 toShow);
 
 private:
     qreal boardPixelSize;

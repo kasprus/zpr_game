@@ -1,4 +1,5 @@
 #include "translatortoarray.h"
+#include "bonusmessage.h"
 #include "gamestartmessage.h"
 #include "pointmessage.h"
 #include "keypressedmessage.h"
@@ -19,7 +20,7 @@ TranslatorToArray::TranslatorToArray()
 
 void TranslatorToArray::visit(const PointMessage &pointMessage) const{
     int usedBytes = 0;
-    auto out = prepareLatMessage();
+    auto out = prepareLastMessage();
     auto points = pointMessage.getPoints();
     *out<<qint32(Communication::pointMessageHeader)<<qint32(points.size());
     usedBytes += Communication::headerSize;
@@ -35,7 +36,7 @@ void TranslatorToArray::visit(const PointMessage &pointMessage) const{
 
 void TranslatorToArray::visit(const KeyPressedMessage &keyPressedMessage) const {
     int usedBytes = 0;
-    auto out = prepareLatMessage();
+    auto out = prepareLastMessage();
     *out<<qint32(keyPressedMessage.getHeader())<<qint32(0)<<qint32(keyPressedMessage.getKeyId());
     usedBytes += Communication::headerSize + 4;
     while(usedBytes < Communication::messageSize) {
@@ -46,7 +47,7 @@ void TranslatorToArray::visit(const KeyPressedMessage &keyPressedMessage) const 
 
 void TranslatorToArray::visit(const KeyReleasedMessage &keyReleasedMessage) const {
     int usedBytes = 0;
-    auto out = prepareLatMessage();
+    auto out = prepareLastMessage();
     *out<<qint32(keyReleasedMessage.getHeader())<<qint32(0)<<qint32(keyReleasedMessage.getKeyId());
     usedBytes += Communication::headerSize + 4;
     while(usedBytes < Communication::messageSize) {
@@ -57,7 +58,7 @@ void TranslatorToArray::visit(const KeyReleasedMessage &keyReleasedMessage) cons
 
 void TranslatorToArray::visit(const RoundEndMessage &roundEndMessage) const {
     int usedBytes = 0;
-    auto out = prepareLatMessage();
+    auto out = prepareLastMessage();
     *out << qint32(roundEndMessage.getHeader()) << qint32(0);
     *out << qint32(roundEndMessage.getNumberOfPlayers());
     for(int score : roundEndMessage.getScore()) {
@@ -73,7 +74,7 @@ void TranslatorToArray::visit(const RoundEndMessage &roundEndMessage) const {
 
 void TranslatorToArray::visit(const GameStartMessage &gameStartMessage) const {
     int usedBytes = 0;
-    auto out = prepareLatMessage();
+    auto out = prepareLastMessage();
     *out << qint32(gameStartMessage.getHeader()) << qint32(0);
     *out << qint32(gameStartMessage.getNumberOfPlayers()) << qint32(gameStartMessage.getMaxScore()) << qint32(gameStartMessage.getPlayerNumber());
     usedBytes += 20;
@@ -85,7 +86,7 @@ void TranslatorToArray::visit(const GameStartMessage &gameStartMessage) const {
 
 void TranslatorToArray::visit(const GameOverMessage &gameOverMessage) const {
     int usedBytes = 0;
-    auto out = prepareLatMessage();
+    auto out = prepareLastMessage();
     *out << qint32(gameOverMessage.getHeader()) << qint32(gameOverMessage.getWinner());
     usedBytes += 8;
     while(usedBytes < Communication::messageSize) {
@@ -96,7 +97,7 @@ void TranslatorToArray::visit(const GameOverMessage &gameOverMessage) const {
 
 void TranslatorToArray::visit(const GameDelayMessage &gameDelayMessage) const {
     int usedBytes = 0;
-    auto out = prepareLatMessage();
+    auto out = prepareLastMessage();
     *out << qint32(gameDelayMessage.getHeader()) << qint32(0);
     usedBytes += Communication::headerSize;
     *out << qint32(gameDelayMessage.getDelay());
@@ -107,7 +108,22 @@ void TranslatorToArray::visit(const GameDelayMessage &gameDelayMessage) const {
     }
 }
 
-std::unique_ptr<QDataStream> TranslatorToArray::prepareLatMessage() const {
+void TranslatorToArray::visit(const BonusMessage &bonusMessage) const {
+    int usedBytes = 0;
+    auto out = prepareLastMessage();
+    *out << qint32(bonusMessage.getHeader()) <<qint32(0);
+    usedBytes += Communication::headerSize;
+    *out << qint32(bonusMessage.getMode());
+    *out << bonusMessage.getX() << bonusMessage.getY();
+    *out << qint8(bonusMessage.getShowBonus());
+    usedBytes += 21;
+    while(usedBytes < Communication::messageSize) {
+        *out << qint8(0);
+        ++usedBytes;
+    }
+}
+
+std::unique_ptr<QDataStream> TranslatorToArray::prepareLastMessage() const {
     lastMessage = QByteArray();
     QDataStream *out = new QDataStream(&lastMessage, QIODevice::WriteOnly);
     out->setVersion(QDataStream::Qt_5_0);
@@ -115,6 +131,8 @@ std::unique_ptr<QDataStream> TranslatorToArray::prepareLatMessage() const {
     out->setFloatingPointPrecision(QDataStream::DoublePrecision);
     return std::unique_ptr<QDataStream>(out);
 }
+
+
 
 QByteArray TranslatorToArray::getLastMessage() const {
     return lastMessage;

@@ -23,7 +23,8 @@ SOURCES += communication.cpp \
     gamestartmessage.cpp \
     gameendmessage.cpp \
     gameovermessage.cpp \
-    gamedelaymessage.cpp
+    gamedelaymessage.cpp \
+    bonusmessage.cpp
 
 HEADERS += communication.h \
     message.h \
@@ -36,7 +37,8 @@ HEADERS += communication.h \
     gamestartmessage.h \
     gameendmessage.h \
     gameovermessage.h \
-    gamedelaymessage.h
+    gamedelaymessage.h \
+    bonusmessage.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

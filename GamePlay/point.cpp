@@ -28,4 +28,3 @@ bool Point::checkEdgeCollision() const {
 }
 
 }
-
