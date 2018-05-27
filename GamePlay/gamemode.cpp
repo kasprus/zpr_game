@@ -24,7 +24,7 @@ Bonus GameMode::tryBonus() {
     int num = distBonus(gen);
     if(num < 7) {
         int mode = distMode(gen);
-        if( mode > 9 && bonuses[mode] ) return Bonus(-1);
+        if( mode > 11 && bonuses[mode] ) return Bonus(-1);
          if(bonuses[mode/2*2]) return Bonus(-1);
 
         auto timeout = std::chrono::system_clock::now(); timeout += std::chrono::seconds(12);

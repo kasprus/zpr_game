@@ -19,6 +19,7 @@ public:
     constexpr static const double smallRadius = 0.005;
     constexpr static const int numberOfInactiveCollisionTurns = 10;
     constexpr static const int secondsOfGameDelay = 3;
+    constexpr static const int maximumNumberOfPlayers = 6;
 private:
     GamePlay();
 };

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "controller.h"
+#include "gameplay.h"
 #include <memory>
 #include <QKeyEvent>
 #include <QDebug>
@@ -15,8 +16,8 @@
 MainWindow::MainWindow(Controller &controller, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    invisiblePoints(6),
-    bonusItems(6)
+    invisiblePoints(GamePlay::GamePlay::maximumNumberOfPlayers),
+    bonusItems(7)
 {
     ui->setupUi(this);
 
@@ -147,6 +148,11 @@ void MainWindow::showBonus(qint32 mode, qreal x, qreal y) {
         bonusItems[5]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[5].get());
     }
+    else if(mode == GamePlay::Modes::REVERSE || GamePlay::Modes::REVERSE_O) {
+        bonusItems[6] = std::make_shared<QGraphicsPixmapItem>(QPixmap("pic/reverse.png").scaled(20,20));
+        bonusItems[6]->setOffset(x,y);
+        ui->graphicsView->scene()->addItem(bonusItems[6].get());
+    }
     qDebug() << "END WINDOW BONUS";
 
 }
@@ -170,6 +176,9 @@ void MainWindow::hideBonus(qint32 mode) {
     }
     else if(mode == GamePlay::Modes::COLLISIONLESS) {
         ui->graphicsView->scene()->removeItem(bonusItems[5].get());
+    }
+    else if(mode == GamePlay::Modes::REVERSE || mode == GamePlay::Modes::REVERSE_O) {
+        ui->graphicsView->scene()->removeItem(bonusItems[6].get());
     }
     qDebug() << "HIDE BONUS WINDOWS END";
 }

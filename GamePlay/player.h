@@ -54,6 +54,7 @@ private:
     bool rotatingLeft;
     bool rotatingRight;
     bool active;
+    bool reversed;
 
 };
 

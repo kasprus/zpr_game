@@ -6,7 +6,7 @@ namespace GamePlay {
 class Modes {
 
 public:
-    constexpr const static int MODESCOUNT = 12;
+    constexpr const static int MODESCOUNT = 13;
 
 
     constexpr const static int FAST = 0;
@@ -20,9 +20,10 @@ public:
     constexpr const static int SQUARE = 8;
     constexpr const static int SQUARE_O = 9;
     constexpr const static int REVERSE = 10;
-    constexpr const static int COLLISIONLESS = 11;
+    constexpr const static int REVERSE_O = 11;
+    constexpr const static int COLLISIONLESS = 12;
 
-    constexpr const static int NORMAL = 12;
+    constexpr const static int NORMAL = 13;
 private:
     Modes();
 };

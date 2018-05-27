@@ -9,7 +9,8 @@
 namespace GamePlay {
 
 Player::Player(int id, double x, double y, double angle) : id(id), score(0), x(x), y(y), angle(angle), radius(GamePlay::defaultRadius), speed(GamePlay::defaultSpeedPerTurn),
-                                                           visible(true), squares(false), collisionless(false), rotatingLeft(false), rotatingRight(false), active(true)
+                                                           visible(true), squares(false), collisionless(false), rotatingLeft(false), rotatingRight(false), active(true),
+                                                           reversed(false)
 {
 
 }
@@ -56,6 +57,10 @@ void Player::updateMode(const Bonus& bonus) {
             case Modes::SLOW:
                 speed = GamePlay::slowSpeedPerTurn;
                 break;
+            case Modes::REVERSE:
+                if(!reversed)std::swap(rotatingLeft, rotatingRight);
+                reversed = true;
+                break;
             default:
                 break;
             }
@@ -73,6 +78,10 @@ void Player::updateMode(const Bonus& bonus) {
                 break;
             case Modes::SLOW_O:
                 speed = GamePlay::slowSpeedPerTurn;
+                break;
+            case Modes::REVERSE_O:
+                if(!reversed)std::swap(rotatingLeft, rotatingRight);
+                reversed = true;
                 break;
             default:
                 break;
@@ -99,6 +108,10 @@ void Player::updateMode(const Bonus& bonus) {
             case Modes::SLOW:
                 speed = GamePlay::defaultSpeedPerTurn;
                 break;
+            case Modes::REVERSE:
+                if(reversed)std::swap(rotatingLeft, rotatingRight);
+                reversed = false;
+                break;
             default:
                 break;
             }
@@ -114,6 +127,10 @@ void Player::updateMode(const Bonus& bonus) {
                 /* fall through */
             case Modes::SLOW_O:
                 speed = GamePlay::defaultSpeedPerTurn;
+                break;
+            case Modes::REVERSE_O:
+                if(reversed)std::swap(rotatingLeft, rotatingRight);
+                reversed = false;
                 break;
             default:
                 break;
@@ -135,19 +152,31 @@ void Player::addScore(int pts) {
     score += pts;
 }
 void Player::setRotatingLeft() {
-    rotatingLeft = true;
+    if(!reversed)rotatingLeft = true;
+    else {
+        rotatingRight = true;
+    }
 }
 
 void Player::setRotatingRight() {
-    rotatingRight = true;
+    if(!reversed)rotatingRight = true;
+    else {
+        rotatingLeft = true;
+    }
 }
 
 void Player::cancelRotatingLeft() {
-    rotatingLeft = false;
+    if(!reversed)rotatingLeft = false;
+    else {
+        rotatingRight = false;
+    }
 }
 
 void Player::cancelRotatingRight() {
-    rotatingRight = false;
+    if(!reversed)rotatingRight = false;
+    else {
+        rotatingLeft = false;
+    }
 }
 
 bool Player::isActive() const {
@@ -159,6 +188,12 @@ void Player::setActive() {
 }
 void Player::setInactive() {
     active = false;
+}
+
+void Player::reset() {
+    reversed = false;
+    rotatingLeft = false;
+    rotatingRight = false;
 }
 }
 

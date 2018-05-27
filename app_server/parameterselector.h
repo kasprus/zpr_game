@@ -2,12 +2,13 @@
 #define PARAMETERSELECTOR_H
 #include <memory>
 #include "gameserver.h"
+#include "gameplay.h"
 
 class ParameterSelector
 {
 public:
     constexpr static int MIN_PLAYERS = 1;
-    constexpr static int MAX_PLAYERS = 6;
+    constexpr static int MAX_PLAYERS = GamePlay::GamePlay::maximumNumberOfPlayers;
     constexpr static int MIN_PORT = 1024;
     constexpr static int MAX_PORT = 65535;
     constexpr static int MIN_POINTS = 1;
