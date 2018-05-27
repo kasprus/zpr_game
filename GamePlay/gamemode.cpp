@@ -5,7 +5,7 @@
 namespace GamePlay {
 
 
-GameMode::GameMode() : bonuses(Modes::MODESCOUNT), dev(), gen(dev()), distBonus(0, 9), distMode(0, Modes::MODESCOUNT-1), distPos(0.1, 0.9 )
+GameMode::GameMode() : bonuses(Modes::MODESCOUNT), dev(), gen(dev()), distBonus(0, 99), distMode(0, Modes::MODESCOUNT-1), distPos(0.1, 0.9 )
 {
 }
 
@@ -22,16 +22,61 @@ void GameMode::notifyPlayers(const Bonus& bonus) {
 
 Bonus GameMode::tryBonus() {
     int num = distBonus(gen);
-    if(num < 7) {
+    if(num < bonusChance) {
         int mode = distMode(gen);
-        if( mode > 9 && bonuses[mode] ) return Bonus(-1);
-         if(bonuses[mode/2*2]) return Bonus(-1);
+        qDebug() << " generated number" << mode << checkIfEligible(mode);
+
+        if(!checkIfEligible(mode)) return Bonus(-1);
 
         auto timeout = std::chrono::system_clock::now(); timeout += std::chrono::seconds(12);
         bonuses[mode] = std::move(std::unique_ptr<Bonus>(new Bonus(mode, -1, timeout, distPos(gen), distPos(gen)))); // todo: send message. here?
         return Bonus(*(bonuses[mode].get()));
     }
     return Bonus(-1);
+}
+
+bool GameMode::checkIfEligible(int mode) {
+    for(int i  = 0; i < Modes::MODESCOUNT; ++i) {
+        if(bonuses[i]) qDebug() << i;
+    }
+    switch(mode) {
+    case Modes::FAST:
+        /* fall through */
+    case Modes::FAST_O:
+        /* fall through */
+    case Modes::SLOW:
+        /* fall through */
+    case Modes::SLOW_O:
+        if(bonuses[Modes::FAST] || bonuses[Modes::FAST_O] || bonuses[Modes::SLOW] || bonuses[Modes::SLOW_O])
+          return false;
+        break;
+    case Modes::THICK:
+        /* fall through */
+    case Modes::THICK_O:
+        /* fall through */
+    case Modes::THIN:
+        /* fall through */
+    case Modes::THIN_O:
+        if(bonuses[Modes::THICK] || bonuses[Modes::THICK_O] || bonuses[Modes::THIN] || bonuses[Modes::THIN_O])
+          return false;
+        break;
+    case Modes::SQUARE:
+        /* fall through */
+    case Modes::SQUARE_O:
+        if(bonuses[Modes::SQUARE] || bonuses[Modes::SQUARE_O])
+            return false;
+        break;
+    case Modes::REVERSE:
+        /* fall through */
+    case Modes::REVERSE_O:
+        if(bonuses[Modes::REVERSE] || bonuses[Modes::REVERSE_O])
+            return false;
+        break;
+    case Modes::COLLISIONLESS:
+        if(bonuses[Modes::COLLISIONLESS])
+            return false;
+    }
+    return true;
 }
 
 double GameMode::getBonusX(int mode) const {
@@ -68,8 +113,10 @@ void GameMode::updateBonus(const Bonus& bonus) {
 
 void GameMode::removeAllBonuses() {
     for(auto& it : bonuses) {
-        if(it.get())
+        if(it.get()) {
+            qDebug() << "REMOVE " << it->getMode() << " " << it->getPlayerID();
             it.reset();
+        }
     }
     notifyPlayers(Bonus(Modes::NORMAL));
 }
