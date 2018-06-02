@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>ZPR</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QGraphicsView" name="graphicsView">
@@ -282,7 +282,7 @@
    <widget class="QLabel" name="label_color">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>170</x>
       <y>510</y>
       <width>231</width>
       <height>31</height>

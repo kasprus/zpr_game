@@ -13,9 +13,9 @@ enum class Mode;
 class Board
 {
 public:
-    constexpr static const double dimensionX = 1.0;
-    constexpr static const double dimensionY = 1.0;
-    constexpr static const double bonusSize = 0.05;
+    constexpr static double dimensionX = 1.0;
+    constexpr static double dimensionY = 1.0;
+    constexpr static double bonusSize = 0.05;
 
     Board();
     void registerPoint(Point p);

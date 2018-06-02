@@ -128,7 +128,7 @@ public:
         label_Not->setAlignment(Qt::AlignCenter);
         label_color = new QLabel(centralWidget);
         label_color->setObjectName(QStringLiteral("label_color"));
-        label_color->setGeometry(QRect(140, 510, 231, 31));
+        label_color->setGeometry(QRect(170, 510, 231, 31));
         label_color->setLayoutDirection(Qt::LeftToRight);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
@@ -149,7 +149,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "ZPR", 0));
         label_1_1->setText(QApplication::translate("MainWindow", "RED", 0));
         label_1_2->setText(QApplication::translate("MainWindow", "BLUE", 0));
         label_1_3->setText(QApplication::translate("MainWindow", "GREEN", 0));

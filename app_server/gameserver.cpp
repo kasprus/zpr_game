@@ -1,3 +1,8 @@
+#include <QtMath>
+#include <QObject>
+#include <QTimer>
+#include <QDebug>
+
 #include "gameserver.h"
 #include "message.h"
 #include "point.h"
@@ -18,11 +23,6 @@
 #include "bonus.h"
 #include "board.h"
 
-#include <QtMath>
-#include <QObject>
-#include <QTimer>
-#include <QDebug>
-
 GameServer::GameServer(int argc, char *argv[], int numberOfPlayers, int numberOfPoints, int portNumber, QObject *parent) : QObject(parent), app(argc, argv), nPlayers(numberOfPlayers), currentNumberOfPlayers(0), numberOfActivePlayers(numberOfPlayers),
                                                                                                                            turnNumber(0), maxScore(numberOfPoints), dev(), gen(dev()), dist(0.1, 0.9), hasBeenReseted(false), portNumber(portNumber)
 {
@@ -42,11 +42,7 @@ void GameServer::newConnection() {
     sockets.emplace_back(server->nextPendingConnection());
     buffers.emplace_back();
     players.emplace_back(currentNumberOfPlayers, dist(gen), dist(gen), dist(gen)*M_PI);
-
     ++currentNumberOfPlayers;
-
-
-
     if(nPlayers == currentNumberOfPlayers) {
         server->close();
         for(int i = 0; i < nPlayers; ++i) {
@@ -57,7 +53,6 @@ void GameServer::newConnection() {
             sockets[i]->write(translator.getLastMessage());
             sockets[i]->flush();
         }
-
         startGame();
     }
 }
@@ -82,7 +77,6 @@ int GameServer::exec() {
 void GameServer::performTurn() {
     for(int i = 0; i < nPlayers; ++i) {
         Communication::PointMessage msg;
-        Communication::TranslatorToArray translator;
         if(players[i].isActive()) {
             GamePlay::Point p = players[i].move(turnNumber);
             if(board.checkCollision(p)) {
@@ -90,84 +84,59 @@ void GameServer::performTurn() {
                 --numberOfActivePlayers;
                 players[i].setInactive();
             }
-
             checkBonusCollision(p);
-
             if(p.isVisible())
                 board.registerPoint(p);
             msg.addPoint(p);
-            translator.visit(msg);
-            sendToAll(translator.getLastMessage());
+            sendToAllWrapper(std::move(msg));
         }
     }
-    if(turnNumber % 200 == 0) {
+    if(turnNumber % GamePlay::GamePlay::intervalBetweenBonusManagement == 0) {
         manageBonuses();
     }
-
     if(numberOfActivePlayers == 0) {
         timer.stop();
         endRound();
     }
-
-
     ++turnNumber;
 }
 void GameServer::checkBonusCollision(const GamePlay::Point& p) {
     GamePlay::Bonus res = board.checkBonusCollision(p);
     if(res.getMode() != -1) {
-        qDebug() << "POINT BONUS COLLSION " << res.getMode() << res.getPlayerID();
-        Communication::TranslatorToArray t;
-        Communication::BonusMessage mes(res, false);
-        t.visit(mes);
-        sendToAll(t.getLastMessage());
-
+        sendToAllWrapper(Communication::BonusMessage(res, false));
         board.removeBonus(res.getMode());
         res.setActive(p.getPlayerId());
         gamemode.updateBonus(res);
     }
-
 }
 
 void GameServer::manageBonuses() {
-    Communication::TranslatorToArray t;
-
     GamePlay::Bonus oldBonus = gamemode.checkTimeout();
     if(oldBonus.getMode() != -1) {
-        qDebug() << "REMOVE BONUS " << oldBonus.getMode() << " " << oldBonus.getPlayerID();
-        Communication::BonusMessage mes(oldBonus, false);
-        t.visit(mes);
-        sendToAll(t.getLastMessage());
+        sendToAllWrapper(Communication::BonusMessage(oldBonus, false));
         oldBonus.setInactive();
-
         board.removeBonus(oldBonus.getMode());
         gamemode.updateBonus(oldBonus);
     }
-
     GamePlay::Bonus newBonus = gamemode.tryBonus();
-    if(newBonus.getMode() != -1) {
-        qDebug() << "NEW BONUS " << newBonus.getMode() << " " << newBonus.getPlayerID();
+    if(newBonus.getMode() != GamePlay::Modes::EMPTY_BONUS) {
         board.registerBonus(newBonus);
-        Communication::BonusMessage mes(newBonus, true);
-        t.visit(mes);
-        sendToAll(t.getLastMessage());
+        sendToAllWrapper(Communication::BonusMessage(newBonus, true));
     }
 }
 void GameServer::endRound() {
     timer.stop();
+    sendToAllWrapper(Communication::RoundEndMessage(nPlayers));
     Communication::RoundEndMessage msg(nPlayers);
-    Communication::TranslatorToArray translator;
     for(int i = 0; i < nPlayers; ++i) {
         msg.addScore(i, players[i].getScore());
         players[i].setCoordinatesAndAngle(dist(gen), dist(gen), M_PI*dist(gen));
         players[i].setActive();
         players[i].reset();
     }
-    translator.visit(msg);
-
     board.eraseBoard();
     gamemode.removeAllBonuses();
-    sendToAll(translator.getLastMessage());
-
+    sendToAllWrapper(std::move(msg));
     if(!checkEndOfAllGames()) {
         numberOfActivePlayers = nPlayers;
         resetDelay();
@@ -228,14 +197,9 @@ bool GameServer::checkEndOfAllGames() {
         }
         return w;
     };
-    qDebug()<<"checking...";
     for(auto &p : players) {
         if(p.getScore() >= maxScore) {
-            Communication::TranslatorToArray t;
-            Communication::GameOverMessage m(findWinner());
-            m.accept(t);
-            sendToAll(t.getLastMessage());
-            qDebug()<<"end of all games";
+            sendToAllWrapper(Communication::GameOverMessage(findWinner()));
             reset();
             return true;
         }
@@ -249,10 +213,7 @@ void GameServer::resetDelay() {
 
 void GameServer::setDelayTimer() {
     gameDelayTimer.start(1000);
-    Communication::TranslatorToArray t;
-    Communication::GameDelayMessage m(secondsOfDelayLeft);
-    m.accept(t);
-    sendToAll(t.getLastMessage());
+    sendInfoAboutSecondsOfDelay();
 }
 
 void GameServer::performDelay() {
@@ -260,11 +221,11 @@ void GameServer::performDelay() {
         gameDelayTimer.stop();
         timer.start(GamePlay::GamePlay::turnInterval);
     }
-    Communication::TranslatorToArray t;
-    Communication::GameDelayMessage m(secondsOfDelayLeft);
-    m.accept(t);
-    sendToAll(t.getLastMessage());
+    sendInfoAboutSecondsOfDelay();
+}
 
+void GameServer::sendInfoAboutSecondsOfDelay() {
+    sendToAllWrapper(Communication::GameDelayMessage(secondsOfDelayLeft));
 }
 
 void GameServer::reset() {
@@ -284,6 +245,12 @@ void GameServer::reset() {
     numberOfActivePlayers = nPlayers;
     turnNumber = 0;
     hasBeenReseted = true;
+}
+
+void GameServer::sendToAllWrapper(Communication::Message&& m) {
+    Communication::TranslatorToArray t;
+    m.accept(t);
+    sendToAll(t.getLastMessage());
 }
 
 GameServer::~GameServer() {

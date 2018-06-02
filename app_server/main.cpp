@@ -1,7 +1,8 @@
-#include <QCoreApplication>
-#include <gameserver.h>
 #include <stdlib.h>
 #include <iostream>
+#include <QCoreApplication>
+
+#include "gameserver.h"
 #include "parameterselector.h"
 #include "parameterexception.h"
 

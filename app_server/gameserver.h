@@ -41,6 +41,8 @@ private:
     void checkBonusCollision(const GamePlay::Point& p);
     void manageBonuses();
     void reset();
+    void sendInfoAboutSecondsOfDelay();
+    void sendToAllWrapper(Communication::Message&&);
 
     QCoreApplication app;
     std::vector<QByteArray> buffers;
