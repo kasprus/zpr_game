@@ -27,6 +27,7 @@
 GameServer::GameServer(int argc, char *argv[], int numberOfPlayers, int numberOfPoints, int portNumber, QObject *parent) : QObject(parent), app(argc, argv), nPlayers(numberOfPlayers), currentNumberOfPlayers(0), numberOfActivePlayers(numberOfPlayers),
                                                                                                                            turnNumber(0), maxScore(numberOfPoints), dev(), gen(dev()), dist(0.1, 0.9), hasBeenReseted(false), portNumber(portNumber)
 {
+    if(numberOfPlayers > GamePlay::GamePlay::maximumNumberOfPlayers || numberOfPlayers <= 0)throw WrongNumberOfPlayersException();
     server = std::unique_ptr<QTcpServer>(new QTcpServer(nullptr));
     connect(server.get(), SIGNAL(newConnection()), this, SLOT(newConnection()));
     if(!server->listen(QHostAddress::AnyIPv4, portNumber)) {
@@ -114,6 +115,7 @@ void GameServer::performTurn() {
     }
     ++turnNumber;
 }
+
 void GameServer::checkBonusCollision(const GamePlay::Point& p) {
     GamePlay::Bonus res = board.checkBonusCollision(p);
     if(res.getMode() != -1) {
@@ -127,6 +129,7 @@ void GameServer::checkBonusCollision(const GamePlay::Point& p) {
 
 void GameServer::manageBonuses() {
     GamePlay::Bonus oldBonus = gamemode.checkTimeout();
+
     while(oldBonus.getMode() != -1) {
         if(!oldBonus.isActive()) {
             qDebug() << "REMOVE IN MANAGE";
@@ -146,6 +149,7 @@ void GameServer::manageBonuses() {
         sendToAllWrapper(Communication::BonusMessage(newBonus, true));
     }
 }
+
 void GameServer::endRound() {
     timer.stop();
     for(int i = 0; i < nPlayers; ++i) {
@@ -182,20 +186,23 @@ void GameServer::dispatchMessage(int playerIndex, std::unique_ptr<Communication:
     if(message->getHeader() == Communication::Communication::keyPressedMessageHeader) {
         int key = dynamic_cast<Communication::KeyPressedMessage*>(message.get())->getKeyId();
         if(key == Communication::Communication::leftKeyId) {
-            players[playerIndex].setRotatingLeft();
+            players.at(playerIndex).setRotatingLeft();
         }
         if(key == Communication::Communication::rightKeyId) {
-            players[playerIndex].setRotatingRight();
+            players.at(playerIndex).setRotatingRight();
         }
     }
     else if(message->getHeader() == Communication::Communication::keyReleasedMessageHeader) {
         int key = dynamic_cast<Communication::KeyReleasedMessage*>(message.get())->getKeyId();
         if(key == Communication::Communication::leftKeyId) {
-            players[playerIndex].cancelRotatingLeft();
+            players.at(playerIndex).cancelRotatingLeft();
         }
         if(key == Communication::Communication::rightKeyId) {
-            players[playerIndex].cancelRotatingRight();
+            players.at(playerIndex).cancelRotatingRight();
         }
+    }
+    else {
+        throw UnsupportedServerMessageException();
     }
 }
 

@@ -1,16 +1,19 @@
+#include <QDebug>
+#include <QString>
+
+#include "clientexception.h"
 #include "gameclient.h"
 #include "bonusmessage.h"
 #include "communication.h"
 #include "message.h"
 #include "pointmessage.h"
 #include "gamestartmessage.h"
-#include "gameendmessage.h"
 #include "roundendmessage.h"
 #include "gamedelaymessage.h"
 #include "gameovermessage.h"
 #include "translatorfromarray.h"
 #include "translatortoarray.h"
-#include <QString>
+
 
 GameClient::GameClient(QObject *parent) : QObject(parent)
 {
@@ -59,7 +62,7 @@ void GameClient::responseForMessage(std::unique_ptr<Communication::Message> msg)
 }
 
 void GameClient::setController(Controller *controller_) {
-    controller = controller_;
+    controller = controller_;    
 }
 
 void GameClient::writeData(QByteArray data) {

@@ -2,11 +2,8 @@
 Makefile
 *.o
 moc_*
-app_client
-app_server
 *.so
 *.a
 *.moc
 *.prl
-tst_communicationtest
-tst_gameplaytest
+*.exe

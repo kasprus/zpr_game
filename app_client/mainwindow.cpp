@@ -75,17 +75,18 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
 
 
 void MainWindow::newCircle(qreal x, qreal y, qreal radius, qint32 pID, bool isVisible) {
-    if(invisiblePoints[pID] && invisiblePoints[pID]->isVisible())
-        invisiblePoints[pID]->setVisible(false);
+
+    if(invisiblePoints.at(pID) && invisiblePoints.at(pID)->isVisible())
+        invisiblePoints.at(pID)->setVisible(false);
 
     if(isVisible) {
-        ui->graphicsView->scene()->addEllipse(x-radius/2, y-radius/2, radius, radius, QPen(QColor(colors[pID])), QBrush(colors[pID]));
+        ui->graphicsView->scene()->addEllipse(x-radius/2, y-radius/2, radius, radius, QPen(QColor(colors.at(pID))), QBrush(colors.at(pID)));
     }
     else {
-        invisiblePoints[pID] = new QGraphicsEllipseItem(x-radius/2, y-radius/2, radius, radius);
-        invisiblePoints[pID]->setPen(QPen(colors[pID]));
-        invisiblePoints[pID]->setBrush(QBrush(colors[pID]));
-        ui->graphicsView->scene()->addItem(invisiblePoints[pID]);
+        invisiblePoints.at(pID) = new QGraphicsEllipseItem(x-radius/2, y-radius/2, radius, radius);
+        invisiblePoints.at(pID)->setPen(QPen(colors.at(pID)));
+        invisiblePoints.at(pID)->setBrush(QBrush(colors.at(pID)));
+        ui->graphicsView->scene()->addItem(invisiblePoints.at(pID));
     }
 }
 
@@ -101,6 +102,7 @@ void MainWindow::printSceneMessage(QString message) {
 void MainWindow::endRoundAndClear() {
     clearBoard();
 }
+
 
 
 void MainWindow::clearBoard() {
@@ -202,20 +204,20 @@ void MainWindow::hideBonus(qint32 mode) {
 
 void MainWindow::setScoreBoard(qint32 playersCount, qint32 maxScore, qint32 playerNumber) {
     nPlayers = playersCount;
-    QLabel* labels_n[6] = {ui->label_1_1, ui->label_1_2, ui->label_1_3, ui->label_1_4, ui->label_1_5, ui->label_1_6 };
-    QLabel* labels_s[6] = {ui->label_2_1, ui->label_2_2, ui->label_2_3, ui->label_2_4, ui->label_2_5, ui->label_2_6 };
+    std::array<QLabel*, GamePlay::GamePlay::maximumNumberOfPlayers> labels_n = {{ui->label_1_1, ui->label_1_2, ui->label_1_3, ui->label_1_4, ui->label_1_5, ui->label_1_6 }};
+    std::array<QLabel*, GamePlay::GamePlay::maximumNumberOfPlayers> labels_s = {{ui->label_2_1, ui->label_2_2, ui->label_2_3, ui->label_2_4, ui->label_2_5, ui->label_2_6 }};
     for(int i = 0; i < nPlayers; ++i) {
 
-        labels_n[i]->setVisible(true);
-        labels_s[i]->setVisible(true);
+        labels_n.at(i)->setVisible(true);
+        labels_s.at(i)->setVisible(true);
     }
     ui->label_Not->setText(QString("First Player to reach " + QString::number(maxScore) + " points wins!"));
     ui->label_Not->setVisible(true); //labels
     QPalette palette;
-    palette.setColor(QPalette::WindowText, colors[playerNumber]);
-    palette.setBrush(QPalette::WindowText, QBrush(colors[playerNumber]));
+    palette.setColor(QPalette::WindowText, colors.at(playerNumber));
+    palette.setBrush(QPalette::WindowText, QBrush(colors.at(playerNumber)));
     ui->label_color->setPalette(palette);
-    ui->label_color->setText(QString::fromStdString(std::string("Your color is " + colorsName[playerNumber])));
+    ui->label_color->setText(QString::fromStdString(std::string("Your color is " + colorsName.at(playerNumber))));
 }
 
 void MainWindow::hideSceneMessage() {

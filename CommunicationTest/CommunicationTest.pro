@@ -8,7 +8,7 @@ QT       += testlib
 
 QT       -= gui
 
-TARGET = tst_communicationtest
+TARGET = tst_communicationtest.exe
 CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG   += c++11

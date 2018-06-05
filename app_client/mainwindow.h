@@ -1,21 +1,24 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <memory>
+#include <string>
+#include <vector>
+#include <array>
 #include <QMainWindow>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsEllipseItem>
-#include <memory>
-#include <string>
-#include <vector>
 #include <QPen>
 #include <QLabel>
+
 #include "communication.h"
 #include "keypressedmessage.h"
 #include "keyreleasedmessage.h"
 #include "roundendmessage.h"
 #include "addressdialog.h"
 #include "modes.h"
+#include "gameplay.h"
 
 namespace Ui {
 class MainWindow;
@@ -126,7 +129,7 @@ private:
     std::vector<QGraphicsEllipseItem*> invisiblePoints;
     std::vector<QGraphicsPixmapItem*> bonusItems;
     int nPlayers;
-    const int colors[6] = {0xfd0000, 0x00edc5, 0x0eed00, 0xeddb00, 0xed00c5, 0xd8e7e1 };
+    const std::array<int, GamePlay::GamePlay::maximumNumberOfPlayers> colors = {{0xfd0000, 0x00edc5, 0x0eed00, 0xeddb00, 0xed00c5, 0xd8e7e1 }};
     const std::vector<std::string>colorsName = {"RED", "BLUE", "GREEN", "YELLOW", "PINK", "WHITE"};
 };
 

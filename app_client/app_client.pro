@@ -9,7 +9,7 @@ QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = app_client
+TARGET = app_client.exe
 CONFIG += c++11
 CONFIG += link_prl
 TEMPLATE = app
@@ -24,7 +24,8 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     gameclient.h \
     controller.h \
-    addressdialog.h
+    addressdialog.h \
+    clientexception.h
 
 FORMS    += mainwindow.ui \
     addressdialog.ui

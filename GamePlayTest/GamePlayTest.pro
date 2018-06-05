@@ -8,7 +8,7 @@ QT       += testlib
 
 QT       -= gui
 
-TARGET = tst_gameplaytest
+TARGET = tst_gameplaytest.exe
 CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG   += c++11
