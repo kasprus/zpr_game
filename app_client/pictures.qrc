@@ -1,0 +1,18 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>pic/angle.png</file>
+    <file>pic/angle_o.png</file>
+    <file>pic/collisionless.png</file>
+    <file>pic/collisionless_o.png</file>
+    <file>pic/fast.png</file>
+    <file>pic/fast_o.png</file>
+    <file>pic/reverse.png</file>
+    <file>pic/reverse_o.png</file>
+    <file>pic/slow.png</file>
+    <file>pic/slow_o.png</file>
+    <file>pic/thick.png</file>
+    <file>pic/thick_o.png</file>
+    <file>pic/thin.png</file>
+    <file>pic/thin_o.png</file>
+</qresource>
+</RCC>

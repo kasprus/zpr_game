@@ -17,7 +17,7 @@ void PointMessage::accept(const MessageVisitor& translator) {
 }
 
 int PointMessage::getCapacity() const {
-    int remaining = Communication::messageSize - Communication::headerSize - messageItemSize * points.size();
+    int remaining = static_cast<int>(Communication::messageSize - Communication::headerSize - messageItemSize * points.size());
     return remaining / messageItemSize;
 }
 

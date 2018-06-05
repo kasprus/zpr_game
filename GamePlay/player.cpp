@@ -1,10 +1,12 @@
+#include <math.h>
+#include <QDebug>
+#include <QtMath>
+
 #include "player.h"
 #include "gameplay.h"
 #include "board.h"
 #include "point.h"
-#include <math.h>
 #include "gamemode.h"
-#include <QDebug>
 
 namespace GamePlay {
 

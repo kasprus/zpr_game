@@ -129,67 +129,67 @@ void MainWindow::showBonus(qint32 mode, qreal x, qreal y) {
     qDebug() << "SHOW BONUS " << mode;
     switch(mode) {
     case(GamePlay::Modes::COLLISIONLESS):
-        bonusItems[mode] = new QGraphicsPixmapItem(QPixmap("pic/collisionless.png").scaled(20,20));
+        bonusItems[mode] = new QGraphicsPixmapItem(QPixmap(":pic/collisionless.png").scaled(20,20));
         bonusItems[mode]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[mode]);
         break;
     case(GamePlay::Modes::FAST):
-        bonusItems[GamePlay::Modes::FAST] = new QGraphicsPixmapItem(QPixmap("pic/fast.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::FAST] = new QGraphicsPixmapItem(QPixmap(":pic/fast.png").scaled(20,20));
         bonusItems[GamePlay::Modes::FAST]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::FAST]);
         break;
     case(GamePlay::Modes::FAST_O):
-        bonusItems[GamePlay::Modes::FAST_O] = new QGraphicsPixmapItem(QPixmap("pic/fast_o.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::FAST_O] = new QGraphicsPixmapItem(QPixmap(":pic/fast_o.png").scaled(20,20));
         bonusItems[GamePlay::Modes::FAST_O]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::FAST_O]);
         break;
     case(GamePlay::Modes::SLOW):
-        bonusItems[GamePlay::Modes::SLOW] = new QGraphicsPixmapItem(QPixmap("pic/slow.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::SLOW] = new QGraphicsPixmapItem(QPixmap(":pic/slow.png").scaled(20,20));
         bonusItems[GamePlay::Modes::SLOW]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::SLOW]);
         break;
     case(GamePlay::Modes::SLOW_O):
-        bonusItems[GamePlay::Modes::SLOW_O] = new QGraphicsPixmapItem(QPixmap("pic/slow_o.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::SLOW_O] = new QGraphicsPixmapItem(QPixmap(":pic/slow_o.png").scaled(20,20));
         bonusItems[GamePlay::Modes::SLOW_O]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::SLOW_O]);
         break;
     case(GamePlay::Modes::THICK):
-        bonusItems[GamePlay::Modes::THICK] = new QGraphicsPixmapItem(QPixmap("pic/thick.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::THICK] = new QGraphicsPixmapItem(QPixmap(":pic/thick.png").scaled(20,20));
         bonusItems[GamePlay::Modes::THICK]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::THICK]);
         break;
     case(GamePlay::Modes::THICK_O):
-        bonusItems[GamePlay::Modes::THICK_O] = new QGraphicsPixmapItem(QPixmap("pic/thick_o.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::THICK_O] = new QGraphicsPixmapItem(QPixmap(":pic/thick_o.png").scaled(20,20));
         bonusItems[GamePlay::Modes::THICK_O]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::THICK_O]);
         break;
     case(GamePlay::Modes::THIN):
-        bonusItems[GamePlay::Modes::THIN] = new QGraphicsPixmapItem(QPixmap("pic/thin.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::THIN] = new QGraphicsPixmapItem(QPixmap(":pic/thin.png").scaled(20,20));
         bonusItems[GamePlay::Modes::THIN]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::THIN]);
         break;
     case(GamePlay::Modes::THIN_O):
-        bonusItems[GamePlay::Modes::THIN_O] = new QGraphicsPixmapItem(QPixmap("pic/thin_o.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::THIN_O] = new QGraphicsPixmapItem(QPixmap(":pic/thin_o.png").scaled(20,20));
         bonusItems[GamePlay::Modes::THIN_O]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::THIN_O]);
         break;
     case(GamePlay::Modes::SQUARE):
-        bonusItems[GamePlay::Modes::SQUARE] = new QGraphicsPixmapItem(QPixmap("pic/angle.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::SQUARE] = new QGraphicsPixmapItem(QPixmap(":pic/angle.png").scaled(20,20));
         bonusItems[GamePlay::Modes::SQUARE]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::SQUARE]);
         break;
     case(GamePlay::Modes::SQUARE_O):
-        bonusItems[GamePlay::Modes::SQUARE_O] = new QGraphicsPixmapItem(QPixmap("pic/angle_o.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::SQUARE_O] = new QGraphicsPixmapItem(QPixmap(":pic/angle_o.png").scaled(20,20));
         bonusItems[GamePlay::Modes::SQUARE_O]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::SQUARE_O]);
         break;
     case(GamePlay::Modes::REVERSE):
-        bonusItems[GamePlay::Modes::REVERSE] = new QGraphicsPixmapItem(QPixmap("pic/reverse.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::REVERSE] = new QGraphicsPixmapItem(QPixmap(":pic/reverse.png").scaled(20,20));
         bonusItems[GamePlay::Modes::REVERSE]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::REVERSE]);
         break;
     case(GamePlay::Modes::REVERSE_O):
-        bonusItems[GamePlay::Modes::REVERSE_O] = new QGraphicsPixmapItem(QPixmap("pic/reverse_o.png").scaled(20,20));
+        bonusItems[GamePlay::Modes::REVERSE_O] = new QGraphicsPixmapItem(QPixmap(":pic/reverse_o.png").scaled(20,20));
         bonusItems[GamePlay::Modes::REVERSE_O]->setOffset(x,y);
         ui->graphicsView->scene()->addItem(bonusItems[GamePlay::Modes::REVERSE_O]);
         break;

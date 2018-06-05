@@ -59,3 +59,6 @@ else:unix: PRE_TARGETDEPS += $$OUT_PWD/../GamePlay/libGamePlay.a
 
 DISTFILES +=
 
+RESOURCES += \
+    pictures.qrc
+
