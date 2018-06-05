@@ -1,4 +1,0 @@
-#ifndef GAMEENDMESSAGE_H
-#define GAMEENDMESSAGE_H
-
-#endif // GAMEENDMESSAGE_H

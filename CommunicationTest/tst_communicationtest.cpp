@@ -1,5 +1,8 @@
+#include <memory>
+#include <exception>
 #include <QString>
 #include <QtTest>
+
 #include "message.h"
 #include "pointmessage.h"
 #include "keypressedmessage.h"
@@ -9,7 +12,10 @@
 #include "translatorfromarray.h"
 #include "keyreleasedmessage.h"
 #include "gamedelaymessage.h"
-#include <memory>
+#include "gameovermessage.h"
+#include "gamestartmessage.h"
+#include "roundendmessage.h"
+
 
 class CommunicationTest : public QObject
 {
@@ -28,6 +34,9 @@ private Q_SLOTS:
     void keyReleasedMessegeSizeTest1();
     void outputKeyReleasedMessegeTest1();
     void gameDelayMessageTest1();
+    void gameOverMessageTest1();
+    void gameStartMessageTest1();
+    void roundEndMessageTest1();
 };
 
 CommunicationTest::CommunicationTest()
@@ -141,6 +150,43 @@ void CommunicationTest::gameDelayMessageTest1() {
     auto msg = std::move(tf.getMessage(tt.getLastMessage()));
     QVERIFY2(dynamic_cast<Communication::GameDelayMessage*>(msg.get())->getHeader() == Communication::Communication::gameDelayMessageHeader, "Wrong header");
     QVERIFY2(dynamic_cast<Communication::GameDelayMessage*>(msg.get())->getDelay() == 3, "Wrong delay");
+}
+
+void CommunicationTest::gameOverMessageTest1() {
+    Communication::GameOverMessage m(5);
+    Communication::TranslatorToArray tt;
+    Communication::TranslatorFromArray tf;
+    m.accept(tt);
+    QVERIFY2(tt.getLastMessage().size() == Communication::Communication::messageSize, "Wrong message size");
+    auto msg = std::move(tf.getMessage(tt.getLastMessage()));
+    QVERIFY2(dynamic_cast<Communication::GameOverMessage*>(msg.get())->getHeader() == Communication::Communication::gameOverMessageHeader, "Wrong header");
+    QVERIFY2(dynamic_cast<Communication::GameOverMessage*>(msg.get())->getWinner() == 5, "Wrong winner number");
+}
+
+void CommunicationTest::gameStartMessageTest1() {
+    Communication::GameStartMessage m(3, 2, 1);
+    Communication::TranslatorToArray tt;
+    Communication::TranslatorFromArray tf;
+    m.accept(tt);
+    QVERIFY2(tt.getLastMessage().size() == Communication::Communication::messageSize, "Wrong message size");
+    auto msg = std::move(tf.getMessage(tt.getLastMessage()));
+    QVERIFY2(dynamic_cast<Communication::GameStartMessage*>(msg.get())->getHeader() == Communication::Communication::gameStartMessageHeader, "Wrong header");
+    QVERIFY2(dynamic_cast<Communication::GameStartMessage*>(msg.get())->getNumberOfPlayers() == 3, "Wrong number of players");
+    QVERIFY2(dynamic_cast<Communication::GameStartMessage*>(msg.get())->getMaxScore() == 2, "Wrong max score");
+    QVERIFY2(dynamic_cast<Communication::GameStartMessage*>(msg.get())->getPlayerNumber() == 1, "Wrong player number");
+}
+
+void CommunicationTest::roundEndMessageTest1() {
+    Communication::RoundEndMessage m(3);
+    Communication::TranslatorToArray tt;
+    Communication::TranslatorFromArray tf;
+    m.accept(tt);
+    QVERIFY2(tt.getLastMessage().size() == Communication::Communication::messageSize, "Wrong message size");
+    auto msg = std::move(tf.getMessage(tt.getLastMessage()));
+    dynamic_cast<Communication::RoundEndMessage*>(msg.get())->addScore(1, 8);
+    QVERIFY2(dynamic_cast<Communication::RoundEndMessage*>(msg.get())->getHeader() == Communication::Communication::roundEndMessageHeader, "Wrong header");
+    QVERIFY2(dynamic_cast<Communication::RoundEndMessage*>(msg.get())->getScore() == std::vector<int>({0, 8, 0}), "Wrong scores");
+    QVERIFY_EXCEPTION_THROWN(dynamic_cast<Communication::RoundEndMessage*>(msg.get())->addScore(3, 3), std::out_of_range);
 }
 
 QTEST_APPLESS_MAIN(CommunicationTest)

@@ -2,7 +2,7 @@ QT += core
 QT -= gui
 QT += network
 
-TARGET = app_server
+TARGET = app_server.exe
 CONFIG += console
 CONFIG -= app_bundle
 CONFIG += c++11
@@ -17,7 +17,8 @@ SOURCES += main.cpp \
 HEADERS += \
     gameserver.h \
     parameterexception.h \
-    parameterselector.h
+    parameterselector.h \
+    serverexception.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../Communication/release/ -lCommunication
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../Communication/debug/ -lCommunication

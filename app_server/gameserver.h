@@ -1,19 +1,21 @@
 #ifndef GAMESERVER_H
 #define GAMESERVER_H
 
+#include <memory>
+#include <vector>
+#include <random>
 #include <QObject>
 #include <QCoreApplication>
 #include <QtNetwork>
 #include <QDebug>
-#include <memory>
-#include <vector>
-#include <random>
 #include <QTimer>
+
 #include "player.h"
 #include "board.h"
 #include "communication.h"
 #include "message.h"
 #include "gamemode.h"
+#include "serverexception.h"
 
 class GameServer : public QObject
 {

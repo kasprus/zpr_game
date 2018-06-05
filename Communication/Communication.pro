@@ -21,7 +21,6 @@ SOURCES += communication.cpp \
     keyreleasedmessage.cpp \
     roundendmessage.cpp \
     gamestartmessage.cpp \
-    gameendmessage.cpp \
     gameovermessage.cpp \
     gamedelaymessage.cpp \
     bonusmessage.cpp
@@ -35,7 +34,6 @@ HEADERS += communication.h \
     keyreleasedmessage.h \
     roundendmessage.h \
     gamestartmessage.h \
-    gameendmessage.h \
     gameovermessage.h \
     gamedelaymessage.h \
     bonusmessage.h

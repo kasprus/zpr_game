@@ -17,7 +17,7 @@ void RoundEndMessage::accept(const TranslatorToArray& translator) {
 }
 
 void RoundEndMessage::addScore(int index, int score) {
-    scores[index] = score;
+    scores.at(index) = score;
 }
 
 std::vector<int> RoundEndMessage::getScore() const {

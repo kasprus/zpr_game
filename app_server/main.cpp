@@ -8,7 +8,6 @@
 
 int main(int argc, char *argv[])
 {
-//    QCoreApplication a(argc, argv);
     ParameterSelector selector;
     selector.selectNumberOfPlayer();
     selector.selectNumberOfPoints();
@@ -17,7 +16,7 @@ int main(int argc, char *argv[])
     try {
         server = std::move(selector.createServer(argc, argv));
     }
-    catch(const ParameterException &e) {
+    catch(const ParameterException &) {
         std::cerr<<"wrong argument values";
         return 0;
     }
