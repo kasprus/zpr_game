@@ -13,13 +13,15 @@
 #include "roundendmessage.h"
 #include "addressdialog.h"
 #include "mainwindow.h"
+#include "messagevisitor.h"
 
 class GameClient;
+
 
 /**
  * @brief This class provides basic controller functionality. It is responsible for reacting for user input, preparing views and and providing data for web client.
  */
-class Controller : public QObject
+class Controller : public QObject, public Communication::MessageVisitor
 {
     Q_OBJECT
 public:
@@ -47,20 +49,20 @@ signals:
      * @param pId Number of player to whom the circle belongs.
      * @param isVisible True if circle is visible
      */
-    void newCircle(qreal x, qreal y, qreal radius, qint32 pId, bool isVisible);
+    void newCircle(qreal x, qreal y, qreal radius, qint32 pId, bool isVisible) const;
 
     /**
      * @brief Called when game parameters and scene should be drawn.
      * @param nPlayers Number of players of the game.
      * @param maxScore Maximum score of the game.
      */
-    void setScoreBoard(qint32 nPlayers, qint32 maxScore, qint32 playerNumber);
+    void setScoreBoard(qint32 nPlayers, qint32 maxScore, qint32 playerNumber) const;
 
     /**
      * @brief Called when round is finished and board should be cleared.
      * @param scr Scores of players achieved in the round.
      */
-    void endRoundAndClear(const std::vector<int>& scr);
+    void endRoundAndClear() const;
 
     /**
      * @brief Called when new message should be sent to server.
@@ -78,12 +80,12 @@ signals:
      * @brief Called when new message should be presented on the scene.
      * @param message Message.
      */
-    void newSceneMessage(QString message);
+    void newSceneMessage(QString message) const;
 
     /**
      * @brief Called when scene messages should be cleared.
      */
-    void clearMessages();
+    void clearMessages() const;
 
     /**
      * @brief Called upon getting new game bonus to display.
@@ -91,13 +93,16 @@ signals:
      * @param x Left hand side coordinate of the bonus.
      * @param y Top coordinate of the bonus.
      */
-    void showBonus(qint32 mode, qreal x, qreal y);
+    void showBonus(qint32 mode, qreal x, qreal y) const;
 
     /**
      * @brief Called to remove game bonus with given mode.
      * @param mode Mode of the bonus.
      */
-    void hideBonus(qint32 mode);
+    void hideBonus(qint32 mode) const;
+
+    void updateScore(const std::vector<int>& scores) const;
+
 
     /**
      * @brief Called when client should reconnect to server
@@ -105,20 +110,6 @@ signals:
     void reconnect();
 
 public slots:
-    //Trzeba zmienić nazwę, bo jest myląca
-    void setWindow(qint32, qint32, qint32);
-
-    /**
-     * @brief Deals with new point.
-     * @param point Game point.
-     */
-    void newPoint(GamePlay::Point point);
-
-    /**
-     * @brief It finishes the game round.
-     * @param scr Scores achieved by players in the round.
-     */
-    void endRound(const std::vector<int>&scr);
 
     /**
      * @brief It reacts to message with information about pressed key.
@@ -137,17 +128,6 @@ public slots:
      */
     void generateConnectionInfo();
 
-    /**
-     * @brief It finishes whole game.
-     * @param Number of the winner
-     */
-    void gameOver(int winner);
-
-    /**
-     * @brief It is responsible for providing required delay between rounds.
-     * @param delay Length of the delay in seconds.
-     */
-    void gameDelay(qint32 delay);
 
     /**
      * @brief Deals with information about connection.
@@ -160,25 +140,28 @@ public slots:
      */
     void setColors(std::vector<std::string>colors);
 
-    /**
-     * @brief Deals with game bonuses.
-     * @param mode Mode of game bonus.
-     * @param x
-     * @param y
-     * @param toShow True if bonus must be displayed. false to remove.
-     */
-    void newBonus(qint32 mode, qreal x, qreal y, qint8 toShow);
+
 
     /**
      * @brief Checks if there is a need to reconnect to server
      */
     void checkReconnect();
+    virtual void visit(const Communication::PointMessage &pointMessage) const;
+    virtual void visit(const Communication::KeyPressedMessage &keyPressedMessage) const;
+    virtual void visit(const Communication::KeyReleasedMessage &keyReleasedMessage) const;
+    virtual void visit(const Communication::RoundEndMessage &roundEndMessage) const;
+    virtual void visit(const Communication::GameStartMessage& gameStartMessage) const;
+    virtual void visit(const Communication::GameOverMessage& gameOverMessage) const;
+    virtual void visit(const Communication::GameDelayMessage &gameDelayMessage) const;
+    virtual void visit(const Communication::BonusMessage& bonusMessage) const;
+    virtual void visit(const Communication::GameScoreMessage& gameScoreMessage) const;
+
 
 private:
     qreal boardPixelSize;
     AddressDialog ipDialog;
     std::vector<std::string>colorNames;
-    bool acceptReconnect;
+    mutable bool acceptReconnect;
     bool hardReconnect;
 };
 

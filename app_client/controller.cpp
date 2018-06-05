@@ -5,18 +5,20 @@
 #include "gameplay.h"
 #include "board.h"
 #include "translatortoarray.h"
+#include "messagevisitor.h"
+#include "pointmessage.h"
+#include "bonusmessage.h"
+#include "gamedelaymessage.h"
+#include "roundendmessage.h"
+#include "gamestartmessage.h"
+#include "gameovermessage.h"
+#include "gamescoremessage.h"
 
 Controller::Controller(GameClient &client, QObject *parent) : QObject(parent), boardPixelSize(0), acceptReconnect(false), hardReconnect(false)
 {
-    connect(&client, SIGNAL(newPoint(GamePlay::Point)), this, SLOT(newPoint(GamePlay::Point)));
-    connect(&client, SIGNAL(newBonus(qint32,qreal,qreal,qint8)), this, SLOT(newBonus(qint32, qreal, qreal, qint8)));
-    connect(&client, SIGNAL(endRound(const std::vector<int>&)), this, SLOT(endRound(const std::vector<int>&)));
-    connect(&client, SIGNAL(setWindow(qint32,qint32, qint32)), this, SLOT(setWindow(qint32, qint32, qint32)));
     connect(this, SIGNAL(newDataToWrite(QByteArray)), &client, SLOT(writeData(QByteArray)));
     connect(&ipDialog, SIGNAL(accepted()), this, SLOT(generateConnectionInfo()));
     connect(this, SIGNAL(newConnectionInfo(QString, qint32)), &client, SLOT(establishConnection(QString, qint32)));
-    connect(&client, SIGNAL(gameOver(int)), this, SLOT(gameOver(int)));
-    connect(&client, SIGNAL(gameDelay(qint32)), this, SLOT(gameDelay(qint32)));
     connect(&client, SIGNAL(newConnectionMessage(bool)), this, SLOT(newConnection(bool)));
     connect(this, SIGNAL(reconnect()), &client, SLOT(reconnect()));
 }
@@ -25,14 +27,6 @@ void Controller::setBoardPixelSize(int size) {
     boardPixelSize = size;
 }
 
-void Controller::newPoint(GamePlay::Point p) {
-    qreal x, y, radius;
-    x = (double)boardPixelSize * p.getX() / GamePlay::Board::dimensionX;
-    y = (double)boardPixelSize * p.getY() / GamePlay::Board::dimensionY;
-    radius = boardPixelSize * p.getRadius() / GamePlay::Board::dimensionX;
-
-    emit newCircle(x, y, 2 * radius, p.getPlayerId(), p.isVisible());//COLOR
-}
 
 void Controller::newKeyPressedMessageToSend(Communication::KeyPressedMessage msg) {
     Communication::TranslatorToArray translator;
@@ -50,30 +44,11 @@ void Controller::generateConnectionInfo() {
     emit newConnectionInfo(ipDialog.getIpAddress(), ipDialog.getPortNumber());
 }
 
-void Controller::endRound(const std::vector<int>& scr) {
-    qDebug() << "CONTROLLER END ROUND";
-    emit endRoundAndClear(scr);
-}
 
-void Controller::setWindow(qint32 nPlayers, qint32 maxScore, qint32 playerNumber) {
-    emit setScoreBoard(nPlayers, maxScore, playerNumber);
-}
 void Controller::showIpDialog() {
     ipDialog.show();
 }
 
-void Controller::gameOver(int winner) {
-    acceptReconnect = true;
-    emit newSceneMessage(QString::fromStdString(std::string("Game over\n The winner is " + colorNames[winner] + "\n Press SPACE to play again")));
-}
-
-void Controller::gameDelay(qint32 delay) {
-    qDebug() << "Control delay: "<<QString::number(delay);
-    if(delay > 0)emit newSceneMessage("Game starts in " + QString::number(delay) + " seconds");
-    else {
-        emit clearMessages();
-    }
-}
 
 void Controller::newConnection(bool status) {
     if(status) {
@@ -90,15 +65,79 @@ void Controller::setColors(std::vector<std::string> colors) {
     colorNames = colors;
 }
 
-void Controller::newBonus(qint32 mode, qreal x, qreal y, qint8 show) {
-    qDebug() << "RECEIVED BONUS " << mode << " " << show;
-    x = (double)boardPixelSize * x / GamePlay::Board::dimensionX;
-    y = (double)boardPixelSize * y / GamePlay::Board::dimensionY;
-    if(show)
+
+void Controller::visit(const Communication::PointMessage &pointMessage) const{
+
+    qreal x, y, radius, pID, isVis;
+
+    auto points = pointMessage.getPoints();
+    for(auto &p : points) {
+        x = (double)boardPixelSize * p.getX() / GamePlay::Board::dimensionX;
+        y = (double)boardPixelSize * p.getY() / GamePlay::Board::dimensionY;
+        radius = boardPixelSize * p.getRadius() / GamePlay::Board::dimensionX;
+        pID = p.getPlayerId(); isVis = p.isVisible();
+        emit newCircle(x,y, 2*radius, pID, isVis);
+    }
+}
+
+void Controller::visit(const Communication::KeyPressedMessage &keyPressedMessage) const {
+    (void)keyPressedMessage;
+}
+
+void Controller::visit(const Communication::KeyReleasedMessage &keyReleasedMessage) const {
+    (void)keyReleasedMessage;
+}
+
+void Controller::visit(const Communication::RoundEndMessage &roundEndMessage) const {
+    (void)roundEndMessage;
+    emit endRoundAndClear();
+}
+
+void Controller::visit(const Communication::GameStartMessage &gameStartMessage) const {
+    qDebug() << "Game Starts...";
+
+    qint32 nPlayers = gameStartMessage.getNumberOfPlayers();
+    qint32 maxScore = gameStartMessage.getMaxScore();
+    qint32 playerNumber = gameStartMessage.getPlayerNumber();
+    emit setScoreBoard(nPlayers, maxScore, playerNumber);
+}
+
+void Controller::visit(const Communication::GameOverMessage &gameOverMessage) const {
+    acceptReconnect = true;
+    emit newSceneMessage(QString::fromStdString(std::string("Game over\n The winner is " + colorNames[gameOverMessage.getWinner()] + "\n Press SPACE to play again")));
+}
+
+void Controller::visit(const Communication::GameDelayMessage &gameDelayMessage) const {
+    qint32 delay = gameDelayMessage.getDelay();
+    qDebug() << "Control delay: "<<QString::number(delay);
+    if(delay > 0)
+        emit newSceneMessage("Game starts in " + QString::number(delay) + " seconds");
+    else {
+        emit clearMessages();
+    }
+}
+
+void Controller::visit(const Communication::BonusMessage &bonusMessage) const {
+    qreal x = (double)boardPixelSize * bonusMessage.getX() / GamePlay::Board::dimensionX;
+    qreal y = (double)boardPixelSize * bonusMessage.getY() / GamePlay::Board::dimensionY;
+    qint32 mode = bonusMessage.getMode();
+    if(bonusMessage.getShowBonus())
         emit showBonus(mode, x, y);
     else
         emit hideBonus(mode);
 }
+
+void Controller::visit(const Communication::GameScoreMessage& gameScoreMessage) const {
+    emit updateScore(gameScoreMessage.getScore());
+}
+
+
+
+
+
+
+
+
 
 void Controller::checkReconnect() {
     if(acceptReconnect) {

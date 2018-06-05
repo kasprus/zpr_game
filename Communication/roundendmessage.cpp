@@ -4,7 +4,8 @@
 
 namespace Communication {
 
-RoundEndMessage::RoundEndMessage(int nPlayers_) : scores(nPlayers_, 0), nPlayers(nPlayers_) {
+RoundEndMessage::RoundEndMessage()
+{
 
 }
 
@@ -12,20 +13,10 @@ int RoundEndMessage::getHeader() const {
     return Communication::roundEndMessageHeader;
 }
 
-void RoundEndMessage::accept(const TranslatorToArray& translator) {
+void RoundEndMessage::accept(const MessageVisitor& translator) {
     translator.visit(*this);
 }
 
-void RoundEndMessage::addScore(int index, int score) {
-    scores[index] = score;
-}
-
-std::vector<int> RoundEndMessage::getScore() const {
-    return scores;
-}
-int RoundEndMessage::getNumberOfPlayers() const {
-    return nPlayers;
-}
 RoundEndMessage::~RoundEndMessage() {
 
 }

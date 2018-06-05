@@ -8,6 +8,7 @@
 #include "roundendmessage.h"
 #include "gameovermessage.h"
 #include "gamedelaymessage.h"
+#include "gamescoremessage.h"
 #include "communication.h"
 #include "point.h"
 #include <QDataStream>
@@ -60,16 +61,7 @@ std::unique_ptr<Message> TranslatorFromArray::getMessage(const QByteArray& array
     }
     else if (type == Communication::roundEndMessageHeader) {
         RoundEndMessage *m;
-        qint32 tmp;
-        qint32 nPlayers;
-        qint32 score;
-
-        dataStream >> tmp >> nPlayers;
-        m = new RoundEndMessage(nPlayers);
-        for(int i = 0; i < nPlayers; ++i) {
-            dataStream >> score;
-            m->addScore(i, score);
-        }
+        m = new RoundEndMessage();
 
         return std::unique_ptr<Message>(m);
     }
@@ -107,6 +99,21 @@ std::unique_ptr<Message> TranslatorFromArray::getMessage(const QByteArray& array
 
         m = new BonusMessage(mode, x, y, showBonus);
         return std::unique_ptr<Message>(m);
+    }
+    else if(type == Communication::gameScoreMessageHeader) {
+        GameScoreMessage* m;
+
+        qint32 tmp, nPlayers, score;
+
+        dataStream >> tmp >> nPlayers;
+        m = new GameScoreMessage(nPlayers);
+        for(int i = 0; i < nPlayers; ++i) {
+            dataStream >> score;
+            m->addScore(i, score);
+        }
+
+        return std::unique_ptr<Message>(m);
+
     }
     return std::unique_ptr<Message>(nullptr);
 }

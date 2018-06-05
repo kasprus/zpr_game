@@ -14,6 +14,7 @@
 #include "bonusmessage.h"
 #include "gamestartmessage.h"
 #include "gameovermessage.h"
+#include "gamescoremessage.h"
 #include "translatorfromarray.h"
 #include "keypressedmessage.h"
 #include "keyreleasedmessage.h"
@@ -80,9 +81,22 @@ void GameServer::performTurn() {
         if(players[i].isActive()) {
             GamePlay::Point p = players[i].move(turnNumber);
             if(board.checkCollision(p)) {
-                players[i].addScore(nPlayers - numberOfActivePlayers);
-                --numberOfActivePlayers;
                 players[i].setInactive();
+                Communication::GameScoreMessage scoreMessage(nPlayers);
+                for(int j = 0; j < nPlayers; ++j) {
+                    if(players[j].isActive())
+                        players[j].addScore(1);
+                    scoreMessage.addScore(j, players[j].getScore());
+
+                }
+
+
+
+
+                sendToAllWrapper(std::move(scoreMessage));
+
+                --numberOfActivePlayers;
+
             }
             checkBonusCollision(p);
             if(p.isVisible())
@@ -103,6 +117,7 @@ void GameServer::performTurn() {
 void GameServer::checkBonusCollision(const GamePlay::Point& p) {
     GamePlay::Bonus res = board.checkBonusCollision(p);
     if(res.getMode() != -1) {
+        qDebug() << "remove in check";
         sendToAllWrapper(Communication::BonusMessage(res, false));
         board.removeBonus(res.getMode());
         res.setActive(p.getPlayerId());
@@ -112,12 +127,19 @@ void GameServer::checkBonusCollision(const GamePlay::Point& p) {
 
 void GameServer::manageBonuses() {
     GamePlay::Bonus oldBonus = gamemode.checkTimeout();
-    if(oldBonus.getMode() != -1) {
-        sendToAllWrapper(Communication::BonusMessage(oldBonus, false));
+    while(oldBonus.getMode() != -1) {
+        if(!oldBonus.isActive()) {
+            qDebug() << "REMOVE IN MANAGE";
+            board.removeBonus(oldBonus.getMode());
+            sendToAllWrapper(Communication::BonusMessage(oldBonus, false));
+        }
         oldBonus.setInactive();
-        board.removeBonus(oldBonus.getMode());
         gamemode.updateBonus(oldBonus);
+
+        oldBonus = gamemode.checkTimeout();
     }
+
+
     GamePlay::Bonus newBonus = gamemode.tryBonus();
     if(newBonus.getMode() != GamePlay::Modes::EMPTY_BONUS) {
         board.registerBonus(newBonus);
@@ -126,17 +148,14 @@ void GameServer::manageBonuses() {
 }
 void GameServer::endRound() {
     timer.stop();
-    sendToAllWrapper(Communication::RoundEndMessage(nPlayers));
-    Communication::RoundEndMessage msg(nPlayers);
     for(int i = 0; i < nPlayers; ++i) {
-        msg.addScore(i, players[i].getScore());
         players[i].setCoordinatesAndAngle(dist(gen), dist(gen), M_PI*dist(gen));
         players[i].setActive();
         players[i].reset();
     }
     board.eraseBoard();
     gamemode.removeAllBonuses();
-    sendToAllWrapper(std::move(msg));
+    sendToAllWrapper(Communication::RoundEndMessage());
     if(!checkEndOfAllGames()) {
         numberOfActivePlayers = nPlayers;
         resetDelay();

@@ -9,7 +9,7 @@ GameOverMessage::GameOverMessage(int winner) : winner(winner)
 
 }
 
-void GameOverMessage::accept(const TranslatorToArray& translator) {
+void GameOverMessage::accept(const MessageVisitor& translator) {
     translator.visit(*this);
 }
 

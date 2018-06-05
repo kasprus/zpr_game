@@ -14,7 +14,7 @@ class GameOverMessage : public Message
 public:
     GameOverMessage(int winner);
     virtual int getHeader() const;
-    virtual void accept(const TranslatorToArray &translator);
+    virtual void accept(const MessageVisitor& translator);
     int getWinner() const;
     virtual ~GameOverMessage();
 private:

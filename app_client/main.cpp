@@ -12,8 +12,11 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    GameClient clinet;
-    Controller controller(clinet);
+    GameClient client;
+    Controller controller(client);
+
+    client.setController(&controller);
+
     MainWindow w(controller);
     w.show();
     controller.showIpDialog();

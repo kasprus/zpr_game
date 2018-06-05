@@ -1,6 +1,7 @@
 #include "message.h"
 #include "pointmessage.h"
 #include "translatortoarray.h"
+#include "messagevisitor.h"
 #include "communication.h"
 #include "point.h"
 
@@ -11,7 +12,7 @@ PointMessage::PointMessage()
 
 }
 
-void PointMessage::accept(const TranslatorToArray& translator) {
+void PointMessage::accept(const MessageVisitor& translator) {
     translator.visit(*this);
 }
 

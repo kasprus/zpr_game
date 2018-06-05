@@ -11,6 +11,7 @@
 #include <vector>
 #include "point.h"
 #include "message.h"
+#include "controller.h"
 
 /**
  * @brief This class provides the implementation of the network client.
@@ -25,44 +26,14 @@ public:
      */
     explicit GameClient(QObject *parent = 0);
     virtual ~GameClient();
+    void setController(Controller* controller);
 signals:
     /**
      * @brief Called when connection is established or failed.
      * @param status True if connection is established.
      */
     void newConnectionMessage(bool);
-    /**
-     * @brief Called when new point should be processed by controller.
-     * @param point New point.
-     */
-    void newPoint(GamePlay::Point point);
-    /**
-     * @brief Called when round should be finished.
-     * @param scores Scores achieved by players
-     */
-    void endRound(const std::vector<int>& scores);
 
-    void setWindow(qint32, qint32, qint32);
-
-    /**
-     * @brief Called when delay between rounds should be set.
-     * @param delay Required delay
-     */
-    void gameDelay(qint32 delay);
-
-    /**
-     * @brief Called when game should be finished.
-     */
-    void gameOver(int winner);
-
-    /**
-     * @brief Called when new game bonus should be processed by controller.
-     * @param mode Mode of game bonus.
-     * @param x
-     * @param y
-     * @param toShow True to display, false to hide.
-     */
-    void newBonus(qint32 mode, qreal x, qreal y, qint8 toShow);
 
 public slots:
 
@@ -94,6 +65,7 @@ private:
     QByteArray buffer;
     QString lastIP;
     qint32 lastPort;
+    Controller* controller;
 };
 
 #endif // GAMECLIENT_H

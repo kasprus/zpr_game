@@ -17,6 +17,7 @@ public:
     constexpr static int gameOverMessageHeader = 6;
     constexpr static int gameDelayMessageHeader = 7;
     constexpr static int bonusMessageHeader = 8;
+    constexpr static int gameScoreMessageHeader = 9;
 
     constexpr static int leftKeyId = 0;
     constexpr static int rightKeyId = 1;

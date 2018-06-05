@@ -1,6 +1,7 @@
 #include "gamedelaymessage.h"
 #include "communication.h"
-#include "translatortoarray.h"
+#include "messagevisitor.h"
+
 
 namespace Communication {
 
@@ -21,7 +22,7 @@ int GameDelayMessage::getDelay() const {
     return delay;
 }
 
-void GameDelayMessage::accept(const TranslatorToArray &translator) {
-    translator.visit(*this);
+void GameDelayMessage::accept(const MessageVisitor& visitor) {
+    visitor.visit(*this);
 }
 }

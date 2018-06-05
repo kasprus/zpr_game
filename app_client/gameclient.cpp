@@ -10,7 +10,6 @@
 #include "gameovermessage.h"
 #include "translatorfromarray.h"
 #include "translatortoarray.h"
-#include <QDebug>
 #include <QString>
 
 GameClient::GameClient(QObject *parent) : QObject(parent)
@@ -56,50 +55,16 @@ void GameClient::readData() {
 }
 
 void GameClient::responseForMessage(std::unique_ptr<Communication::Message> msg) {
-    if(msg->getHeader() == Communication::Communication::pointMessageHeader) {
-        //qDebug() << "Point Message";
-        auto points = dynamic_cast<Communication::PointMessage*>(msg.get())->getPoints();
-//        qDebug() <<"Number of points: "<<points.size();
-        for(auto &p : points) {
-//            qDebug() <<"Emining new point";
-            emit newPoint(p);
-        }
-    }
-    else if (msg->getHeader() == Communication::Communication::roundEndMessageHeader) {
-        qDebug() << "Round Ended";
-        std::vector<int> scr = dynamic_cast<Communication::RoundEndMessage*>(msg.get())->getScore();
-        emit endRound(scr);
-    }
-    else if (msg->getHeader() == Communication::Communication::gameStartMessageHeader) {
-        qDebug() << "Game Starts...";
-        auto m = dynamic_cast<Communication::GameStartMessage*>(msg.get());
-        qint32 nPlayers = m->getNumberOfPlayers();
-        qint32 maxScore = m->getMaxScore();
-        qint32 playerNumber = m->getPlayerNumber();
-        emit setWindow(nPlayers, maxScore, playerNumber);
-    }
-    else if (msg->getHeader() == Communication::Communication::gameOverMessageHeader) {
-        qDebug() << "Game over";
-        emit gameOver(dynamic_cast<Communication::GameOverMessage*>(msg.get())->getWinner());
-    }
-    else if(msg->getHeader() == Communication::Communication::gameDelayMessageHeader) {
-        qDebug() << "Dealy" << dynamic_cast<Communication::GameDelayMessage*>(msg.get())->getDelay();
-        emit gameDelay(dynamic_cast<Communication::GameDelayMessage*>(msg.get())->getDelay());
-    }
-    else if (msg->getHeader() == Communication::Communication::bonusMessageHeader) {
-        qDebug() << "Bonus";
-        auto m = dynamic_cast<Communication::BonusMessage*>(msg.get());
-        qint32 mode = m->getMode();
-        qreal x = m->getX();
-        qreal y = m->getY();
-        qint8 show = m->getShowBonus();
-        emit newBonus(mode, x, y, show);
-    }
+    msg->accept(*controller);
+}
+
+void GameClient::setController(Controller *controller_) {
+    controller = controller_;
 }
 
 void GameClient::writeData(QByteArray data) {
     if(!socket)return;
-    qDebug()<<"sending some data";
+    //qDebug()<<"sending some data";
     socket->write(data);
     socket->flush();
 }

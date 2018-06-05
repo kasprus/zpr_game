@@ -15,7 +15,7 @@ int GameStartMessage::getHeader() const {
     return Communication::gameStartMessageHeader;
 }
 
-void GameStartMessage::accept(const TranslatorToArray& translator) {
+void GameStartMessage::accept(const MessageVisitor& translator) {
     translator.visit(*this);
 }
 

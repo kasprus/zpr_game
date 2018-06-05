@@ -8,6 +8,7 @@
 #include "communication.h"
 #include "gameovermessage.h"
 #include "gamedelaymessage.h"
+#include "gamescoremessage.h"
 #include <QIODevice>
 #include <QDataStream>
 
@@ -60,12 +61,7 @@ void TranslatorToArray::visit(const RoundEndMessage &roundEndMessage) const {
     int usedBytes = 0;
     auto out = prepareLastMessage();
     *out << qint32(roundEndMessage.getHeader()) << qint32(0);
-    *out << qint32(roundEndMessage.getNumberOfPlayers());
-    for(int score : roundEndMessage.getScore()) {
-        *out << qint32(score);
-        usedBytes += 4;
-    }
-    usedBytes += Communication::headerSize + 4;
+    usedBytes += Communication::headerSize;
     while(usedBytes < Communication::messageSize) {
         *out << qint8(0);
         ++usedBytes;
@@ -122,6 +118,25 @@ void TranslatorToArray::visit(const BonusMessage &bonusMessage) const {
         ++usedBytes;
     }
 }
+
+void TranslatorToArray::visit(const GameScoreMessage& gameScoreMessage) const {
+    int usedBytes = 0;
+    auto out = prepareLastMessage();
+    *out << qint32(gameScoreMessage.getHeader()) << qint32(0);
+    usedBytes += Communication::headerSize;
+    *out << qint32(gameScoreMessage.getNumberOfPlayers());
+    usedBytes +=4;
+    for(int score : gameScoreMessage.getScore()) {
+        *out << qint32(score);
+        usedBytes += 4;
+    }
+    while(usedBytes < Communication::messageSize) {
+        *out << qint8(0);
+        ++usedBytes;
+    }
+
+}
+
 
 std::unique_ptr<QDataStream> TranslatorToArray::prepareLastMessage() const {
     lastMessage = QByteArray();

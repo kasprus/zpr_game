@@ -4,6 +4,7 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <memory>
+#include "messagevisitor.h"
 
 namespace Communication {
 
@@ -15,19 +16,23 @@ class GameStartMessage;
 class GameOverMessage;
 class GameDelayMessage;
 class BonusMessage;
+class GameScoreMessage;
 
-class TranslatorToArray
+
+class TranslatorToArray : public MessageVisitor
 {
 public:
     TranslatorToArray();
-    void visit(const PointMessage &pointMessage) const;
-    void visit(const KeyPressedMessage &keyPressedMessage) const;
-    void visit(const KeyReleasedMessage &keyPressedMessage) const;
-    void visit(const RoundEndMessage &roundEndMessage) const;
-    void visit(const GameStartMessage& gameStartMessage) const;
-    void visit(const GameOverMessage& gameOverMessage) const;
-    void visit(const GameDelayMessage &gameDelayMessage) const;
-    void visit(const BonusMessage& bonusMessage) const;
+    virtual void visit(const PointMessage &pointMessage) const;
+    virtual void visit(const KeyPressedMessage &keyPressedMessage) const;
+    virtual void visit(const KeyReleasedMessage &keyReleasedMessage) const;
+    virtual void visit(const RoundEndMessage &roundEndMessage) const;
+    virtual void visit(const GameStartMessage& gameStartMessage) const;
+    virtual void visit(const GameOverMessage& gameOverMessage) const;
+    virtual void visit(const GameDelayMessage &gameDelayMessage) const;
+    virtual void visit(const BonusMessage& bonusMessage) const;
+    virtual void visit(const GameScoreMessage& gameScoreMessage) const;
+
     QByteArray getLastMessage() const;
 private:
     std::unique_ptr<QDataStream> prepareLastMessage() const;

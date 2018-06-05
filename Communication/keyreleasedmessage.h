@@ -14,7 +14,7 @@ class KeyReleasedMessage : public Message
 public:
     KeyReleasedMessage(int key);
     virtual int getHeader() const;
-    virtual void accept(const TranslatorToArray& translator);
+    virtual void accept(const MessageVisitor& translator);
     int getKeyId() const;
     virtual ~KeyReleasedMessage();
 private:

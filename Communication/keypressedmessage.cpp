@@ -17,7 +17,7 @@ int KeyPressedMessage::getKeyId() const {
     return keyId;
 }
 
-void KeyPressedMessage::accept(const TranslatorToArray &translator) {
+void KeyPressedMessage::accept(const MessageVisitor& translator) {
     translator.visit(*this);
 }
 

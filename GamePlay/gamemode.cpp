@@ -28,16 +28,13 @@ Bonus GameMode::tryBonus() {
         if(!checkIfEligible(mode)) return Bonus(-1);
 
         auto timeout = std::chrono::system_clock::now(); timeout += std::chrono::seconds(12);
-        bonuses[mode] = std::move(std::unique_ptr<Bonus>(new Bonus(mode, -1, timeout, distPos(gen), distPos(gen)))); // todo: send message. here?
+        bonuses[mode] = std::move(std::unique_ptr<Bonus>(new Bonus(mode, -1, timeout, distPos(gen), distPos(gen))));
         return Bonus(*(bonuses[mode].get()));
     }
     return Bonus(-1);
 }
 
 bool GameMode::checkIfEligible(int mode) {
-    for(int i  = 0; i < Modes::MODESCOUNT; ++i) {
-        if(bonuses[i]) qDebug() << i;
-    }
     switch(mode) {
     case Modes::FAST:
         /* fall through */
@@ -91,7 +88,7 @@ std::chrono::system_clock::time_point GameMode::getTimeout(int mode) const {
 }
 
 Bonus GameMode::checkTimeout() {
-    //qDebug() << "begin check timeout";
+
     for(auto& it : bonuses) {
         if(it.get() &&  it->getTimeout() <= std::chrono::system_clock::now()) {
             Bonus bns(*(it.get()));
@@ -99,7 +96,7 @@ Bonus GameMode::checkTimeout() {
             return bns;
         }
     }
-     //qDebug() << "end check timeout";
+
     return Bonus(-1);
 }
 

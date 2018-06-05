@@ -11,12 +11,9 @@ class Message;
 
 class RoundEndMessage : public Message {
 public:
-    RoundEndMessage(int nPlayers);
+    RoundEndMessage();
     virtual int getHeader() const;
-    virtual void accept(const TranslatorToArray& translator);
-    std::vector<int> getScore() const;
-    int getNumberOfPlayers() const;
-    void addScore(int index, int score);
+    virtual void accept(const MessageVisitor& translator);
     virtual ~RoundEndMessage();
 private:
     std::vector<int> scores;

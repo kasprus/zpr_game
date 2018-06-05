@@ -55,6 +55,8 @@ private:
     bool rotatingRight;
     bool active;
     bool reversed;
+    void setMode(int mode, int playerID);
+    void resetMode(int mode, int playerID);
 
 };
 

@@ -6,9 +6,10 @@ Bonus::Bonus(int mode, int playerID, std::chrono::system_clock::time_point timeo
 {
 }
 
-Bonus::Bonus(const Bonus& bonus) : Bonus(bonus.getMode(), bonus.getPlayerID() , bonus.getTimeout(), bonus.getX(), bonus.getY())
-{
-}
+//Bonus::Bonus(const Bonus& bonus) : Bonus(bonus.getMode(), bonus.getPlayerID() , bonus.getTimeout(), bonus.getX(), bonus.getY())
+//{
+//    active = bonus.isActive();
+//}
 
 int Bonus::getMode() const {
     return mode;

@@ -12,7 +12,7 @@ BonusMessage::BonusMessage(int mode, double x, double y, bool showBonus) : mode(
 BonusMessage::BonusMessage(const GamePlay::Bonus& bonus, bool showBonus) : mode(bonus.getMode()), x(bonus.getX()), y(bonus.getY()), showBonus(showBonus)
 {
 }
-void BonusMessage::accept(const TranslatorToArray& translator) {
+void BonusMessage::accept(const MessageVisitor& translator) {
     translator.visit(*this);
 }
 

@@ -17,7 +17,7 @@ int KeyReleasedMessage::getKeyId() const {
     return keyId;
 }
 
-void KeyReleasedMessage::accept(const TranslatorToArray &translator) {
+void KeyReleasedMessage::accept(const MessageVisitor& translator) {
     translator.visit(*this);
 }
 

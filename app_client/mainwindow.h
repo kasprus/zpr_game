@@ -75,7 +75,7 @@ private slots:
      * @brief Updates meta game information and clears scene.
      * @param scr Players points
      */
-    void endRoundAndClear(const std::vector<int>& scr);
+    void endRoundAndClear();
 
     /**
      * @brief Sets meta game information
@@ -110,6 +110,8 @@ private slots:
      */
     void hideBonus(qint32 mode);
 
+    void updateScore(const std::vector<int> scores);
+
     /**
      * @brief Returns player colors used by window
      * @return vector of strings with color names
@@ -121,8 +123,8 @@ private:
     Ui::MainWindow *ui;
     void setScores(const std::vector<int>& scr);
     void clearBoard();
-    std::vector<std::shared_ptr<QGraphicsEllipseItem> > invisiblePoints;
-    std::vector<std::shared_ptr<QGraphicsPixmapItem> > bonusItems;
+    std::vector<QGraphicsEllipseItem*> invisiblePoints;
+    std::vector<QGraphicsPixmapItem*> bonusItems;
     int nPlayers;
     const int colors[6] = {0xfd0000, 0x00edc5, 0x0eed00, 0xeddb00, 0xed00c5, 0xd8e7e1 };
     const std::vector<std::string>colorsName = {"RED", "BLUE", "GREEN", "YELLOW", "PINK", "WHITE"};

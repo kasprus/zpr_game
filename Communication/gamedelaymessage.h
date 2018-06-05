@@ -15,7 +15,7 @@ class GameDelayMessage : public Message
 public:
     GameDelayMessage(int delay);
     virtual int getHeader() const;
-    virtual void accept(const TranslatorToArray& translator);
+    virtual void accept(const MessageVisitor& visitor);
     int getDelay() const;
     virtual ~GameDelayMessage();
 private:
