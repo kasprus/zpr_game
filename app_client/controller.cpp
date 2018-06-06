@@ -1,5 +1,6 @@
 #include <QObject>
 #include <QDebug>
+
 #include "controller.h"
 #include "gameclient.h"
 #include "gameplay.h"

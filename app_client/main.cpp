@@ -1,7 +1,8 @@
+#include <QApplication>
+
 #include "mainwindow.h"
 #include "gameclient.h"
 #include "controller.h"
-#include <QApplication>
 
 /**
  * @brief Main game client function

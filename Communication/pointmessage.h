@@ -2,6 +2,7 @@
 #define POINTMESSAGE_H
 
 #include <vector>
+
 #include "point.h"
 #include "message.h"
 

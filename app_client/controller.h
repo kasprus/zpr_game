@@ -1,11 +1,12 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include <memory>
+#include <vector>
 #include <QObject>
 #include <QGraphicsItem>
 #include <QPainter>
-#include <memory>
-#include <vector>
+
 #include "point.h"
 #include "message.h"
 #include "keypressedmessage.h"

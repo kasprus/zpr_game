@@ -2,6 +2,7 @@
 #define ROUNDENDMESSAGE_H
 
 #include <vector>
+
 #include "message.h"
 
 namespace Communication {

@@ -1,8 +1,6 @@
 #ifndef GAMEDELAYMESSAGE_H
 #define GAMEDELAYMESSAGE_H
 
-
-
 #include "message.h"
 
 namespace Communication {

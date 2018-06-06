@@ -1,3 +1,6 @@
+#include <QIODevice>
+#include <QDataStream>
+
 #include "translatortoarray.h"
 #include "bonusmessage.h"
 #include "gamestartmessage.h"
@@ -9,8 +12,6 @@
 #include "gameovermessage.h"
 #include "gamedelaymessage.h"
 #include "gamescoremessage.h"
-#include <QIODevice>
-#include <QDataStream>
 
 namespace Communication {
 

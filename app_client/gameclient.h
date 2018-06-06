@@ -1,14 +1,15 @@
 #ifndef GAMECLIENT_H
 #define GAMECLIENT_H
 
+#include <memory>
+#include <vector>
 #include <QObject>
 #include <QtNetwork>
 #include <QTcpSocket>
 #include <QDebug>
 #include <QByteArray>
 #include <QString>
-#include <memory>
-#include <vector>
+
 #include "point.h"
 #include "message.h"
 #include "controller.h"

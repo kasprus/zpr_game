@@ -11,6 +11,7 @@ public:
     GamePlayTest();
 
 private Q_SLOTS:
+    void testPointProperties1();
     void testPointCollision1();
     void testPointCollision2();
     void testPointCollision3();
@@ -22,11 +23,25 @@ private Q_SLOTS:
     void testPlayerDirections2();
     void testPlayerDirections3();
     void testPlayerDirections4();
+    void testPlayerProperties1();
+    void testPlayerPropertiesAfterReset1();
+    void testPlayerInactivity1();
+    void testBoardClear1();
 };
 
 GamePlayTest::GamePlayTest()
 {
 
+}
+
+void GamePlayTest::testPointProperties1() {
+    GamePlay::Point p(0.0, 0.0, 0.0, 1, 2, true);
+    QVERIFY2(p.getX() == 0.0, "Wrong X position");
+    QVERIFY2(p.getY() == 0.0, "Wrong Y position");
+    QVERIFY2(p.getRadius() == 0.0, "Wrong radius");
+    QVERIFY2(p.getTurnNumber() == 1, "Wrong turn number");
+    QVERIFY2(p.getPlayerId() == 2, "Wrong player ID");
+    QVERIFY2(p.isVisible(), "Should be visible");
 }
 
 void GamePlayTest::testPointCollision1()
@@ -126,6 +141,45 @@ void GamePlayTest::testPlayerDirections4() {
     p.move(1);
     QVERIFY2(p.getX() > x, "Wrong movement effects");
     QVERIFY2(p.getY() == y, "Wrong movement effects");
+}
+
+void GamePlayTest::testPlayerProperties1() {
+    GamePlay::Player p(1, 0.0, 0.0, 0.0);
+    QVERIFY2(p.getID() == 1, "Wrong ID");
+    QVERIFY2(p.getScore() == 0, "Wrong score number");
+    QVERIFY2(p.getX() == 0.0, "Wrong X position");
+    QVERIFY2(p.getY() == 0.0, "Wrong Y position");
+    QVERIFY2(p.isActive() == true, "Player is inactive");
+}
+
+void GamePlayTest::testPlayerPropertiesAfterReset1() {
+    GamePlay::Player p(1, 0.0, 0.0, 0.0);
+    p.reset();
+    QVERIFY2(p.getID() == 1, "Wrong ID");
+    QVERIFY2(p.getScore() == 0, "Wrong score number");
+    QVERIFY2(p.getX() == 0.0, "Wrong X position");
+    QVERIFY2(p.getY() == 0.0, "Wrong Y position");
+    QVERIFY2(p.isActive() == true, "Player is inactive");
+}
+
+void GamePlayTest::testPlayerInactivity1() {
+    GamePlay::Player p(1, 0.0, 0.0, 0.0);
+    p.setInactive();
+    QVERIFY2(p.isActive() == false, "Player is active");
+    p.reset();
+    QVERIFY2(p.isActive() == false, "Player is active");
+    p.setActive();
+    QVERIFY2(p.isActive() == true, "Player is inactive");
+}
+
+void GamePlayTest::testBoardClear1() {
+    GamePlay::Board b;
+    for(int i = 0; i < 100; ++i) {
+        b.registerPoint(GamePlay::Point(0.5, 0.5, 0.1, 1, 1, true));
+    }
+    QVERIFY2(b.checkCollision(GamePlay::Point(0.5, 0.5, 0.1, 1000, 1, true)), "Points should make collision");
+    b.eraseBoard();
+    QVERIFY2(!b.checkCollision(GamePlay::Point(0.5, 0.5, 0.1, 1000, 1, true)), "Board is not clean");
 }
 
 QTEST_APPLESS_MAIN(GamePlayTest)

@@ -4,6 +4,7 @@
 #include <QByteArray>
 #include <QDataStream>
 #include <memory>
+
 #include "messagevisitor.h"
 
 namespace Communication {

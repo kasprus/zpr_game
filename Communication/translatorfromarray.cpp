@@ -1,3 +1,5 @@
+#include <QDataStream>
+
 #include "translatorfromarray.h"
 #include "message.h"
 #include "bonusmessage.h"
@@ -11,7 +13,6 @@
 #include "gamescoremessage.h"
 #include "communication.h"
 #include "point.h"
-#include <QDataStream>
 
 namespace Communication {
 

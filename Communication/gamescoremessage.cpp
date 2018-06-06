@@ -1,6 +1,7 @@
 #include "gamescoremessage.h"
 #include "communication.h"
 #include "messagevisitor.h"
+
 namespace Communication {
 
 

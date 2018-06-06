@@ -1,18 +1,18 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "controller.h"
-#include "modes.h"
-#include "gameplay.h"
 #include <memory>
+#include <cassert>
 #include <QKeyEvent>
 #include <QDebug>
-#include <cassert>
 #include <QObject>
 #include <QGraphicsProxyWidget>
 #include <QPalette>
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
 
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "controller.h"
+#include "modes.h"
+#include "gameplay.h"
 
 MainWindow::MainWindow(Controller &controller, QWidget *parent) :
     QMainWindow(parent),

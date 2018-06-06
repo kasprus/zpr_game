@@ -7,3 +7,4 @@ moc_*
 *.moc
 *.prl
 *.exe
+qrc_*

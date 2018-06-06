@@ -1,7 +1,6 @@
 #ifndef KEYRELEASEDMESSAGE_H
 #define KEYRELEASEDMESSAGE_H
 
-
 #include "message.h"
 
 namespace Communication {

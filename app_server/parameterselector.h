@@ -1,6 +1,7 @@
 #ifndef PARAMETERSELECTOR_H
 #define PARAMETERSELECTOR_H
 #include <memory>
+
 #include "gameserver.h"
 #include "gameplay.h"
 
