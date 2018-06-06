@@ -22,6 +22,7 @@ class GameMode {
 public:
     GameMode();
     void addObserver(Player* obs);
+    void removeObservers();
     void removeAllBonuses();
     Bonus tryBonus();
     Bonus checkTimeout();

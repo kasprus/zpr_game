@@ -88,16 +88,9 @@ void GameServer::performTurn() {
                     if(players[j].isActive())
                         players[j].addScore(1);
                     scoreMessage.addScore(j, players[j].getScore());
-
                 }
-
-
-
-
                 sendToAllWrapper(std::move(scoreMessage));
-
                 --numberOfActivePlayers;
-
             }
             checkBonusCollision(p);
             if(p.isVisible())
@@ -264,6 +257,7 @@ void GameServer::reset() {
     } else {
         std::cout <<"Server started\n";
     }
+    gamemode.removeObservers();
     players.clear();
     currentNumberOfPlayers = 0;
     numberOfActivePlayers = nPlayers;
