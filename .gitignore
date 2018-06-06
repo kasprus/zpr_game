@@ -8,3 +8,8 @@ moc_*
 *.prl
 *.exe
 qrc_*
+cov/
+*.info
+*.gcov
+*.gcno
+*.gcda

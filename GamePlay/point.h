@@ -11,24 +11,12 @@ class Point
 public:
     Point(double x, double y, double radius, long turnNumber, int playerNumber, bool visble = false);
     Point(const Point &p) = default;
-    double getX() const {
-        return x;
-    }
-    double getY() const {
-        return y;
-    }
-    double getRadius() const {
-        return radius;
-    }
-    long getTurnNumber() const {
-        return turnNumber;
-    }
-    int getPlayerId() const {
-        return playerId;
-    }
-    bool isVisible() const {
-        return visible;
-    }
+    double getX() const;
+    double getY() const;
+    double getRadius() const;
+    long getTurnNumber() const;
+    int getPlayerId() const;
+    bool isVisible() const;
     bool checkCollision(const Point &p) const;
     bool checkEdgeCollision() const;
 private:

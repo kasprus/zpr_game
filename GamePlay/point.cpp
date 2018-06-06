@@ -27,4 +27,28 @@ bool Point::checkEdgeCollision() const {
     return false;
 }
 
+double Point::getX() const {
+    return x;
+}
+
+double Point::getY() const {
+    return y;
+}
+
+double Point::getRadius() const {
+    return radius;
+}
+
+long Point::getTurnNumber() const {
+    return turnNumber;
+}
+
+int Point::getPlayerId() const {
+    return playerId;
+}
+
+bool Point::isVisible() const {
+    return visible;
+}
+
 }

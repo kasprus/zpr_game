@@ -16,6 +16,7 @@
 #include "gamestartmessage.h"
 #include "roundendmessage.h"
 #include "gamescoremessage.h"
+#include "bonusmessage.h"
 
 /**
  * @brief The CommunicationTest class tests Cmmunication library
@@ -40,6 +41,8 @@ private Q_SLOTS:
     void gameOverMessageTest1();
     void gameStartMessageTest1();
     void roundEndMessageTest1();
+    void bonusMessageTest1();
+    void bonusMessageTest2();
 };
 
 CommunicationTest::CommunicationTest()
@@ -67,6 +70,7 @@ void CommunicationTest::pointMessageSizeTest2()
     QVERIFY2(m.getPoints().size() == 2, "Wrong number of points");
     m.accept(t);
     QVERIFY2(t.getLastMessage().length() == Communication::Communication::messageSize, "Wrong message size");
+    QVERIFY2(m.getHeader() == Communication::Communication::pointMessageHeader, "Wrong header");
 }
 
 void CommunicationTest::outputPointMessageTest1()
@@ -180,16 +184,41 @@ void CommunicationTest::gameStartMessageTest1() {
 }
 
 void CommunicationTest::roundEndMessageTest1() {
-    Communication::GameScoreMessage m(3);
+    Communication::RoundEndMessage m;
+    Communication::TranslatorToArray tt;
+    Communication::TranslatorFromArray tf;
+    m.accept(tt);
+    QVERIFY2(tt.getLastMessage().size() == Communication::Communication::messageSize, "Wrong message size");
+}
+
+void CommunicationTest::bonusMessageTest1() {
+    Communication::BonusMessage m(GamePlay::Modes::EMPTY_BONUS, 0.0, 0.0, true);
     Communication::TranslatorToArray tt;
     Communication::TranslatorFromArray tf;
     m.accept(tt);
     QVERIFY2(tt.getLastMessage().size() == Communication::Communication::messageSize, "Wrong message size");
     auto msg = std::move(tf.getMessage(tt.getLastMessage()));
-    dynamic_cast<Communication::GameScoreMessage*>(msg.get())->addScore(1, 8);
-    QVERIFY2(dynamic_cast<Communication::GameScoreMessage*>(msg.get())->getHeader() == Communication::Communication::gameScoreMessageHeader, "Wrong header");
-    QVERIFY2(dynamic_cast<Communication::GameScoreMessage*>(msg.get())->getScore() == std::vector<int>({0, 8, 0}), "Wrong scores");
-    QVERIFY_EXCEPTION_THROWN(dynamic_cast<Communication::GameScoreMessage*>(msg.get())->addScore(3, 3), std::out_of_range);
+    QVERIFY2(dynamic_cast<Communication::BonusMessage*>(msg.get())->getHeader() == Communication::Communication::bonusMessageHeader, "Wrong message header");
+    QVERIFY2(dynamic_cast<Communication::BonusMessage*>(msg.get())->getX() == 0.0, "Wrong X position");
+    QVERIFY2(dynamic_cast<Communication::BonusMessage*>(msg.get())->getY() == 0.0, "Wrong Y position");
+    QVERIFY2(dynamic_cast<Communication::BonusMessage*>(msg.get())->getShowBonus() == true, "Wrong visibility");
+    QVERIFY2(dynamic_cast<Communication::BonusMessage*>(msg.get())->getMode() == GamePlay::Modes::EMPTY_BONUS, "Wrong mode");
+
+}
+
+void CommunicationTest::bonusMessageTest2() {
+    GamePlay::Bonus b(GamePlay::Modes::EMPTY_BONUS);
+    Communication::BonusMessage m(b, true);
+    Communication::TranslatorToArray tt;
+    Communication::TranslatorFromArray tf;
+    m.accept(tt);
+    QVERIFY2(tt.getLastMessage().size() == Communication::Communication::messageSize, "Wrong message size");
+    auto msg = std::move(tf.getMessage(tt.getLastMessage()));
+    QVERIFY2(dynamic_cast<Communication::BonusMessage*>(msg.get())->getHeader() == Communication::Communication::bonusMessageHeader, "Wrong message header");
+    QVERIFY2(dynamic_cast<Communication::BonusMessage*>(msg.get())->getX() == b.getY(), "Wrong X position");
+    QVERIFY2(dynamic_cast<Communication::BonusMessage*>(msg.get())->getY() == b.getX(), "Wrong Y position");
+    QVERIFY2(dynamic_cast<Communication::BonusMessage*>(msg.get())->getShowBonus() == true, "Wrong visibility");
+    QVERIFY2(dynamic_cast<Communication::BonusMessage*>(msg.get())->getMode() == b.getMode(), "Wrong mode");
 }
 
 QTEST_APPLESS_MAIN(CommunicationTest)

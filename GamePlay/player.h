@@ -18,19 +18,10 @@ class Player
 public:
     Player(int id, double x, double y, double angle);
     Point move(long turn);
-    double getX() const {
-        return x;
-    }
-    double getY() const {
-        return y;
-    }
-    int getScore() const {
-        return score;
-    }
-    int getID() const {
-        return id;
-    }
-
+    double getX() const;
+    double getY() const;
+    int getScore() const;
+    int getID() const;
     void setCoordinatesAndAngle(double x, double y, double angle);
     void addScore(int pts);
     void setRotatingLeft();

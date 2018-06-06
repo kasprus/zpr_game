@@ -57,8 +57,6 @@ void Player::updateMode(const Bonus& bonus) {
 
 }
 
-
-
 void Player::setMode(int mode, int playerID) {
     if(mode== Modes::COLLISIONLESS) {
         visible = false;
@@ -171,7 +169,21 @@ void Player::resetMode(int mode, int playerID) {
     }
 }
 
+double Player::getX() const {
+    return x;
+}
 
+double Player::getY() const {
+    return y;
+}
+
+int Player::getScore() const {
+    return score;
+}
+
+int Player::getID() const {
+    return id;
+}
 
 void Player::setCoordinatesAndAngle(double x_, double y_, double angle_) {
     x = x_;
@@ -220,6 +232,7 @@ bool Player::isActive() const {
 void Player::setActive() {
     active = true;
 }
+
 void Player::setInactive() {
     active = false;
 }
