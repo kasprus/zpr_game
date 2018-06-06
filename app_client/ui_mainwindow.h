@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.10.0
+** Created by: Qt User Interface Compiler version 5.5.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -149,19 +149,19 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "ZPR", nullptr));
-        label_1_1->setText(QApplication::translate("MainWindow", "RED", nullptr));
-        label_1_2->setText(QApplication::translate("MainWindow", "BLUE", nullptr));
-        label_1_3->setText(QApplication::translate("MainWindow", "GREEN", nullptr));
-        label_1_4->setText(QApplication::translate("MainWindow", "YELLOW", nullptr));
-        label_1_5->setText(QApplication::translate("MainWindow", "PINK", nullptr));
-        label_1_6->setText(QApplication::translate("MainWindow", "WHITE", nullptr));
-        label_2_3->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_2_5->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_2_4->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_2_1->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_2_2->setText(QApplication::translate("MainWindow", "0", nullptr));
-        label_2_6->setText(QApplication::translate("MainWindow", "0", nullptr));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "ZPR", 0));
+        label_1_1->setText(QApplication::translate("MainWindow", "RED", 0));
+        label_1_2->setText(QApplication::translate("MainWindow", "BLUE", 0));
+        label_1_3->setText(QApplication::translate("MainWindow", "GREEN", 0));
+        label_1_4->setText(QApplication::translate("MainWindow", "YELLOW", 0));
+        label_1_5->setText(QApplication::translate("MainWindow", "PINK", 0));
+        label_1_6->setText(QApplication::translate("MainWindow", "WHITE", 0));
+        label_2_3->setText(QApplication::translate("MainWindow", "0", 0));
+        label_2_5->setText(QApplication::translate("MainWindow", "0", 0));
+        label_2_4->setText(QApplication::translate("MainWindow", "0", 0));
+        label_2_1->setText(QApplication::translate("MainWindow", "0", 0));
+        label_2_2->setText(QApplication::translate("MainWindow", "0", 0));
+        label_2_6->setText(QApplication::translate("MainWindow", "0", 0));
         label_Not->setText(QString());
         label_color->setText(QString());
     } // retranslateUi

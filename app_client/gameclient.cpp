@@ -1,4 +1,4 @@
-#include <QDebug>
+#include <iostream>
 #include <QString>
 
 #include "clientexception.h"
@@ -31,11 +31,11 @@ void GameClient::establishConnection(QString ip, qint32 port) {
     connect(socket.get(), SIGNAL(readyRead()), this, SLOT(readData()));
     socket->connectToHost(ip, port);
     if(socket->waitForConnected()) {
-        qDebug() <<"Connection started";
+        std::cout << "Connection started\n";
         emit newConnectionMessage(true);
     } else {
         emit newConnectionMessage(false);
-        qDebug() <<"Connection failed";
+        std::cout << "Connection failed\n";
     }
 }
 
@@ -44,7 +44,6 @@ void GameClient::reconnect() {
 }
 
 void GameClient::readData() {
-//    qDebug()<<"new data";
     if(!socket)return;
     QByteArray tmp = socket->readAll();
     Communication::TranslatorFromArray translator;
@@ -67,7 +66,6 @@ void GameClient::setController(Controller *controller_) {
 
 void GameClient::writeData(QByteArray data) {
     if(!socket)return;
-    //qDebug()<<"sending some data";
     socket->write(data);
     socket->flush();
 }

@@ -2,8 +2,12 @@
 #define BONUS_H
 
 #include <chrono>
+
 namespace GamePlay {
 
+/**
+ * @brief The Bonus class provides implemetation of game bonus which can be put on the board
+ */
 class Bonus {
 public:
     Bonus(int mode, int playerID = -1, std::chrono::system_clock::time_point timeout = std::chrono::system_clock::now(), double x = -1, double y = -1);
@@ -16,7 +20,6 @@ public:
     void setActive(int pID);
     void setInactive();
     std::chrono::system_clock::time_point getTimeout() const;
-
 
 private:
     int mode;

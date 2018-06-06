@@ -10,6 +10,9 @@ namespace GamePlay {
 class GameMode;
 enum class Mode;
 
+/**
+ * @brief The Player class represents game player
+ */
 class Player
 {
 public:

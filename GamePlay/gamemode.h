@@ -15,12 +15,13 @@ class GameMode;
 class Player;
 class Bonus;
 
+/**
+ * @brief The GameMode class provides implementation of game modes which can be chaged during game by using bonuses
+ */
 class GameMode {
 public:
-
     GameMode();
     void addObserver(Player* obs);
-
     void removeAllBonuses();
     Bonus tryBonus();
     Bonus checkTimeout();

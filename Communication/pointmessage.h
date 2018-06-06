@@ -12,6 +12,9 @@ class TranslatorToArray;
 class MessageVisitor;
 class Message;
 
+/**
+ * @brief The PointMessage class provides information about points on a game board
+ */
 class PointMessage : public Message
 {
 public:

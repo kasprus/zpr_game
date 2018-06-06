@@ -1,5 +1,5 @@
 #include <QObject>
-#include <QDebug>
+#include <iostream>
 
 #include "controller.h"
 #include "gameclient.h"
@@ -95,8 +95,6 @@ void Controller::visit(const Communication::RoundEndMessage &roundEndMessage) co
 }
 
 void Controller::visit(const Communication::GameStartMessage &gameStartMessage) const {
-    qDebug() << "Game Starts...";
-
     qint32 nPlayers = gameStartMessage.getNumberOfPlayers();
     qint32 maxScore = gameStartMessage.getMaxScore();
     qint32 playerNumber = gameStartMessage.getPlayerNumber();
@@ -110,7 +108,6 @@ void Controller::visit(const Communication::GameOverMessage &gameOverMessage) co
 
 void Controller::visit(const Communication::GameDelayMessage &gameDelayMessage) const {
     qint32 delay = gameDelayMessage.getDelay();
-    qDebug() << "Control delay: "<<QString::number(delay);
     if(delay > 0)
         emit newSceneMessage("Game starts in " + QString::number(delay) + " seconds");
     else {
@@ -131,14 +128,6 @@ void Controller::visit(const Communication::BonusMessage &bonusMessage) const {
 void Controller::visit(const Communication::GameScoreMessage& gameScoreMessage) const {
     emit updateScore(gameScoreMessage.getScore());
 }
-
-
-
-
-
-
-
-
 
 void Controller::checkReconnect() {
     if(acceptReconnect) {

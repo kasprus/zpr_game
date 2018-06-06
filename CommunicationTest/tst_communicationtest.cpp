@@ -17,7 +17,9 @@
 #include "roundendmessage.h"
 #include "gamescoremessage.h"
 
-
+/**
+ * @brief The CommunicationTest class tests Cmmunication library
+ */
 class CommunicationTest : public QObject
 {
     Q_OBJECT

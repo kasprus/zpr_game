@@ -1,13 +1,16 @@
 #include <QString>
 #include <QtTest>
+
 #include <chrono>
 #include "point.h"
 #include "board.h"
 #include "modes.h"
 #include "gameplay.h"
 #include "player.h"
-#include <QDebug>
 
+/**
+ * @brief The GamePlayTest class test GamePlay library
+ */
 class GamePlayTest : public QObject
 {
     Q_OBJECT
@@ -395,9 +398,6 @@ void GamePlayTest::testGamemode() {
     gamemode.removeAllBonuses();
     QVERIFY2(gamemode.getBonus(bonus.getMode()).getMode() == GamePlay::Modes::EMPTY_BONUS, "Should be empty");
 }
-
-
-
 
 QTEST_APPLESS_MAIN(GamePlayTest)
 

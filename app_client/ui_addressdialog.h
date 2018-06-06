@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'addressdialog.ui'
 **
-** Created by: Qt User Interface Compiler version 5.10.0
+** Created by: Qt User Interface Compiler version 5.5.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -67,12 +67,12 @@ public:
 
     void retranslateUi(QDialog *AddressDialog)
     {
-        AddressDialog->setWindowTitle(QApplication::translate("AddressDialog", "Dialog", nullptr));
-        lineEdit->setText(QApplication::translate("AddressDialog", "127.0.0.1", nullptr));
-        label->setText(QApplication::translate("AddressDialog", "Please Enter Server I.P and Port Number", nullptr));
-        lineEdit_2->setText(QApplication::translate("AddressDialog", "4321", nullptr));
-        label_2->setText(QApplication::translate("AddressDialog", "I.P Address", nullptr));
-        label_3->setText(QApplication::translate("AddressDialog", "Port Number", nullptr));
+        AddressDialog->setWindowTitle(QApplication::translate("AddressDialog", "Dialog", 0));
+        lineEdit->setText(QApplication::translate("AddressDialog", "127.0.0.1", 0));
+        label->setText(QApplication::translate("AddressDialog", "Please Enter Server I.P and Port Number", 0));
+        lineEdit_2->setText(QApplication::translate("AddressDialog", "4321", 0));
+        label_2->setText(QApplication::translate("AddressDialog", "I.P Address", 0));
+        label_3->setText(QApplication::translate("AddressDialog", "Port Number", 0));
     } // retranslateUi
 
 };

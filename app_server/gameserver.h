@@ -7,7 +7,6 @@
 #include <QObject>
 #include <QCoreApplication>
 #include <QtNetwork>
-#include <QDebug>
 #include <QTimer>
 
 #include "player.h"
@@ -17,6 +16,9 @@
 #include "gamemode.h"
 #include "serverexception.h"
 
+/**
+ * @brief The GameServer class provides basic functionality connected with communicationg with client and organizing gameplay
+ */
 class GameServer : public QObject
 {
     Q_OBJECT

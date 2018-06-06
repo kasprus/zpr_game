@@ -11,6 +11,9 @@ class TranslatorToArray;
 class Message;
 class MessageVisitor;
 
+/**
+ * @brief The BonusMessage class provides information about game bonus parameters
+ */
 class BonusMessage : public Message
 {
 public:

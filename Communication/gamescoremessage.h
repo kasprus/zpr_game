@@ -7,7 +7,9 @@
 
 namespace Communication {
 
-
+/**
+ * @brief The GameScoreMessage class provides information about player scores collected during game
+ */
 class GameScoreMessage : public Message
 {
 public:
@@ -24,6 +26,5 @@ private:
 };
 
 }
-
 
 #endif // GAMESCOREMESSAGE_H

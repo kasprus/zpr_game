@@ -15,12 +15,9 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     GameClient client;
     Controller controller(client);
-
     client.setController(&controller);
-
     MainWindow w(controller);
     w.show();
     controller.showIpDialog();
-
     return a.exec();
 }

@@ -8,6 +8,9 @@ namespace Communication {
 class TranslatorToArray;
 class Message;
 
+/**
+ * @brief The KeyPressedMessage class provides information that some key was pressed
+ */
 class KeyPressedMessage : public Message
 {
 public:

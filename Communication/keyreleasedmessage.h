@@ -8,6 +8,9 @@ namespace Communication {
 class TranslatorToArray;
 class Message;
 
+/**
+ * @brief The KeyReleasedMessage class provides information that some key has been released
+ */
 class KeyReleasedMessage : public Message
 {
 public:

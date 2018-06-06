@@ -10,6 +10,9 @@ namespace Communication {
 class TranslatorToArray;
 class Message;
 
+/**
+ * @brief The RoundEndMessage class provides information that round is over
+ */
 class RoundEndMessage : public Message {
 public:
     RoundEndMessage();

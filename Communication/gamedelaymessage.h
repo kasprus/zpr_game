@@ -8,6 +8,9 @@ namespace Communication {
 class TranslatorToArray;
 class Message;
 
+/**
+ * @brief The GameDelayMessage class provides information about delay between games
+ */
 class GameDelayMessage : public Message
 {
 public:

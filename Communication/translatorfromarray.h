@@ -8,6 +8,9 @@ namespace Communication {
 
 class Message;
 
+/**
+ * @brief The TranslatorFromArray class provides methods to create Message object from QByteArray
+ */
 class TranslatorFromArray
 {
 public:

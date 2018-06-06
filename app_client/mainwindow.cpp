@@ -1,7 +1,6 @@
 #include <memory>
 #include <cassert>
 #include <QKeyEvent>
-#include <QDebug>
 #include <QObject>
 #include <QGraphicsProxyWidget>
 #include <QPalette>
@@ -45,30 +44,23 @@ MainWindow::MainWindow(Controller &controller, QWidget *parent) :
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
     if(event->isAutoRepeat())return;
-    //qDebug()<<"Some key pressed";
     if(event->key() == Qt::Key_A) {
-        //qDebug()<<"Left key pressed";
         emit newKeyPressedMessage(Communication::KeyPressedMessage(Communication::Communication::leftKeyId));
     }
     else if(event->key() == Qt::Key_D) {
-        //qDebug()<<"Right key pressed";
         emit newKeyPressedMessage(Communication::KeyPressedMessage(Communication::Communication::rightKeyId));
     }
     else if(event->key() == Qt::Key_Space) {
-        //qDebug()<<"Space";
         emit accept();
     }
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
     if(event->isAutoRepeat())return;
-    //qDebug()<<"Some key released";
     if(event->key() == Qt::Key_A) {
-        //qDebug()<<"Left key released";
         emit newKeyReleasedMessage(Communication::KeyReleasedMessage(Communication::Communication::leftKeyId));
     }
     else if(event->key() == Qt::Key_D) {
-        //qDebug()<<"Right key released";
         emit newKeyReleasedMessage(Communication::KeyReleasedMessage(Communication::Communication::rightKeyId));
     }
 }
@@ -108,7 +100,6 @@ void MainWindow::endRoundAndClear() {
 void MainWindow::clearBoard() {
 
     auto items = ui->graphicsView->scene()->items();
-//Changed way of clearing messages, because we don't want to remove widget
     for (auto &it : items) {
         if(it != static_cast<QGraphicsItem*>(sceneMessage.graphicsProxyWidget())) {
             delete it;
@@ -126,7 +117,6 @@ void MainWindow::updateScore(const std::vector<int> scores) {
 }
 
 void MainWindow::showBonus(qint32 mode, qreal x, qreal y) {
-    qDebug() << "SHOW BONUS " << mode;
     switch(mode) {
     case(GamePlay::Modes::COLLISIONLESS):
         bonusItems[mode] = new QGraphicsPixmapItem(QPixmap(":pic/collisionless.png").scaled(20,20));
@@ -197,7 +187,6 @@ void MainWindow::showBonus(qint32 mode, qreal x, qreal y) {
 }
 
 void MainWindow::hideBonus(qint32 mode) {
-    qDebug() << "HIDE BONUS" << mode;
     bonusItems[mode]->setVisible(false);
 }
 

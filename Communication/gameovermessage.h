@@ -8,7 +8,9 @@ namespace Communication {
 class Message;
 class TranslatorToArray;
 
-
+/**
+ * @brief The GameOverMessage class provides information, that there was game over
+ */
 class GameOverMessage : public Message
 {
 public:

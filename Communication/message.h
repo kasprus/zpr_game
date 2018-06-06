@@ -6,6 +6,10 @@ namespace Communication {
 class PointMessage;
 class TranslatorToArray;
 class MessageVisitor;
+
+/**
+ * @brief The Message class provides interface for messages
+ */
 class Message
 {
 public:

@@ -13,7 +13,9 @@ class GameDelayMessage;
 class BonusMessage;
 class GameScoreMessage;
 
-
+/**
+ * @brief The MessageVisitor class provides implementation of the visitor pattern
+ */
 class MessageVisitor {
 public:
     virtual void visit(const PointMessage& pointMessage) const = 0;

@@ -5,6 +5,9 @@
 #include "gameserver.h"
 #include "gameplay.h"
 
+/**
+ * @brief The ParameterSelector class implements interface for selecting game parameters
+ */
 class ParameterSelector
 {
 public:

@@ -8,6 +8,9 @@ namespace Communication {
 class TranslatorToArray;
 class Message;
 
+/**
+ * @brief The GameStartMessage class provides information that game has started and game parameters
+ */
 class GameStartMessage : public Message {
 public:
     GameStartMessage(int nPlayers, int maxScore, int playerNumber);

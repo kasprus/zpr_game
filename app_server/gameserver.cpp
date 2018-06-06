@@ -1,7 +1,7 @@
+#include <iostream>
 #include <QtMath>
 #include <QObject>
 #include <QTimer>
-#include <QDebug>
 
 #include "gameserver.h"
 #include "message.h"
@@ -31,9 +31,9 @@ GameServer::GameServer(int argc, char *argv[], int numberOfPlayers, int numberOf
     server = std::unique_ptr<QTcpServer>(new QTcpServer(nullptr));
     connect(server.get(), SIGNAL(newConnection()), this, SLOT(newConnection()));
     if(!server->listen(QHostAddress::AnyIPv4, portNumber)) {
-        qDebug() <<"Server could not start";
+        std::cout <<"Server could not start\n";
     } else {
-        qDebug() <<"Server started";
+        std::cout <<"Server started\n";
     }
 }
 
@@ -60,7 +60,7 @@ void GameServer::newConnection() {
 }
 
 void GameServer::startGame() {
-    qDebug()<<"Game started";
+    std::cout << "Game started\n";
     for(int i = 0; i < nPlayers; ++i) {
         connect(sockets[i].get(), SIGNAL(readyRead()), this, SLOT(readData()));
     }
@@ -119,7 +119,6 @@ void GameServer::performTurn() {
 void GameServer::checkBonusCollision(const GamePlay::Point& p) {
     GamePlay::Bonus res = board.checkBonusCollision(p);
     if(res.getMode() != -1) {
-        qDebug() << "remove in check";
         sendToAllWrapper(Communication::BonusMessage(res, false));
         board.removeBonus(res.getMode());
         res.setActive(p.getPlayerId());
@@ -132,7 +131,6 @@ void GameServer::manageBonuses() {
 
     while(oldBonus.getMode() != -1) {
         if(!oldBonus.isActive()) {
-            qDebug() << "REMOVE IN MANAGE";
             board.removeBonus(oldBonus.getMode());
             sendToAllWrapper(Communication::BonusMessage(oldBonus, false));
         }
@@ -262,9 +260,9 @@ void GameServer::reset() {
     server = std::unique_ptr<QTcpServer>(new QTcpServer(nullptr));
     connect(server.get(), SIGNAL(newConnection()), this, SLOT(newConnection()));
     if(!server->listen(QHostAddress::AnyIPv4, portNumber)) {
-        qDebug() <<"Server could not start";
+        std::cout <<"Server could not start\n";
     } else {
-        qDebug() <<"Server started";
+        std::cout <<"Server started\n";
     }
     players.clear();
     currentNumberOfPlayers = 0;

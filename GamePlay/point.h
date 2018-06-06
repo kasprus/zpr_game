@@ -3,6 +3,9 @@
 
 namespace GamePlay {
 
+/**
+ * @brief The Point class provides implementation of a game point which na be put on the board
+ */
 class Point
 {
 public:

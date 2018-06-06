@@ -1,7 +1,7 @@
 #include "gamemode.h"
 #include "bonus.h"
 #include "modes.h"
-#include "QDebug"
+
 namespace GamePlay {
 
 
@@ -119,7 +119,6 @@ void GameMode::updateBonus(const Bonus& bonus) {
 void GameMode::removeAllBonuses() {
     for(auto& it : bonuses) {
         if(it.get()) {
-            //qDebug() << "REMOVE " << it->getMode() << " " << it->getPlayerID();
             it.reset();
         }
     }

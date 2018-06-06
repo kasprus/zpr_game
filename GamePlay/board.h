@@ -11,6 +11,9 @@ namespace GamePlay {
 class GameMode;
 enum class Mode;
 
+/**
+ * @brief The Board class provides implementation of a game board and methods for managing objects on it
+ */
 class Board
 {
 public:

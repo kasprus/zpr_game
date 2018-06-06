@@ -1,6 +1,7 @@
+#include <algorithm>
+
 #include "board.h"
 #include "gameplay.h"
-#include <algorithm>
 
 namespace GamePlay {
 

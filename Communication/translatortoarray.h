@@ -19,7 +19,9 @@ class GameDelayMessage;
 class BonusMessage;
 class GameScoreMessage;
 
-
+/**
+ * @brief The TranslatorToArray class provides methods for translating messages to byte arrays
+ */
 class TranslatorToArray : public MessageVisitor
 {
 public:

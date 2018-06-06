@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
         server = std::move(selector.createServer(argc, argv));
     }
     catch(const ParameterException &) {
-        std::cerr<<"wrong argument values";
+        std::cerr << "wrong argument values";
         return 0;
     }
     return server->exec();

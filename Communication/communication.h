@@ -3,6 +3,9 @@
 
 namespace Communication {
 
+/**
+ * @brief The Communication class contains communication constants
+ */
 class Communication
 {
 

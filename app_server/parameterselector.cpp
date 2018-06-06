@@ -10,17 +10,17 @@ ParameterSelector::ParameterSelector() : numberOfPlayers(0), numberOfPoints(0), 
 }
 
 void ParameterSelector::selectNumberOfPlayer() {
-    std::cout<<"Select number of players ["<<MIN_PLAYERS<<" : "<<MAX_PLAYERS<<"] default is "<<DEFAULT_PLAYERS<<"\n";
+    std::cout << "Select number of players [" << MIN_PLAYERS << " : " << MAX_PLAYERS << "] default is " << DEFAULT_PLAYERS << "\n";
     numberOfPlayers = getParametersFromStdInput(DEFAULT_PLAYERS);
 }
 
 void ParameterSelector::selectNumberOfPoints() {
-    std::cout<<"Select number of points ["<<MIN_POINTS<<" : "<<MAX_POINTS<<"] deafult is "<< DEFAULT_POINTS <<"\n";
+    std::cout << "Select number of points [" << MIN_POINTS << " : " << MAX_POINTS << "] deafult is " << DEFAULT_POINTS << "\n";
     numberOfPoints = getParametersFromStdInput(DEFAULT_POINTS);
 }
 
 void ParameterSelector::selectPort() {
-    std::cout<<"Select port number ["<<MIN_PORT<<" : "<<MAX_PORT<<"] default is "<<DEFAULT_PORT<<"\n";
+    std::cout << "Select port number [" << MIN_PORT << " : " << MAX_PORT << "] default is " << DEFAULT_PORT << "\n";
     portNumber = getParametersFromStdInput(DEFAULT_PORT);
 }
 
@@ -38,7 +38,7 @@ int ParameterSelector::getParametersFromStdInput(int defaultValue) const {
     std::getline(std::cin, line);
     if(line.size() > 0) {
         int ret;
-        std::stringstream(line)>>ret;
+        std::stringstream(line) >> ret;
         return ret;
     }
     else {
