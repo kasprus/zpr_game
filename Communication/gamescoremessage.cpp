@@ -22,7 +22,7 @@ void GameScoreMessage::accept(const MessageVisitor& visitor) {
 }
 
 void GameScoreMessage::addScore(int index, int score) {
-    scores[index] = score;
+    scores.at(index) = score;
 }
 
 std::vector<int> GameScoreMessage::getScore() const {
