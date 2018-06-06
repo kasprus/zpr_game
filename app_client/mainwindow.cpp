@@ -199,6 +199,7 @@ void MainWindow::setScoreBoard(qint32 playersCount, qint32 maxScore, qint32 play
 
         labels_n.at(i)->setVisible(true);
         labels_s.at(i)->setVisible(true);
+        labels_s.at(i)->setText(QString::number(0));
     }
     ui->label_Not->setText(QString("First Player to reach " + QString::number(maxScore) + " points wins!"));
     ui->label_Not->setVisible(true); //labels

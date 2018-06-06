@@ -17,7 +17,10 @@ void GameMode::notifyPlayers(const Bonus& bonus) {
     for(auto player : observerPlayers) {
         player->updateMode(bonus);
     }
+}
 
+void GameMode::removeObservers() {
+    observerPlayers.clear();
 }
 
 Bonus GameMode::tryBonus() {

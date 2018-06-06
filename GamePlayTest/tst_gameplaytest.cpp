@@ -1,6 +1,6 @@
 #include <QString>
 #include <QtTest>
-
+#include <cmath>
 #include <chrono>
 #include "point.h"
 #include "board.h"
@@ -48,6 +48,13 @@ private Q_SLOTS:
     void testBonusMovement4();
     void testBonusReset();
     void testGamemode();
+    void testGamemode1();
+    void testGamemode2();
+    void testGamemode3();
+    void testGamemode4();
+    void testGamemode5();
+    void testGamemode6();
+    void testGamemode7();
 };
 
 GamePlayTest::GamePlayTest()
@@ -311,12 +318,16 @@ void GamePlayTest::testBonusMovement1() {
     GamePlay::Bonus bonus(GamePlay::Modes::SQUARE);
     bonus.setActive(0);
     player.updateMode(bonus);
+
     GamePlay::Point point1 = player.move(1);
-    QVERIFY2(point1.getX() >= 0.5, "Wrong movement");
+
+    QVERIFY2(point1.getX() > 0.5, "Wrong movement");
     QVERIFY2(point1.getY() == 0.5, "Wrong movement");
     player.setRotatingRight();
+
     GamePlay::Point point2 = player.move(2);
     QVERIFY2(point2.getY() > 0.5, "Wrong movement");
+    QVERIFY2(abs(point2.getX() - point1.getX()) < 0.0001, "Wrong movement");
 }
 
 void GamePlayTest::testBonusMovement2() {
@@ -398,6 +409,100 @@ void GamePlayTest::testGamemode() {
     gamemode.removeAllBonuses();
     QVERIFY2(gamemode.getBonus(bonus.getMode()).getMode() == GamePlay::Modes::EMPTY_BONUS, "Should be empty");
 }
+
+
+void GamePlayTest::testGamemode1() {
+    GamePlay::GameMode gamemode;
+    GamePlay::Player player(0, 0.5, 0.5, 0);
+    gamemode.addObserver(&player);
+    GamePlay::Bonus bonus = gamemode.tryBonus();
+    while(bonus.getMode() != GamePlay::Modes::THIN) {
+        gamemode.removeAllBonuses();
+        bonus = gamemode.tryBonus();
+    }
+    bonus.setActive(0);
+    gamemode.updateBonus(bonus);
+
+    GamePlay::Point point(player.move(1));
+    QVERIFY2(point.getRadius() == GamePlay::GamePlay::smallRadius, "Radius should be small");
+    gamemode.removeAllBonuses();
+    GamePlay::Point point1(player.move(2));
+    QVERIFY2(point1.getRadius() == GamePlay::GamePlay::defaultRadius, "Radius should be default");
+
+}
+
+void GamePlayTest::testGamemode2() {
+    GamePlay::GameMode gamemode;
+    GamePlay::Bonus bonus = gamemode.checkTimeout();
+    QVERIFY2(bonus.getMode() == GamePlay::Modes::EMPTY_BONUS, "There were no bonuses generated");
+}
+
+void GamePlayTest::testGamemode3() {
+    GamePlay::GameMode gamemode;
+    GamePlay::Bonus bonus = gamemode.tryBonus();
+    while(bonus.getMode() == GamePlay::Modes::EMPTY_BONUS) {
+        bonus = gamemode.tryBonus();
+    }
+    QVERIFY2(bonus.getMode() != GamePlay::Modes::EMPTY_BONUS, "Wrong bonus");
+    gamemode.removeAllBonuses();
+    GamePlay::Bonus bonus1 = gamemode.getBonus(bonus.getMode());
+    QVERIFY2(bonus1.getMode() == GamePlay::Modes::EMPTY_BONUS, "There should be no bonuses");
+}
+
+void GamePlayTest::testGamemode4() {
+    GamePlay::GameMode gamemode;
+    GamePlay::Bonus bonus = gamemode.tryBonus();
+    while(bonus.getMode() == GamePlay::Modes::EMPTY_BONUS) {
+        bonus = gamemode.tryBonus();
+    }
+
+    QVERIFY2(bonus.getMode() == gamemode.getBonus(bonus.getMode()).getMode(), "Modes should be equal");
+    QVERIFY2(bonus.getX() == gamemode.getBonusX(bonus.getMode()), "X should be equal");
+    QVERIFY2(bonus.getY() == gamemode.getBonusY(bonus.getMode()), "Y should be equal");
+    QVERIFY2(bonus.getTimeout() == gamemode.getBonus(bonus.getMode()).getTimeout(), "Timeouts should be equal");
+
+}
+
+void GamePlayTest::testGamemode5() {
+    GamePlay::Player player(5,0.5, 0.5, 0);
+    GamePlay::Bonus bonus(GamePlay::Modes::REVERSE_O);
+    bonus.setActive(player.getID());
+    QVERIFY2(bonus.getPlayerID() == player.getID(), "Wrong ID");
+
+}
+
+void GamePlayTest::testGamemode6() {
+    GamePlay::GameMode gamemode;
+    GamePlay::Player player(4, 0.6, 0.4, 0);
+    GamePlay::Bonus bonus = gamemode.tryBonus();
+    while(bonus.getMode() == GamePlay::Modes::EMPTY_BONUS) {
+        bonus = gamemode.tryBonus();
+    }
+    bonus.setActive(4);
+    gamemode.updateBonus(bonus);
+    QVERIFY2(gamemode.getBonus(bonus.getMode()).getPlayerID() == player.getID(), "Wrong player id");
+}
+
+void GamePlayTest::testGamemode7() {
+    GamePlay::GameMode gamemode;
+    GamePlay::Player player(4, 0.6, 0.4, 0);
+    GamePlay::Bonus bonus = gamemode.tryBonus();
+    gamemode.addObserver(&player);
+    while(bonus.getMode() != GamePlay::Modes::THIN_O) {
+        gamemode.removeAllBonuses();
+        bonus = gamemode.tryBonus();
+    }
+    bonus.setActive(0);
+    gamemode.updateBonus(bonus);
+    GamePlay::Point point(player.move(1));
+    QVERIFY2(point.getRadius() == GamePlay::GamePlay::smallRadius, "Wrong radius");
+    gamemode.removeObservers();
+    gamemode.removeAllBonuses();
+    GamePlay::Point point2(player.move(2));
+    QVERIFY2(point2.getRadius() == GamePlay::GamePlay::smallRadius, "Wrong radius");
+
+}
+
 
 QTEST_APPLESS_MAIN(GamePlayTest)
 
