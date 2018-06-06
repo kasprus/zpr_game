@@ -1,7 +1,12 @@
 #include <QString>
 #include <QtTest>
+#include <chrono>
 #include "point.h"
 #include "board.h"
+#include "modes.h"
+#include "gameplay.h"
+#include "player.h"
+#include <QDebug>
 
 class GamePlayTest : public QObject
 {
@@ -27,6 +32,19 @@ private Q_SLOTS:
     void testPlayerPropertiesAfterReset1();
     void testPlayerInactivity1();
     void testBoardClear1();
+    void testNewBonusID1();
+    void testNewBonusID2();
+    void testBonusBoard1();
+    void testBonusActivity1();
+    void testBonusActivity2();
+    void testBonusActivity3();
+    void testBonus();
+    void testBonusMovement1();
+    void testBonusMovement2();
+    void testBonusMovement3();
+    void testBonusMovement4();
+    void testBonusReset();
+    void testGamemode();
 };
 
 GamePlayTest::GamePlayTest()
@@ -181,6 +199,205 @@ void GamePlayTest::testBoardClear1() {
     b.eraseBoard();
     QVERIFY2(!b.checkCollision(GamePlay::Point(0.5, 0.5, 0.1, 1000, 1, true)), "Board is not clean");
 }
+
+void GamePlayTest::testNewBonusID1() {
+    GamePlay::GameMode gamemode;
+    GamePlay::Bonus bonus = gamemode.tryBonus();
+    while(bonus.getMode() != GamePlay::Modes::FAST_O) {
+       gamemode.removeAllBonuses();
+       bonus = gamemode.tryBonus();
+    }
+
+    GamePlay::Bonus bonus1 = gamemode.tryBonus();
+    while (bonus1.getMode() == GamePlay::Modes::EMPTY_BONUS) {
+        bonus1 = gamemode.tryBonus();
+    }
+    QVERIFY2(bonus.getMode() == GamePlay::Modes::FAST_O, "Wrong mode");
+    QVERIFY2(bonus1.getMode() != GamePlay::Modes::EMPTY_BONUS, "Wrong mode");
+
+
+    GamePlay::Bonus bns_fast = gamemode.getBonus(GamePlay::Modes::FAST);
+    GamePlay::Bonus bns_slow = gamemode.getBonus(GamePlay::Modes::SLOW_O);
+    GamePlay::Bonus bns_slow_o = gamemode.getBonus(GamePlay::Modes::SLOW);
+    QVERIFY2(bns_fast.getMode() == -1, "Cannot create this bonus while fast bonus is present");
+    QVERIFY2(bns_slow.getMode() == -1, "Cannot create this bonus while fast bonus is present");
+    QVERIFY2(bns_slow_o.getMode() == -1, "Cannot create this bonus while fast bonus is present");
+}
+
+void GamePlayTest::testNewBonusID2() {
+    GamePlay::GameMode gamemode;
+    GamePlay::Bonus bonus = gamemode.tryBonus();
+    while(bonus.getMode() != GamePlay::Modes::THICK) {
+        gamemode.removeAllBonuses();
+        bonus = gamemode.tryBonus();
+    }
+    GamePlay::Bonus bonus1 = gamemode.tryBonus();
+    while (bonus1.getMode() == GamePlay::Modes::EMPTY_BONUS) {
+        bonus1 = gamemode.tryBonus();
+    }
+    QVERIFY2(bonus.getMode() == GamePlay::Modes::THICK, "Wrong mode");
+    QVERIFY2(bonus1.getMode() != GamePlay::Modes::EMPTY_BONUS, "Wrong mode");
+
+    GamePlay::Bonus bns_thin = gamemode.getBonus(GamePlay::Modes::THIN);
+    GamePlay::Bonus bns_thin_o = gamemode.getBonus(GamePlay::Modes::THIN_O);
+    GamePlay::Bonus bns_thick_o = gamemode.getBonus(GamePlay::Modes::THICK_O);
+    QVERIFY2(bns_thin.getMode() == -1, "Cannot create this bonus while fast bonus is present");
+    QVERIFY2(bns_thin_o.getMode() == -1, "Cannot create this bonus while fast bonus is present");
+    QVERIFY2(bns_thick_o.getMode() == -1, "Cannot create this bonus while fast bonus is present");
+}
+
+void GamePlayTest::testBonus() {
+    GamePlay::Bonus bonus(GamePlay::Modes::FAST, 0);
+    QVERIFY2(bonus.isActive() == false, "Bonus should be inactive");
+}
+
+void GamePlayTest::testBonusActivity1() {
+    GamePlay::Player player(0, 0.5, 0.5, 1);
+
+    GamePlay::Bonus bonus(GamePlay::Modes::COLLISIONLESS);
+    QVERIFY2(bonus.isActive() == false, "Bonus should be inactive");
+    bonus.setActive(0);
+    player.updateMode(bonus);
+    GamePlay::Point point(player.move(1));
+
+    QVERIFY2(point.isVisible() == false, "Point should be invisible");
+}
+
+void GamePlayTest::testBonusActivity2() {
+    GamePlay::Player player(0, 0.5, 0.5, 1);
+
+
+    GamePlay::Bonus bonus(GamePlay::Modes::THICK);
+    bonus.setActive(0);
+    player.updateMode(bonus);
+    GamePlay::Point point(player.move(1));
+
+    QVERIFY2(point.getRadius() == GamePlay::GamePlay::bigRadius, "Radius should change");
+}
+
+void GamePlayTest::testBonusActivity3() {
+    GamePlay::Player player(0, 0.5, 0.5, 1);
+
+
+    GamePlay::Bonus bonus(GamePlay::Modes::THICK_O);
+    bonus.setActive(0);
+    player.updateMode(bonus);
+    GamePlay::Point point(player.move(1));
+
+    QVERIFY2(point.getRadius() == GamePlay::GamePlay::defaultRadius, "Radius should not change");
+}
+
+void GamePlayTest::testBonusReset() {
+    GamePlay::Player player(3, 0.5, 0.5, 1);
+    GamePlay::Bonus bonus0(GamePlay::Modes::FAST);
+    GamePlay::Bonus bonus1(GamePlay::Modes::THICK);
+    bonus0.setActive(3);
+    bonus1.setActive(3);
+    player.updateMode(bonus0);
+    player.updateMode(bonus1);
+    GamePlay::Point point(player.move(1));
+
+    QVERIFY2(point.getRadius() == GamePlay::GamePlay::bigRadius, "Wrong radius");
+    player.updateMode(GamePlay::Bonus(GamePlay::Modes::NORMAL));
+    GamePlay::Point point1(player.move(2));
+    QVERIFY2(point1.getRadius() == GamePlay::GamePlay::defaultRadius, "Wrong radius");
+}
+
+void GamePlayTest::testBonusMovement1() {
+    GamePlay::Player player(0, 0.5, 0.5, 0);
+    GamePlay::Bonus bonus(GamePlay::Modes::SQUARE);
+    bonus.setActive(0);
+    player.updateMode(bonus);
+    GamePlay::Point point1 = player.move(1);
+    QVERIFY2(point1.getX() >= 0.5, "Wrong movement");
+    QVERIFY2(point1.getY() == 0.5, "Wrong movement");
+    player.setRotatingRight();
+    GamePlay::Point point2 = player.move(2);
+    QVERIFY2(point2.getY() > 0.5, "Wrong movement");
+}
+
+void GamePlayTest::testBonusMovement2() {
+    GamePlay::Player player(0, 0.5, 0.5, 0);
+    GamePlay::Bonus bonus(GamePlay::Modes::REVERSE);
+    bonus.setActive(0);
+    player.updateMode(bonus);
+    GamePlay::Point point1 = player.move(1);
+    QVERIFY2(point1.getX() >= 0.5, "Wrong movement");
+    QVERIFY2(point1.getY() == 0.5, "Wrong movement");
+    player.setRotatingRight();
+    GamePlay::Point point2 = player.move(2);
+    QVERIFY2(point2.getY() < 0.5, "Wrong movement");
+
+}
+
+void GamePlayTest::testBonusMovement3() {
+    GamePlay::Player player0(0, 0.2, 0.2, 0);
+    GamePlay::Player player1(1, 0.2, 0.8, 0);
+
+    GamePlay::Bonus bonus1(GamePlay::Modes::FAST);
+    bonus1.setActive(0);
+    player0.updateMode(bonus1);
+
+    GamePlay::Point point0 = player0.move(1);
+    GamePlay::Point point1 = player1.move(1);
+
+    QVERIFY2(point0.getY() == 0.2, "Wrong movement");
+    QVERIFY2(point1.getY() == 0.8, "Wrong movement");
+
+    QVERIFY2(point0.getX() > point1.getX(), "Wrong movement");
+
+}
+
+void GamePlayTest::testBonusMovement4() {
+    GamePlay::Player player0(0, 0.2, 0.2, 0);
+    GamePlay::Player player1(1, 0.2, 0.8, 0);
+
+    GamePlay::Bonus bonus1(GamePlay::Modes::SLOW);
+    bonus1.setActive(0);
+    player0.updateMode(bonus1);
+
+    GamePlay::Point point0 = player0.move(1);
+    GamePlay::Point point1 = player1.move(1);
+
+    QVERIFY2(point0.getY() == 0.2, "Wrong movement");
+    QVERIFY2(point1.getY() == 0.8, "Wrong movement");
+
+    QVERIFY2(point0.getX() < point1.getX(), "Wrong movement");
+
+}
+
+
+void GamePlayTest::testBonusBoard1() {
+    GamePlay::Board board;
+    GamePlay::Bonus bonus(GamePlay::Modes::COLLISIONLESS, -1, std::chrono::system_clock::now(), 0.1, 0.1);
+    GamePlay::Player player(3, 0.09, 0.13, 0);
+    board.registerBonus(bonus);
+    GamePlay::Point pointBeforeMove = player.getPoint(0);
+
+    auto bonusCheck = board.checkBonusCollision(pointBeforeMove);
+    QVERIFY2(bonusCheck.getMode() == -1, "There should be no collsion");
+    QVERIFY2(bonusCheck.isActive() == false, "Bonus should be inactive");
+    GamePlay::Point pointAfterMove = player.move(1);
+    bonusCheck = board.checkBonusCollision(pointAfterMove);
+
+    QVERIFY2(bonusCheck.getMode() != -1, "There shouldbe collision");
+    QVERIFY2(bonusCheck.getPlayerID() == 3, "Wrong Player");
+    QVERIFY2(bonusCheck.isActive() == true, "Bonus should be active");
+}
+
+void GamePlayTest::testGamemode() {
+    GamePlay::GameMode gamemode;
+    GamePlay::Bonus bonus = gamemode.tryBonus();
+    while(bonus.getMode() == GamePlay::Modes::EMPTY_BONUS) {
+        bonus = gamemode.tryBonus();
+    }
+    QVERIFY2(gamemode.getBonus(bonus.getMode()).getMode() != GamePlay::Modes::EMPTY_BONUS, "Wrong behaviour" );
+    gamemode.removeAllBonuses();
+    QVERIFY2(gamemode.getBonus(bonus.getMode()).getMode() == GamePlay::Modes::EMPTY_BONUS, "Should be empty");
+}
+
+
+
 
 QTEST_APPLESS_MAIN(GamePlayTest)
 

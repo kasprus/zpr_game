@@ -45,8 +45,10 @@ Bonus Board::checkBonusCollision(const Point& p) const {
         double bottom = top + bonusSize, right = left + bonusSize;
         double x = p.getX(), y = p.getY();
         if((x - GamePlay::defaultRadius < right) && (x + GamePlay::defaultRadius > left)  &&
-            (y + GamePlay::defaultRadius > top) && (y + GamePlay::defaultRadius < bottom) )
-            return Bonus(it.value());
+                  (y + GamePlay::defaultRadius > top) && (y + GamePlay::defaultRadius < bottom)) {
+            Bonus bonus(it.value()); bonus.setActive(p.getPlayerId());
+            return bonus;
+       }
     }
 
     return Bonus(-1);

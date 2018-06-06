@@ -23,6 +23,7 @@ public:
     constexpr static int secondsOfGameDelay = 3;
     constexpr static int maximumNumberOfPlayers = 6;
     constexpr static int intervalBetweenBonusManagement = 200;
+    constexpr static int intervalWithInvisiblePoint = 0b110000;
 private:
     GamePlay();
 };

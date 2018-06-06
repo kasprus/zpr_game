@@ -76,16 +76,25 @@ bool GameMode::checkIfEligible(int mode) {
 }
 
 double GameMode::getBonusX(int mode) const {
-    return bonuses[mode]->getX();
+    if(bonuses[mode])
+        return bonuses[mode]->getX();
+    else return -1;
 }
 
 double GameMode::getBonusY(int mode) const {
-    return bonuses[mode]->getY();
+    if(bonuses[mode])
+        return bonuses[mode]->getY();
+    else return -1;
 }
 
-std::chrono::system_clock::time_point GameMode::getTimeout(int mode) const {
-    return bonuses[mode]->getTimeout();
+Bonus GameMode::getBonus(int mode) const {
+    if(bonuses[mode])
+        return Bonus(*(bonuses[mode].get()));
+    else
+        return Bonus(GamePlay::Modes::EMPTY_BONUS);
 }
+
+
 
 Bonus GameMode::checkTimeout() {
 
@@ -110,7 +119,7 @@ void GameMode::updateBonus(const Bonus& bonus) {
 void GameMode::removeAllBonuses() {
     for(auto& it : bonuses) {
         if(it.get()) {
-            qDebug() << "REMOVE " << it->getMode() << " " << it->getPlayerID();
+            //qDebug() << "REMOVE " << it->getMode() << " " << it->getPlayerID();
             it.reset();
         }
     }

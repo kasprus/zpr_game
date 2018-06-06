@@ -43,7 +43,7 @@ void GameServer::newConnection() {
     }
     sockets.emplace_back(server->nextPendingConnection());
     buffers.emplace_back();
-    players.emplace_back(currentNumberOfPlayers, dist(gen), dist(gen), dist(gen)*M_PI);
+    players.emplace_back(currentNumberOfPlayers, dist(gen), dist(gen), dist(gen)*M_PI*2);
     ++currentNumberOfPlayers;
     if(nPlayers == currentNumberOfPlayers) {
         server->close();
@@ -153,7 +153,7 @@ void GameServer::manageBonuses() {
 void GameServer::endRound() {
     timer.stop();
     for(int i = 0; i < nPlayers; ++i) {
-        players[i].setCoordinatesAndAngle(dist(gen), dist(gen), M_PI*dist(gen));
+        players[i].setCoordinatesAndAngle(dist(gen), dist(gen), 2*M_PI*dist(gen));
         players[i].setActive();
         players[i].reset();
     }

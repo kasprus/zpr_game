@@ -27,7 +27,7 @@ public:
     void updateBonus(const Bonus& bonus);
     double getBonusX(int mode) const;
     double getBonusY(int mode) const;
-    std::chrono::system_clock::time_point getTimeout(int mode) const;
+    Bonus getBonus(int mode) const;
 
 private:
     std::vector<Player*> observerPlayers;

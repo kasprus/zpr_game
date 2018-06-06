@@ -19,7 +19,7 @@ Player::Player(int id, double x, double y, double angle) : id(id), score(0), x(x
 
 Point Player::move(long turn) {
     if(!collisionless) {
-        visible = turn&0b110000;
+        visible = turn&GamePlay::intervalWithInvisiblePoint;
     }
     if(squares) {
         if(rotatingLeft) {
@@ -182,7 +182,7 @@ void Player::setCoordinatesAndAngle(double x_, double y_, double angle_) {
 }
 
 Point Player::getPoint(long turn) const {
-    return Point(x, y, GamePlay::defaultRadius, turn, id, turn);
+    return Point(x, y, GamePlay::defaultRadius, turn, id, (visible || turn&0b110000));
 }
 void Player::addScore(int pts) {
     score += pts;

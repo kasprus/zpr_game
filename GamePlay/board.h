@@ -5,6 +5,7 @@
 
 #include "point.h"
 #include "gamemode.h"
+#include "bonus.h"
 
 namespace GamePlay {
 class GameMode;
