@@ -13,3 +13,4 @@ cov/
 *.gcov
 *.gcno
 *.gcda
+ui_*
